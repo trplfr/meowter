@@ -1,0 +1,11 @@
+{
+  "name": "meowter-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Valentine C. <trplfr@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "echo \"Error: no test specified\" && exit 1"
+  }
+}
