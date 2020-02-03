@@ -2,10 +2,10 @@ node_modules/
 \.idea/
 
 client/.idea/
-client/.env/
-client/.env.development/
+client/.env
+client/.env.development
 client/node_modules/
 
 server/.idea/
-server/.env/
+server/.env
 server/node_modules/
