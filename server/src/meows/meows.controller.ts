@@ -21,28 +21,26 @@ import { Meow } from './meow.entity'
 export class MeowsController {
   constructor(private meowsService: MeowsService) {}
 
-  // @Get()
-  // getMeows(@Query(ValidationPipe) filterDTO: GetMeowsFilterDTO): Meow[] {
-  //   if (Object.keys(filterDTO).length) {
-  //     return this.meowsService.getMeowsWithFilters(filterDTO)
-  //   }
-  //
-  //   return this.meowsService.getAllMeows()
-  // }
+  @Get()
+  getMeows(
+    @Query(ValidationPipe) filterDTO: GetMeowsFilterDTO
+  ): Promise<Meow[]> {
+    return this.meowsService.getMeows(filterDTO)
+  }
 
   @Get('/:id')
   getMeowById(@Param('id', ParseIntPipe) id: number): Promise<Meow> {
     return this.meowsService.getMeowById(id)
   }
 
-  // @Post()
-  // @UsePipes(ValidationPipe)
-  // createMeow(@Body() createMeowDTO: CreateMeowDTO): Meow {
-  //   return this.meowsService.createMeow(createMeowDTO)
-  // }
-  //
-  // @Delete('/:id')
-  // deleteMeow(@Param('id') id: string) {
-  //   return this.meowsService.deleteMeow(id)
-  // }
+  @Post()
+  @UsePipes(ValidationPipe)
+  createMeow(@Body() createMeowDTO: CreateMeowDTO): Promise<Meow> {
+    return this.meowsService.createMeow(createMeowDTO)
+  }
+
+  @Delete('/:id')
+  deleteMeow(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.meowsService.deleteMeow(id)
+  }
 }

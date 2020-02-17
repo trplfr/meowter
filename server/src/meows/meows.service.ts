@@ -13,10 +13,10 @@ export class MeowsService {
     private meowRepository: MeowRepository
   ) {}
 
-  // getAllMeows(): Meow[] {
-  //   return this.meows
-  // }
-  //
+  async getMeows(filterDTO: GetMeowsFilterDTO): Promise<Meow[]> {
+    return this.meowRepository.getMeows(filterDTO)
+  }
+
   // getMeowsWithFilters(filterDTO: GetMeowsFilterDTO): Meow[] {
   //   const { search } = filterDTO
   //
@@ -39,21 +39,15 @@ export class MeowsService {
     return foundMeow
   }
 
-  // createMeow(createMeowDTO: CreateMeowDTO): Meow {
-  //   const { content } = createMeowDTO
-  //
-  //   const meow = {
-  //     id: uuid(),
-  //     content
-  //   }
-  //
-  //   this.meows.push(meow)
-  //   return meow
-  // }
-  //
-  // deleteMeow(id: string): void {
-  //   const foundMeow = this.getMeowById(id)
-  //
-  //   this.meows = this.meows.filter(meow => meow.id !== foundMeow.id)
-  // }
+  async createMeow(createMeowDTO: CreateMeowDTO): Promise<Meow> {
+    return this.meowRepository.createMeow(createMeowDTO)
+  }
+
+  async deleteMeow(id: number): Promise<void> {
+    const result = await this.meowRepository.delete(id)
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Meow with ID ${id} not found!`)
+    }
+  }
 }
