@@ -5,6 +5,7 @@ import { MeowRepository } from './meow.repository'
 import { CreateMeowDTO } from './dto/create-meow.dto'
 import { GetMeowsFilterDTO } from './dto/get-meows-filter.dto'
 import { Meow } from './meow.entity'
+import { User } from '../auth/user.entity'
 
 @Injectable()
 export class MeowsService {
@@ -13,8 +14,8 @@ export class MeowsService {
     private meowRepository: MeowRepository
   ) {}
 
-  async getMeows(filterDTO: GetMeowsFilterDTO): Promise<Meow[]> {
-    return this.meowRepository.getMeows(filterDTO)
+  async getMeows(filterDTO: GetMeowsFilterDTO, user: User): Promise<Meow[]> {
+    return this.meowRepository.getMeows(filterDTO, user)
   }
 
   // getMeowsWithFilters(filterDTO: GetMeowsFilterDTO): Meow[] {
@@ -29,8 +30,10 @@ export class MeowsService {
   //   return meows
   // }
 
-  async getMeowById(id: number): Promise<Meow> {
-    const foundMeow = await this.meowRepository.findOne(id)
+  async getMeowById(id: number, user: User): Promise<Meow> {
+    const foundMeow = await this.meowRepository.findOne({
+      where: { id, creatorId: user.id }
+    })
 
     if (!foundMeow) {
       throw new NotFoundException(`Meow with ID ${id} not found!`)
@@ -39,12 +42,12 @@ export class MeowsService {
     return foundMeow
   }
 
-  async createMeow(createMeowDTO: CreateMeowDTO): Promise<Meow> {
-    return this.meowRepository.createMeow(createMeowDTO)
+  async createMeow(createMeowDTO: CreateMeowDTO, user: User): Promise<Meow> {
+    return this.meowRepository.createMeow(createMeowDTO, user)
   }
 
-  async deleteMeow(id: number): Promise<void> {
-    const result = await this.meowRepository.delete(id)
+  async deleteMeow(id: number, user: User): Promise<void> {
+    const result = await this.meowRepository.delete({ id, creatorId: user.id })
 
     if (result.affected === 0) {
       throw new NotFoundException(`Meow with ID ${id} not found!`)

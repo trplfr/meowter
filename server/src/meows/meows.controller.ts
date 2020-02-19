@@ -18,6 +18,8 @@ import { CreateMeowDTO } from './dto/create-meow.dto'
 import { GetMeowsFilterDTO } from './dto/get-meows-filter.dto'
 import { Meow } from './meow.entity'
 import { AuthGuard } from '@nestjs/passport'
+import { User } from '../auth/user.entity'
+import { GetUser } from '../auth/get-user.decorator'
 
 @Controller('meows')
 @UseGuards(AuthGuard())
@@ -26,24 +28,34 @@ export class MeowsController {
 
   @Get()
   getMeows(
-    @Query(ValidationPipe) filterDTO: GetMeowsFilterDTO
+    @Query(ValidationPipe) filterDTO: GetMeowsFilterDTO,
+    @GetUser() user: User
   ): Promise<Meow[]> {
-    return this.meowsService.getMeows(filterDTO)
+    return this.meowsService.getMeows(filterDTO, user)
   }
 
   @Get('/:id')
-  getMeowById(@Param('id', ParseIntPipe) id: number): Promise<Meow> {
-    return this.meowsService.getMeowById(id)
+  getMeowById(
+    @Param('id', ParseIntPipe) id: number,
+    @GetUser() user: User
+  ): Promise<Meow> {
+    return this.meowsService.getMeowById(id, user)
   }
 
   @Post()
   @UsePipes(ValidationPipe)
-  createMeow(@Body() createMeowDTO: CreateMeowDTO): Promise<Meow> {
-    return this.meowsService.createMeow(createMeowDTO)
+  createMeow(
+    @Body() createMeowDTO: CreateMeowDTO,
+    @GetUser() user: User
+  ): Promise<Meow> {
+    return this.meowsService.createMeow(createMeowDTO, user)
   }
 
   @Delete('/:id')
-  deleteMeow(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.meowsService.deleteMeow(id)
+  deleteMeow(
+    @Param('id', ParseIntPipe) id: number,
+    @GetUser() user: User
+  ): Promise<void> {
+    return this.meowsService.deleteMeow(id, user)
   }
 }
