@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  UseGuards,
   UsePipes,
   ValidationPipe
 } from '@nestjs/common'
@@ -16,8 +17,10 @@ import { MeowsService } from './meows.service'
 import { CreateMeowDTO } from './dto/create-meow.dto'
 import { GetMeowsFilterDTO } from './dto/get-meows-filter.dto'
 import { Meow } from './meow.entity'
+import { AuthGuard } from '@nestjs/passport'
 
 @Controller('meows')
+@UseGuards(AuthGuard())
 export class MeowsController {
   constructor(private meowsService: MeowsService) {}
 
