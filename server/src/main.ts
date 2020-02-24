@@ -7,10 +7,9 @@ async function bootstrap() {
   const logger = new Logger('bootstrap')
   const app = await NestFactory.create(AppModule, { cors: true })
 
-  app.enableCors()
   app.setGlobalPrefix(`api/${process.env.API_VERSION}`)
 
-  await app.listen(+process.env.PORT)
+  await app.listen(process.env.PORT)
 
   logger.log(`Application listening on ${process.env.PORT}`)
 }
