@@ -1,3 +1,4 @@
+import { InternalServerErrorException, Logger } from '@nestjs/common'
 import { EntityRepository, Repository } from 'typeorm'
 
 import { Meow } from './meow.entity'
@@ -7,6 +8,8 @@ import { User } from '../auth/user.entity'
 
 @EntityRepository(Meow)
 export class MeowRepository extends Repository<Meow> {
+  private logger = new Logger('MeowRepository')
+
   async getMeows(filterDTO: GetMeowsFilterDTO, user: User): Promise<Meow[]> {
     const { search } = filterDTO
 
@@ -18,7 +21,17 @@ export class MeowRepository extends Repository<Meow> {
       query.andWhere('meow.content LIKE :search', { search: `%${search}%` })
     }
 
-    return await query.getMany()
+    try {
+      return await query.getMany()
+    } catch (error) {
+      this.logger.error(
+        `Failed to get meows for user '${
+          user.login
+        }'. Filters: ${JSON.stringify(filterDTO)}`,
+        error.stack
+      )
+      throw new InternalServerErrorException()
+    }
   }
 
   async createMeow(createMeowDTO: CreateMeowDTO, user: User): Promise<Meow> {
@@ -28,7 +41,16 @@ export class MeowRepository extends Repository<Meow> {
 
     meow.content = content
     meow.user = user
-    await meow.save()
+
+    try {
+      await meow.save()
+    } catch (error) {
+      this.logger.error(
+        `Failed to create meow for user '${user.login}'`,
+        error.stack
+      )
+      throw new InternalServerErrorException()
+    }
 
     delete meow.user
 

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   ParseIntPipe,
   Post,
@@ -24,6 +25,8 @@ import { GetUser } from '../auth/get-user.decorator'
 @Controller('meows')
 @UseGuards(AuthGuard())
 export class MeowsController {
+  private logger = new Logger('MeowsController')
+
   constructor(private meowsService: MeowsService) {}
 
   @Get()
@@ -31,6 +34,12 @@ export class MeowsController {
     @Query(ValidationPipe) filterDTO: GetMeowsFilterDTO,
     @GetUser() user: User
   ): Promise<Meow[]> {
+    this.logger.verbose(
+      `User '${user.login}' retrieving all meows. Filters: ${JSON.stringify(
+        filterDTO
+      )}'`
+    )
+
     return this.meowsService.getMeows(filterDTO, user)
   }
 
@@ -39,6 +48,8 @@ export class MeowsController {
     @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User
   ): Promise<Meow> {
+    this.logger.verbose(`User '${user.login}' retrieving meow with id: ${id}`)
+
     return this.meowsService.getMeowById(id, user)
   }
 
@@ -48,6 +59,8 @@ export class MeowsController {
     @Body() createMeowDTO: CreateMeowDTO,
     @GetUser() user: User
   ): Promise<Meow> {
+    this.logger.verbose(`User '${user.login}' creating a new meow`)
+
     return this.meowsService.createMeow(createMeowDTO, user)
   }
 
@@ -56,6 +69,8 @@ export class MeowsController {
     @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User
   ): Promise<void> {
+    this.logger.verbose(`User '${user.login}' deleted meow with id: ${id}`)
+
     return this.meowsService.deleteMeow(id, user)
   }
 }

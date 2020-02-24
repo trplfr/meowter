@@ -1,10 +1,18 @@
 import { NestFactory } from '@nestjs/core'
+import { Logger } from '@nestjs/common'
+
 import { AppModule } from './app.module'
 
 async function bootstrap() {
+  const logger = new Logger('bootstrap')
   const app = await NestFactory.create(AppModule, { cors: true })
-  app.setGlobalPrefix('api/v1') // TODO: выввести это в .env
-  await app.listen(5000)
+
+  app.enableCors()
+  app.setGlobalPrefix(`api/${process.env.API_VERSION}`)
+
+  await app.listen(+process.env.PORT)
+
+  logger.log(`Application listening on ${process.env.PORT}`)
 }
 
 bootstrap()

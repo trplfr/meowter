@@ -18,18 +18,6 @@ export class MeowsService {
     return this.meowRepository.getMeows(filterDTO, user)
   }
 
-  // getMeowsWithFilters(filterDTO: GetMeowsFilterDTO): Meow[] {
-  //   const { search } = filterDTO
-  //
-  //   let meows = this.getAllMeows()
-  //
-  //   if (search) {
-  //     meows = meows.filter(meow => meow.content.includes(search))
-  //   }
-  //
-  //   return meows
-  // }
-
   async getMeowById(id: number, user: User): Promise<Meow> {
     const foundMeow = await this.meowRepository.findOne({
       where: { id, creatorId: user.id }
