@@ -7,7 +7,7 @@ meowter is a responsive [React](https://reactjs.org/) app that utilises Redux an
 <!-- ![] -->
 
 ## Installation
-[node.js](http://nodejs.org/download/) and [yarn](https://yarnpkg.com/en/docs/install/) is required to get ``yarn``.
+[node.js](http://nodejs.org/download/) and npm.
 
 If you would like to download the code and try it for yourself:
 
