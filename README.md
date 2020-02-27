@@ -13,10 +13,11 @@ If you would like to download the code and try it for yourself:
 
 1. Clone the repo: `git@github.com:trplfr/meowter`
 2. `cd meowter/client`
-2. Install packages for client: `yarn`
+2. Install packages for client: `npm i`
+3. Build project, start client and launch: `npm run start`
 2. `cd meowter/server`
-2. Install packages for server: `yarn`
-3. Build project, start server and launch: `yarn serve`
+2. Install packages for server: `npm i`
+3. Build project, start server and launch: `npm run start:dev`
 4. Open your browser at: `http://localhost:8080`
 
 ## Tools
