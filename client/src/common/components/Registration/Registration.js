@@ -1,11 +1,11 @@
 import React, { useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { requestLogin } from 'modules/actions/login.actions'
+import { requestRegistration } from 'modules/actions/registration.actions'
 
 import { Container, Heading, Field, Button } from 'screens/Auth/Auth.style'
 
-export const Login = () => {
+export const Registration = () => {
   const dispatch = useDispatch()
 
   const [login, setLogin] = useState('')
@@ -14,17 +14,17 @@ export const Login = () => {
   const handleLogin = ({ target: { value } }) => setLogin(value)
   const handlePassword = ({ target: { value } }) => setPassword(value)
 
-  const signIn = useCallback(
-    () => dispatch(requestLogin({ login, password })),
+  const signUp = useCallback(
+    () => dispatch(requestRegistration({ login, password })),
     [login, password]
   )
 
   return (
     <Container>
-      <Heading>Вход</Heading>
+      <Heading>Регистрация</Heading>
       <Field onChange={handleLogin} placeholder='Логин' />
       <Field onChange={handlePassword} placeholder='Пароль' />
-      <Button onClick={signIn}>Войти</Button>
+      <Button onClick={signUp}>Зарегистрироваться</Button>
     </Container>
   )
 }

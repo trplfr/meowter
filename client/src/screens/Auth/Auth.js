@@ -1,7 +1,8 @@
 import React from 'react'
 import { Route, Switch } from 'react-router'
 
-import { Login } from 'common/components'
+import { Login, Registration } from 'common/components'
+
 import { Screen } from 'screens/Auth/Auth.style'
 
 export const Auth = () => {
@@ -9,7 +10,7 @@ export const Auth = () => {
     <Screen>
       <Switch>
         <Route path='/login' component={Login} />
-        {/* <Route path='/registration' component={Registration} /> */}
+        <Route path='/registration' component={Registration} />
       </Switch>
     </Screen>
   )
