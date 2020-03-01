@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Switch } from 'react-router'
 
-import { Login, Registration } from 'common/components'
+import { Login, Registration } from 'screens/Auth/components'
 
 import { Screen } from 'screens/Auth/Auth.style'
 

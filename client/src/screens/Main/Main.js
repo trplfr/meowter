@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Login } from 'common/components/Login'
+import { Login } from 'screens/Auth/components'
 
 import { Screen, Left, Right, Title } from './Main.style'
 

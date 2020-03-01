@@ -9,7 +9,7 @@ import {
   Description,
   Field,
   Heading
-} from 'common/components/Login/Login.style'
+} from 'screens/Auth/Auth.style'
 
 export const Login = () => {
   const dispatch = useDispatch()

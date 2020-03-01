@@ -1,13 +1,24 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import styled from 'styled-components'
 
-import { Input as Entity } from './Input.style'
+export const Input = styled.input`
+  width: 100%;
+  padding: 15px 20px;
 
-export const Input = ({ placeholder, onChange }) => {
-  return <Entity placeholder={placeholder} onChange={onChange} />
-}
+  background: ${props => props.theme.colors.white};
+  color: ${props => props.theme.colors.black};
 
-Input.propTypes = {
-  placeholder: PropTypes.string,
-  onChange: PropTypes.func
-}
+  font-weight: ${props => props.theme.fontWeights.normal};
+  font-size: ${props => props.theme.fontSizes.small};
+
+  border: 1px solid ${props => props.theme.colors.lightGray};
+  border-radius: 100px;
+
+  :focus {
+    border: 1px solid ${props => props.theme.colors.lightPrimary};
+  }
+
+  ::placeholder {
+    font-size: ${props => props.theme.fontSizes.small};
+    color: ${props => props.theme.colors.gray};
+  }
+`

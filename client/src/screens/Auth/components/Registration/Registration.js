@@ -9,7 +9,7 @@ import {
   Description,
   Field,
   Heading
-} from 'common/components/Registration/Registration.style'
+} from 'screens/Auth/Auth.style'
 
 export const Registration = () => {
   const dispatch = useDispatch()

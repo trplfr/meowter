@@ -1,13 +1,16 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import styled from 'styled-components'
 
-import { Button as Entity } from './Button.style'
+export const Button = styled.button`
+  width: 100%;
+  height: 50px;
 
-export const Button = ({ children, onClick }) => {
-  return <Entity onClick={onClick}>{children}</Entity>
-}
+  background: ${props => props.theme.colors.primary};
+  color: ${props => props.theme.colors.white};
 
-Button.propTypes = {
-  children: PropTypes.node,
-  onClick: PropTypes.func
-}
+  font-weight: 500;
+  font-size: ${props => props.theme.fontSizes.medium};
+
+  border-radius: 100px;
+
+  cursor: pointer;
+`
