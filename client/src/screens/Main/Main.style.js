@@ -17,7 +17,7 @@ export const Left = styled.div`
   width: 50%;
   height: 100%;
 
-  @media (${props => props.theme.mobile}) {
+  @media (${props => props.theme.media.mobile}) {
     display: none;
   }
 `
@@ -29,7 +29,7 @@ export const Right = styled.div`
   width: 50%;
   height: 100%;
 
-  @media (${props => props.theme.mobile}) {
+  @media (${props => props.theme.media.mobile}) {
     width: 100%;
   }
 `

@@ -14,7 +14,7 @@ export const Container = styled.div`
 export const Accept = styled(Button)`
   width: 50%;
 
-  @media (${props => props.theme.mobile}) {
+  @media (${props => props.theme.media.mobile}) {
     width: 100%;
   }
 `
@@ -27,7 +27,7 @@ export const Field = styled(Input)`
     margin: 0 0 15px;
   }
 
-  @media (${props => props.theme.mobile}) {
+  @media (${props => props.theme.media.mobile}) {
     width: 100%;
   }
 `

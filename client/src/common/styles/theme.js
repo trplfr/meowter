@@ -23,7 +23,9 @@ const theme = {
     medium: '500',
     bold: '700'
   },
-  mobile: 'max-width: 768px'
+  media: {
+    mobile: 'max-width: 768px'
+  }
 }
 
 export const Theme = ({ children }) => (
