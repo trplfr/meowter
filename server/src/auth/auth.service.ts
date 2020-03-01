@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt'
 import { UserRepository } from './user.repository'
 import { AuthCredentialsDTO } from './dto/auth-credentials.dto'
 import { JwtPayload } from './jwt-payload.interface'
+import { AuthJWTDTO } from './dto/auth-jwt.dto'
 
 @Injectable()
 export class AuthService {
@@ -39,5 +40,24 @@ export class AuthService {
     )
 
     return { accessToken }
+  }
+
+  async refreshToken(authJWTDTO: AuthJWTDTO): Promise<{ accessToken: string }> {
+    const { refreshToken } = authJWTDTO
+
+    try {
+      const decodedToken = await this.jwtService.verify(refreshToken)
+      const payload = { login: decodedToken.login }
+
+      const accessToken = await this.jwtService.sign(payload)
+
+      this.logger.debug(
+        `JWT Token refreshed with payload ${JSON.stringify(payload)}`
+      )
+
+      return { accessToken }
+    } catch (error) {
+      throw new UnauthorizedException(`Token expired`)
+    }
   }
 }
