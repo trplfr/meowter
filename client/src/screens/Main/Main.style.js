@@ -16,6 +16,10 @@ export const Left = styled.div`
   justify-content: center;
   width: 50%;
   height: 100%;
+
+  @media (${props => props.theme.mobile}) {
+    display: none;
+  }
 `
 
 export const Right = styled.div`
@@ -24,8 +28,12 @@ export const Right = styled.div`
   justify-content: center;
   width: 50%;
   height: 100%;
+
+  @media (${props => props.theme.mobile}) {
+    width: 100%;
+  }
 `
 
-export const Title = styled.h1`
-  ${H1};
+export const Title = styled(H1)`
+  font-size: ${props => props.theme.fontSizes.huge};
 `

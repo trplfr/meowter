@@ -26,7 +26,6 @@ export const normalize = css`
   }
 
   pre {
-    font-family: monospace, monospace;
     font-size: 1em;
   }
 
@@ -36,7 +35,6 @@ export const normalize = css`
 
   abbr[title] {
     border-bottom: none;
-    text-decoration: underline;
     text-decoration: underline dotted;
   }
 
@@ -81,10 +79,11 @@ export const normalize = css`
   optgroup,
   select,
   textarea {
-    font-family: inherit;
     font-size: 100%;
     line-height: 1.15;
     margin: 0;
+    outline: none;
+    padding: 0;
   }
 
   button,
@@ -102,6 +101,7 @@ export const normalize = css`
   [type='reset'],
   [type='submit'] {
     -webkit-appearance: button;
+    border: 0;
   }
 
   button::-moz-focus-inner,
@@ -162,7 +162,6 @@ export const normalize = css`
 
   ::-webkit-file-upload-button {
     -webkit-appearance: button;
-    font: inherit;
   }
 
   details {

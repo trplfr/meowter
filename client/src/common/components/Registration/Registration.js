@@ -3,7 +3,13 @@ import { useDispatch } from 'react-redux'
 
 import { requestRegistration } from 'modules/actions/registration.actions'
 
-import { Container, Heading, Field, Button } from 'screens/Auth/Auth.style'
+import {
+  Accept,
+  Container,
+  Description,
+  Field,
+  Heading
+} from 'common/components/Registration/Registration.style'
 
 export const Registration = () => {
   const dispatch = useDispatch()
@@ -21,10 +27,14 @@ export const Registration = () => {
 
   return (
     <Container>
-      <Heading>Регистрация</Heading>
+      <Heading>Давайте начинать</Heading>
+      <Description>
+        Заведите аккаунт, чтобы полноценно пользоваться нашим сервисом
+      </Description>
       <Field onChange={handleLogin} placeholder='Логин' />
       <Field onChange={handlePassword} placeholder='Пароль' />
-      <Button onClick={signUp}>Зарегистрироваться</Button>
+      <Field placeholder='Почта или телефон' />
+      <Accept onClick={signUp}>Далее</Accept>
     </Container>
   )
 }

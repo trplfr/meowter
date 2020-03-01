@@ -2,15 +2,27 @@ import { createGlobalStyle } from 'styled-components'
 
 import { normalize } from 'common/styles/normalize'
 
+import Rubik from 'common/assets/fonts/Rubik-Medium.ttf'
+
 export const GlobalStyle = createGlobalStyle`
   ${normalize}
   
-  html, body, body > div {
-    width: 100%;
-    height: 100%;
+  @font-face {
+    font-family: 'Rubik';
+    font-style: normal;
+    font-weight: normal;
+    src:
+      url('${Rubik}') format('ttf')
   }
   
-  body > div {
+  * { 
+    box-sizing: border-box;
+    font-family: 'Rubik', sans-serif;
+  }
+  
+  html, body, body > div {
     display: flex;
+    width: 100%;
+    height: 100%;
   }
 `

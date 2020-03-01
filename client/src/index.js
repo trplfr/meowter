@@ -6,6 +6,7 @@ import { HelmetProvider } from 'react-helmet-async'
 
 import { configureStore } from 'modules/store'
 
+import { Theme as ThemeProvider } from 'common/styles/theme'
 import { App } from './App'
 
 import { GlobalStyle } from './style'
@@ -17,8 +18,10 @@ const renderApp = () => {
     <Provider store={store}>
       <RouterProvider>
         <HelmetProvider>
-          <GlobalStyle />
-          <App />
+          <ThemeProvider>
+            <GlobalStyle />
+            <App />
+          </ThemeProvider>
         </HelmetProvider>
       </RouterProvider>
     </Provider>,

@@ -3,7 +3,13 @@ import { useDispatch } from 'react-redux'
 
 import { requestLogin } from 'modules/actions/login.actions'
 
-import { Container, Heading, Field, Button } from 'screens/Auth/Auth.style'
+import {
+  Accept,
+  Container,
+  Description,
+  Field,
+  Heading
+} from 'common/components/Login/Login.style'
 
 export const Login = () => {
   const dispatch = useDispatch()
@@ -21,10 +27,13 @@ export const Login = () => {
 
   return (
     <Container>
-      <Heading>Вход</Heading>
-      <Field onChange={handleLogin} placeholder='Логин' />
+      <Heading>Авторизация</Heading>
+      <Description>
+        Войдите в аккаунт, чтобы продолжить обсуждать любимые темы
+      </Description>
+      <Field onChange={handleLogin} placeholder='Почта или телефон' />
       <Field onChange={handlePassword} placeholder='Пароль' />
-      <Button onClick={signIn}>Войти</Button>
+      <Accept onClick={signIn}>Далее</Accept>
     </Container>
   )
 }
