@@ -5,6 +5,8 @@ client/.idea/
 client/.env
 client/.env.development
 client/node_modules/
+client/dist/bundle.js
+client/dist/bundle.js.map
 
 server/.idea/
 server/.env

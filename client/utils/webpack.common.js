@@ -10,10 +10,21 @@ module.exports = {
         use: ['babel-loader', 'eslint-loader']
       },
       {
-        test: /\.(woff|woff2|ttf)$/,
+        test: /\.(woff|woff2|ttf|png|jpg)$/,
         use: {
           loader: 'url-loader'
         }
+      },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: 'svg-url-loader',
+            options: {
+              limit: 10000
+            }
+          }
+        ]
       }
     ]
   },
