@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
+import { Provider as StoreProvider } from 'react-redux'
 import { BrowserRouter as RouterProvider } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 
@@ -15,7 +15,7 @@ const store = configureStore()
 
 const renderApp = () => {
   ReactDOM.render(
-    <Provider store={store}>
+    <StoreProvider store={store}>
       <RouterProvider>
         <HelmetProvider>
           <ThemeProvider>
@@ -24,7 +24,7 @@ const renderApp = () => {
           </ThemeProvider>
         </HelmetProvider>
       </RouterProvider>
-    </Provider>,
+    </StoreProvider>,
     document.getElementById('root')
   )
 }

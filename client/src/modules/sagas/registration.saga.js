@@ -1,6 +1,6 @@
 import { takeLatest, call, put } from 'redux-saga/effects'
 
-import { API } from 'common/const/api'
+import { API } from 'common/api/config'
 
 import {
   acceptRegistration,
