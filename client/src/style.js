@@ -1,6 +1,6 @@
 import { createGlobalStyle } from 'styled-components'
 
-import { normalize } from 'common/styles/normalize'
+import { normalize } from 'core/styles/normalize'
 
 import Rubik from 'common/assets/fonts/Rubik/Rubik-Medium.ttf'
 

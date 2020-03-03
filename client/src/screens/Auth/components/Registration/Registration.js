@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { requestRegistration } from 'modules/actions/registration.actions'
+import { requestRegistration } from 'store/actions/registration.actions'
 
 import {
   Accept,

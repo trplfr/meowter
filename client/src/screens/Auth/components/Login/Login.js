@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { requestLogin } from 'modules/actions/login.actions'
+import { requestLogin } from 'store/actions/login.actions'
 
-import { API } from 'common/api/config'
+import { API } from 'core/api'
 
 import {
   Accept,

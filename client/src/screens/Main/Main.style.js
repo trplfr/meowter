@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { H1 } from 'common/styles/typography'
+import { H1 } from 'core/styles/typography'
 
 export const Screen = styled.div`
   display: flex;

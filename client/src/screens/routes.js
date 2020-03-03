@@ -1,11 +1,9 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 
-import { Main } from 'screens/Main'
-import { Auth } from 'screens/Auth'
-import { NotFound } from 'screens/NotFound'
+import { Main, Auth, NotFound } from 'screens'
 
-export const Router = () => {
+export const Routes = () => {
   return (
     <Switch>
       <Route exact path='/' key='Main' component={Main} />

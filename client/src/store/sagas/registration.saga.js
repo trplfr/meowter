@@ -1,12 +1,12 @@
 import { takeLatest, call, put } from 'redux-saga/effects'
 
-import { API } from 'common/api/config'
+import { API } from 'core/api'
 
 import {
   acceptRegistration,
   abortRegistration,
   requestRegistration
-} from 'modules/actions/registration.actions'
+} from 'store/actions/registration.actions'
 
 export function* registerUser(action) {
   try {

@@ -4,9 +4,10 @@ import { Provider as StoreProvider } from 'react-redux'
 import { BrowserRouter as RouterProvider } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 
-import { configureStore } from 'modules/store'
+import { configureStore } from 'store'
 
-import { Theme as ThemeProvider } from 'common/styles/theme'
+import { Theme as ThemeProvider } from 'core/styles/theme'
+
 import { App } from './App'
 
 import { GlobalStyle } from './style'

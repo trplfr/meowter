@@ -4,7 +4,7 @@ import {
   requestLogin,
   acceptLogin,
   abortLogin
-} from 'modules/actions/login.actions'
+} from 'store/actions/login.actions'
 
 const initialState = {
   token: null

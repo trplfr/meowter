@@ -1,12 +1,12 @@
 import { takeLatest, call, put } from 'redux-saga/effects'
 
-import { API } from 'common/api/config'
+import { API } from 'core/api'
 
 import {
   requestLogin,
   abortLogin,
   acceptLogin
-} from 'modules/actions/login.actions'
+} from 'store/actions/login.actions'
 
 export function* loginUser(action) {
   try {

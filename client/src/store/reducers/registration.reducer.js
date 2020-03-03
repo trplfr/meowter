@@ -4,7 +4,7 @@ import {
   requestRegistration,
   acceptRegistration,
   abortRegistration
-} from 'modules/actions/registration.actions'
+} from 'store/actions/registration.actions'
 
 const initialState = {
   token: null

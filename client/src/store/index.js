@@ -3,8 +3,8 @@ import 'regenerator-runtime/runtime'
 import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 
-import { rootReducer } from 'modules/reducers'
-import { rootSaga } from 'modules/sagas'
+import { rootReducer } from 'store/reducers/root.reducer'
+import { rootSaga } from 'store/sagas/root.saga'
 
 export const configureStore = initialState => {
   const sagaMiddleware = createSagaMiddleware()
@@ -21,7 +21,7 @@ export const configureStore = initialState => {
   sagaMiddleware.run(rootSaga)
 
   if (module.hot) {
-    module.hot.accept('modules/reducers', () =>
+    module.hot.accept('store/reducers/root.reducer', () =>
       store.replaceReducer(rootReducer)
     )
   }
