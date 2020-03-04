@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 
 import { requestLogin } from 'store/actions/login.actions'
 
-import { API } from 'core/api'
+// import { API } from 'core/api'
 
 import {
   Accept,
@@ -27,7 +27,7 @@ export const Login = () => {
     [login, password]
   )
 
-  const getMeows = () => API.get('meows')
+  // const getMeows = () => API.get('meows')
 
   return (
     <Container>
@@ -38,7 +38,7 @@ export const Login = () => {
       <Field onChange={handleLogin} placeholder='Почта или телефон' />
       <Field onChange={handlePassword} placeholder='Пароль' />
       <Accept onClick={signIn}>Далее</Accept>
-      <Accept onClick={getMeows}>Получить мяуты</Accept>
+      {/* <Accept onClick={getMeows}>Получить мяуты</Accept> */}
     </Container>
   )
 }

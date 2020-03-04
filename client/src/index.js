@@ -7,10 +7,9 @@ import { HelmetProvider } from 'react-helmet-async'
 import { configureStore } from 'store'
 
 import { Theme as ThemeProvider } from 'core/styles/theme'
+import { GlobalStyle } from 'core/styles/global'
 
 import { App } from './App'
-
-import { GlobalStyle } from './style'
 
 const store = configureStore()
 

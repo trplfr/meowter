@@ -1,4 +1,6 @@
 import axios from 'axios'
+import jwtDecode from 'jwt-decode'
+import { differenceInMinutes, fromUnixTime } from 'date-fns'
 
 export const API_BASE = process.env.API_BASE
 export const API_PORT = process.env.API_PORT
@@ -10,27 +12,39 @@ export const API = axios.create({
   baseURL: API_URL
 })
 
-const getToken = () => localStorage.getItem('accessToken')
-const clearToken = () => localStorage.removeItem('accessToken')
-const setToken = token => localStorage.setItem('accessToken', token)
+export const getToken = () => localStorage.getItem('accessToken')
+export const clearToken = () => localStorage.removeItem('accessToken')
+export const setToken = token => localStorage.setItem('accessToken', token)
 
-const refreshTokenLogic = async failedRequest => {
+const getNewToken = async () => {
   const response = await API.post('auth/token', {
     refreshToken: getToken()
   })
 
-  setToken(response.refreshToken)
-
-  failedRequest.response.config.headers.Authorization = `Bearer ${response.refreshToken}`
+  setToken(response.data.accessToken)
 }
 
 API.interceptors.request.use(request => {
-  request.headers.Authorization = `Bearer ${getToken()}`
+  const token = getToken()
+  const decodedToken = token ? jwtDecode(token) : null
+
+  if (
+    decodedToken &&
+    request.url !== 'auth/login' &&
+    request.url !== 'auth/token' &&
+    differenceInMinutes(fromUnixTime(decodedToken?.exp), new Date()) < 5
+  ) {
+    getNewToken()
+  }
+
+  request.headers.Authorization = `Bearer ${token}`
+
   return request
 })
 
 API.interceptors.response.use(response => {
   if (response.status === 401) {
+    // TODO: нужно редиректить на /not-logged-in
     clearToken()
   }
 
