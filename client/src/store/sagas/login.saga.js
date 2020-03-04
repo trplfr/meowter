@@ -1,18 +1,20 @@
 import { takeLatest, call, put } from 'redux-saga/effects'
 
-import { API } from 'common/const/api'
+import { API, setToken } from 'core/api'
 
 import {
   requestLogin,
   abortLogin,
   acceptLogin
-} from 'modules/actions/login.actions'
+} from 'store/actions/login.actions'
 
 export function* loginUser(action) {
   try {
-    const token = yield call(API.post, 'auth/login', action.payload)
+    const response = yield call(API.post, 'auth/login', action.payload)
 
-    yield put(acceptLogin(token))
+    setToken(response.data.accessToken)
+
+    yield put(acceptLogin(response.data.accessToken))
   } catch (e) {
     yield put(abortLogin())
 

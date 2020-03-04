@@ -1,7 +1,9 @@
 import React, { useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { requestLogin } from 'modules/actions/login.actions'
+import { requestLogin } from 'store/actions/login.actions'
+
+// import { API } from 'core/api'
 
 import {
   Accept,
@@ -25,6 +27,8 @@ export const Login = () => {
     [login, password]
   )
 
+  // const getMeows = () => API.get('meows')
+
   return (
     <Container>
       <Heading>Авторизация</Heading>
@@ -34,6 +38,7 @@ export const Login = () => {
       <Field onChange={handleLogin} placeholder='Почта или телефон' />
       <Field onChange={handlePassword} placeholder='Пароль' />
       <Accept onClick={signIn}>Далее</Accept>
+      {/* <Accept onClick={getMeows}>Получить мяуты</Accept> */}
     </Container>
   )
 }

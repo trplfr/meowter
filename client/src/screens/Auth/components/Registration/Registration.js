@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { requestRegistration } from 'modules/actions/registration.actions'
+import { requestRegister } from 'store/actions/register.actions'
 
 import {
   Accept,
@@ -21,7 +21,7 @@ export const Registration = () => {
   const handlePassword = ({ target: { value } }) => setPassword(value)
 
   const signUp = useCallback(
-    () => dispatch(requestRegistration({ login, password })),
+    () => dispatch(requestRegister({ login, password })),
     [login, password]
   )
 

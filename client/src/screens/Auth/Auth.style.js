@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 import { Button, Input } from 'common/components'
-import { H1, Paragraph } from 'common/styles/typography'
+import { H1, Paragraph } from 'core/styles/typography'
 
 export const Screen = styled.div`
   display: flex;

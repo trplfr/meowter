@@ -1,6 +1,7 @@
-import { Body, Controller, Post, Put, ValidationPipe } from '@nestjs/common'
+import { Body, Controller, Post, ValidationPipe } from '@nestjs/common'
 
 import { AuthService } from './auth.service'
+
 import { AuthCredentialsDTO } from './dto/auth-credentials.dto'
 import { AuthJWTDTO } from './dto/auth-jwt.dto'
 
@@ -22,7 +23,7 @@ export class AuthController {
     return this.authService.signIn(authCredentialsDTO)
   }
 
-  @Put('/refresh')
+  @Post('/token')
   refreshToken(
     @Body(ValidationPipe) authJWTDTO: AuthJWTDTO
   ): Promise<{ accessToken: string }> {

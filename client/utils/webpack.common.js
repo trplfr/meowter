@@ -32,7 +32,8 @@ module.exports = {
     alias: {
       assets: path.resolve(__dirname, '../', 'src/assets'),
       common: path.resolve(__dirname, '../', 'src/common'),
-      modules: path.resolve(__dirname, '../', 'src/modules'),
+      core: path.resolve(__dirname, '../', 'src/core'),
+      store: path.resolve(__dirname, '../', 'src/store'),
       screens: path.resolve(__dirname, '../', 'src/screens')
     },
     extensions: ['*', '.js', '.jsx']

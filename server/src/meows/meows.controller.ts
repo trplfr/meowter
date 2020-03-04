@@ -12,14 +12,16 @@ import {
   UsePipes,
   ValidationPipe
 } from '@nestjs/common'
+import { AuthGuard } from '@nestjs/passport'
 
 import { MeowsService } from './meows.service'
 
 import { CreateMeowDTO } from './dto/create-meow.dto'
 import { GetMeowsFilterDTO } from './dto/get-meows-filter.dto'
+
 import { Meow } from './meow.entity'
-import { AuthGuard } from '@nestjs/passport'
 import { User } from '../auth/user.entity'
+
 import { GetUser } from '../auth/get-user.decorator'
 
 @Controller('meows')
