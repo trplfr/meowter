@@ -1,6 +1,6 @@
 import { takeLatest, call, put } from 'redux-saga/effects'
 
-import { API } from 'core/api'
+import { API, setToken } from 'core/api'
 
 import {
   acceptRegister,
@@ -10,9 +10,11 @@ import {
 
 export function* registerUser(action) {
   try {
-    const token = yield call(API.post, 'auth', action.payload)
+    const response = yield call(API.post, 'auth', action.payload)
 
-    yield put(acceptRegister(token))
+    setToken(response.data.accessToken)
+
+    yield put(acceptRegister(response.data.accessToken))
   } catch (e) {
     yield put(abortRegister())
 
