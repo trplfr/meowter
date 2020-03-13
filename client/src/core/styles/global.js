@@ -2,7 +2,7 @@ import { createGlobalStyle } from 'styled-components'
 
 import { normalize } from 'core/styles/normalize'
 
-import Rubik from 'common/assets/fonts/Rubik/Rubik-Medium.ttf'
+import Rubik from 'assets/fonts/Rubik/Rubik-Medium.ttf'
 
 export const GlobalStyle = createGlobalStyle`
   ${normalize}

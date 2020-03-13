@@ -8,6 +8,7 @@
   "plugins": ["prettier"],
   "parser": "babel-eslint",
   "rules": {
+    "consistent-return": 0,
     "no-param-reassign": 0,
     "operator-linebreak": 0,
     "jsx-quotes": 0,
