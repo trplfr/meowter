@@ -9,7 +9,7 @@ function* tokenRefreshSaga() {
   const token = getToken()
   const decodedToken = token ? jwtDecode(token) : null
   const isTokenExpired =
-    differenceInSeconds(fromUnixTime(decodedToken?.exp), new Date()) <
+    differenceInSeconds(fromUnixTime(decodedToken?.exp), new Date()) <=
     tokenCheckRange
 
   if (isTokenExpired) {
