@@ -33,8 +33,8 @@ module.exports = {
       assets: path.resolve(__dirname, '../', 'src/assets'),
       common: path.resolve(__dirname, '../', 'src/common'),
       core: path.resolve(__dirname, '../', 'src/core'),
-      store: path.resolve(__dirname, '../', 'src/store'),
-      screens: path.resolve(__dirname, '../', 'src/screens')
+      screens: path.resolve(__dirname, '../', 'src/screens'),
+      store: path.resolve(__dirname, '../', 'src/store')
     },
     extensions: ['*', '.js', '.jsx']
   },
