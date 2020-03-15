@@ -24,6 +24,10 @@ export const Accept = styled(Button)`
   @media (${props => props.theme.media.mobile}) {
     width: 100%;
   }
+
+  :nth-of-type(1) {
+    margin: 0 0 10px;
+  }
 `
 
 export const Field = styled(Input)`

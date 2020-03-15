@@ -84,6 +84,8 @@ export const normalize = css`
     margin: 0;
     outline: none;
     padding: 0;
+    background: transparent;
+    cursor: pointer;
   }
 
   button,
