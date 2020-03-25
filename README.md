@@ -1,4 +1,7 @@
-# meowter
+<p align="center">
+  <img src="https://i.imgur.com/mhRDVJP.png">
+</p>
+
 [![GitHub stars](https://img.shields.io/github/stars/trplfr/meowter.svg?style=flat-square)](https://github.com/trplfr/meowter/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/trplfr/meowter.svg?style=flat-square)](https://github.com/trplfr/meowter/network)
 
