@@ -12,6 +12,7 @@ export const theme = {
     lightGray: 'rgba(48, 48, 48, 0.1)'
   },
   fontSizes: {
+    tiny: '12px',
     small: '14px',
     medium: '16px',
     large: '22px',

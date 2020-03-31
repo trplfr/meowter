@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider as StoreProvider } from 'react-redux'
-import { BrowserRouter as RouterProvider } from 'react-router-dom'
+import { ConnectedRouter as ConnectedRouterProvider } from 'connected-react-router'
 import { HelmetProvider } from 'react-helmet-async'
 
-import { configureStore } from 'store'
+import { configureStore, history } from 'store/index'
 
 import { Theme as ThemeProvider } from 'core/styles/theme'
 import { GlobalStyle } from 'core/styles/global'
@@ -16,14 +16,14 @@ const store = configureStore()
 const renderApp = () => {
   ReactDOM.render(
     <StoreProvider store={store}>
-      <RouterProvider>
+      <ConnectedRouterProvider history={history}>
         <HelmetProvider>
           <ThemeProvider>
             <GlobalStyle />
             <App />
           </ThemeProvider>
         </HelmetProvider>
-      </RouterProvider>
+      </ConnectedRouterProvider>
     </StoreProvider>,
     document.getElementById('root')
   )

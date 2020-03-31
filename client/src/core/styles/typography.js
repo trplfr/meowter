@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 export const H1 = styled.h1`
   font-weight: ${props => props.theme.fontWeights.bold};
@@ -26,4 +27,10 @@ export const Paragraph = styled.p`
 export const Phrase = styled.span`
   font-weight: ${props => props.theme.fontWeights.normal};
   font-size: ${props => props.theme.fontSizes.small};
+`
+
+export const Anchor = styled(Link)`
+  font-weight: ${props => props.theme.fontWeights.normal};
+  font-size: ${props => props.theme.fontSizes.tiny};
+  color: ${props => props.theme.colors.primary};
 `

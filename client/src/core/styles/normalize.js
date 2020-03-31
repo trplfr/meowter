@@ -31,6 +31,7 @@ export const normalize = css`
 
   a {
     background-color: transparent;
+    text-decoration: none;
   }
 
   abbr[title] {
@@ -85,7 +86,6 @@ export const normalize = css`
     outline: none;
     padding: 0;
     background: transparent;
-    cursor: pointer;
   }
 
   button,
@@ -104,6 +104,7 @@ export const normalize = css`
   [type='submit'] {
     -webkit-appearance: button;
     border: 0;
+    cursor: pointer;
   }
 
   button::-moz-focus-inner,

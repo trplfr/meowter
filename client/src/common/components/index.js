@@ -1,2 +1,5 @@
 export { Button } from './Button/Button'
 export { Input } from './Input/Input'
+export { Helmet } from './Helmet/Helmet'
+export { Modal } from './Modal/Modal'
+export { Back } from './Back/Back'

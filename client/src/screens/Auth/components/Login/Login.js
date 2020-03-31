@@ -34,15 +34,17 @@ export const Login = () => {
   }
 
   return (
-    <Container>
-      <Heading>Авторизация</Heading>
-      <Description>
-        Войдите в аккаунт, чтобы продолжить обсуждать любимые темы
-      </Description>
-      <Field onChange={handleLogin} placeholder='Почта или телефон' />
-      <Field onChange={handlePassword} placeholder='Пароль' />
-      <Accept onClick={signIn}>Далее</Accept>
-      <Accept onClick={getMeows}>Получить мяуты</Accept>
-    </Container>
+    <>
+      <Container>
+        <Heading>Авторизация</Heading>
+        <Description>
+          Войдите в аккаунт, чтобы продолжить обсуждать любимые темы
+        </Description>
+        <Field onChange={handleLogin} placeholder='Почта или телефон' />
+        <Field onChange={handlePassword} placeholder='Пароль' />
+        <Accept onClick={signIn}>Далее</Accept>
+        <Accept onClick={getMeows}>Получить мяуты</Accept>
+      </Container>
+    </>
   )
 }

@@ -1,4 +1,5 @@
 import { takeLatest, call, put } from 'redux-saga/effects'
+import { push } from 'connected-react-router'
 
 import { API } from 'core/api'
 import { setToken } from 'core/token'
@@ -17,6 +18,7 @@ function* loginUser(action) {
     if (token) {
       setToken(token)
       yield put(acceptLogin(token))
+      yield put(push('/'))
     }
   } catch (e) {
     yield put(abortLogin())

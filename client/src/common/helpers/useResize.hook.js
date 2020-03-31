@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react'
 
 import { theme } from 'core/styles/theme'
 
-export const useResize = () => {
-  const [isMobile, setMobile] = useState(
-    window.innerWidth < +theme.media.desktop.match(/\d+/g)
-  )
+const mobile = `(${theme.media.mobile})`
 
-  const handleSizeChange = () =>
-    setMobile(window.innerWidth < +theme.media.desktop.match(/\d+/g))
+export const useResize = () => {
+  const [isMobile, setMobile] = useState(window.matchMedia(mobile).matches)
+
+  const handleSizeChange = () => setMobile(window.matchMedia(mobile).matches)
 
   useEffect(() => {
     window.addEventListener('resize', handleSizeChange)
