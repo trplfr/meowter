@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { ThemeProvider } from 'styled-components'
 
-const theme = {
+export const theme = {
   colors: {
     white: '#FFF',
     primary: '#EB7E44',
@@ -12,6 +12,7 @@ const theme = {
     lightGray: 'rgba(48, 48, 48, 0.1)'
   },
   fontSizes: {
+    tiny: '12px',
     small: '14px',
     medium: '16px',
     large: '22px',
@@ -24,7 +25,8 @@ const theme = {
     bold: '700'
   },
   media: {
-    mobile: 'max-width: 768px'
+    mobile: 'max-width: 768px',
+    desktop: 'min-width: 769px'
   }
 }
 

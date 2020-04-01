@@ -25,4 +25,12 @@ export const GlobalStyle = createGlobalStyle`
     width: 100%;
     height: 100%;
   }
+   
+  .Toastify__toast--success {
+    background: #EB7E44;
+  }
+   
+  .Toastify__toast--error {
+    background: #E86166;
+  }
 `

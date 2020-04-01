@@ -1,17 +1,39 @@
 import React from 'react'
-import { Route, Switch } from 'react-router'
+import { Switch } from 'react-router'
+
+import { LayoutRoute } from 'common/components'
 
 import { Login, Registration } from 'screens/Auth/components'
 
-import { Screen } from 'screens/Auth/Auth.style'
-
 export const Auth = () => {
   return (
-    <Screen>
-      <Switch>
-        <Route path='/login' component={Login} />
-        <Route path='/registration' component={Registration} />
-      </Switch>
-    </Screen>
+    <Switch>
+      <LayoutRoute
+        path='/login'
+        component={Login}
+        header={{
+          isBack: true
+        }}
+        footer={{
+          link: {
+            to: '/recovery',
+            content: 'Восстановить пароль'
+          }
+        }}
+      />
+      <LayoutRoute
+        path='/registration'
+        component={Registration}
+        header={{
+          isBack: true
+        }}
+        footer={{
+          link: {
+            to: '/login',
+            content: 'Войти в аккаунт'
+          }
+        }}
+      />
+    </Switch>
   )
 }

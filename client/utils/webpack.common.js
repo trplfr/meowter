@@ -10,6 +10,10 @@ module.exports = {
         use: ['babel-loader', 'eslint-loader']
       },
       {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader']
+      },
+      {
         test: /\.(woff|woff2|ttf|png|jpg)$/,
         use: {
           loader: 'url-loader'
@@ -19,9 +23,12 @@ module.exports = {
         test: /\.svg$/,
         use: [
           {
-            loader: 'svg-url-loader',
+            loader: 'babel-loader'
+          },
+          {
+            loader: 'react-svg-loader',
             options: {
-              limit: 10000
+              jsx: true
             }
           }
         ]
