@@ -6,7 +6,7 @@ import Arrow from 'assets/icons/arrow.svg'
 
 import { Anchor } from 'core/styles/typography'
 
-import { Button } from './Back.style'
+import { Button } from 'common/components/Back/Back.style'
 
 export const Back = ({ children }) => {
   const { goBack } = useHistory()

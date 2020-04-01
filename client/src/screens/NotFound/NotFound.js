@@ -1,5 +1,11 @@
 import React from 'react'
+import { Redirect } from 'react-router'
 
 export const NotFound = () => {
-  return <>Не найдено!</>
+  return (
+    <>
+      <Redirect to='/404' />
+      Не найдено!
+    </>
+  )
 }
