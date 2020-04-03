@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-
-import { Button, Input } from 'common/components'
 import { H1, H3 } from 'core/styles/typography'
+
+import image from 'assets/images/cats/notfound.png'
 
 export const Container = styled.div`
   display: flex;
@@ -10,29 +10,11 @@ export const Container = styled.div`
   width: 100%;
 `
 
-export const Accept = styled(Button)`
-  width: 50%;
-
-  @media (${props => props.theme.media.mobile}) {
-    width: 100%;
-  }
-
-  :nth-of-type(1) {
-    margin: 0 0 10px;
-  }
-`
-
-export const Field = styled(Input)`
-  width: 50%;
-  margin: 0 0 10px;
-
-  :last-of-type {
-    margin: 0 0 15px;
-  }
-
-  @media (${props => props.theme.media.mobile}) {
-    width: 100%;
-  }
+export const Cat = styled.div`
+  width: 179px;
+  height: 287px;
+  margin: 0 0 20px 0;
+  background: url('${image}');
 `
 
 export const Heading = styled(H1)`

@@ -4,10 +4,7 @@ import PropTypes from 'prop-types'
 
 import { Footer, Header } from 'common/components'
 
-import {
-  Layout,
-  Wrapper
-} from 'common/components/LayoutRoute/LayoutRoute.style'
+import { Layout, Wrapper } from './LayoutRoute.style'
 
 export const LayoutRoute = ({
   component: Component,
