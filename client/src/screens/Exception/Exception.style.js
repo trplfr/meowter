@@ -53,5 +53,6 @@ export const Description = styled(H3)`
 `
 
 export const Details = styled.details`
+  margin: 10px 0 0 0;
   white-space: pre-wrap;
 `

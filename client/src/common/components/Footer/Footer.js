@@ -25,11 +25,8 @@ export const Footer = ({ link, button, isMenu }) => {
             {button.content}
           </Button>
         )}
-        {link.isBack ? (
-          <Back>{link.content}</Back>
-        ) : (
-          <Anchor to={link.to}>{link.content}</Anchor>
-        )}
+        {link?.isBack && <Back>{link?.content}</Back>}
+        {link && !link.isBack && <Anchor to={link.to}>{link.content}</Anchor>}
       </Container>
     )
   }

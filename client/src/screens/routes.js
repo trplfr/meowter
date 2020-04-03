@@ -7,7 +7,22 @@ import { LayoutRoute } from 'common/components'
 export const Routes = () => {
   return (
     <Switch>
-      <Route exact path='/' key='Main' component={Main} />
+      <LayoutRoute
+        exact
+        path='/'
+        key='Main'
+        component={Main}
+        footer={{
+          button: {
+            to: '/registration',
+            content: 'Зарегистрироваться'
+          },
+          link: {
+            to: '/login',
+            content: 'Войти в аккаунт'
+          }
+        }}
+      />
       <Route path='/login' key='Login' component={Auth} />
       <Route path='/registration' key='Registration' component={Auth} />
       <LayoutRoute
