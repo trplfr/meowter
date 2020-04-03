@@ -10,11 +10,12 @@ export const LayoutRoute = ({
   component: Component,
   header: { ...restHeader },
   footer: { ...restFooter },
+  helmet,
   ...rest
 }) => {
   return (
     <Layout>
-      <Header {...restHeader} />
+      <Header helmet={helmet} {...restHeader} />
       <Wrapper>
         <Route {...rest} render={props => <Component {...rest} {...props} />} />
       </Wrapper>
@@ -25,6 +26,10 @@ export const LayoutRoute = ({
 
 LayoutRoute.propTypes = {
   component: PropTypes.func,
+  helmet: PropTypes.exact({
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string
+  }),
   header: PropTypes.shape({
     title: PropTypes.string,
     isBorder: PropTypes.bool,
