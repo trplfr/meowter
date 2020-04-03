@@ -1,3 +1,5 @@
 export { Auth } from 'screens/Auth/Auth'
 export { Main } from 'screens/Main/Main'
-export { NotFound } from 'screens/NotFound/NotFound'
+export { NotFound } from 'screens/Exception/NotFound/NotFound'
+export { Error } from 'screens/Exception/Error/Error'
+export { NotLoggedIn } from 'screens/Exception/NotLoggedIn/NotLoggedIn'

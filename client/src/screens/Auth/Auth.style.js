@@ -35,6 +35,10 @@ export const Field = styled(Input)`
   }
 `
 
+export const Heading = styled(H1)`
+  margin: 0 0 10px;
+`
+
 export const Description = styled(H3)`
   width: 50%;
   margin: 0 0 20px;
@@ -46,8 +50,4 @@ export const Description = styled(H3)`
   @media (${props => props.theme.media.mobile}) {
     width: 100%;
   }
-`
-
-export const Heading = styled(H1)`
-  margin: 0 0 10px;
 `

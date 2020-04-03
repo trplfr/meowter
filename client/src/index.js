@@ -9,6 +9,8 @@ import { configureStore, history } from 'store/index'
 import { Theme as ThemeProvider } from 'core/styles/theme'
 import { GlobalStyle } from 'core/styles/global'
 
+import { ErrorBoundary } from 'common/components/ErrorBoundary/ErrorBoundary'
+
 import { App } from './App'
 
 const store = configureStore()
@@ -20,7 +22,9 @@ const renderApp = () => {
         <HelmetProvider>
           <ThemeProvider>
             <GlobalStyle />
-            <App />
+            <ErrorBoundary>
+              <App />
+            </ErrorBoundary>
           </ThemeProvider>
         </HelmetProvider>
       </ConnectedRouterProvider>

@@ -7,6 +7,15 @@
     [
       "babel-plugin-styled-components",
       { "displayName": true, "preprocess": false }
+    ],
+    "@babel/plugin-syntax-throw-expressions",
+    [
+      "@babel/plugin-proposal-decorators",
+      { "legacy":  true }
+    ],
+    [
+      "@babel/plugin-proposal-class-properties",
+      { "loose":  true }
     ]
   ]
 }
