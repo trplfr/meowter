@@ -11,7 +11,7 @@ export const UnauthorizedRoute = ({ component: Component, ...rest }) => {
           return <Component {...rest} {...props} />
         }
 
-        return <Redirect to='/not-logged-in' />
+        return <Redirect push to='/not-logged-in' />
       }}
     />
   )

@@ -1,15 +1,17 @@
 import React from 'react'
+import { useHistory } from 'react-router'
 import PropTypes from 'prop-types'
 
 import { Anchor } from 'core/styles/typography'
 
-import { Back } from 'common/components'
+import { Back, Button } from 'common/components'
 import { useResize } from 'common/helpers'
 
 import { Container } from './Footer.style'
 
-export const Footer = ({ link, isMenu }) => {
+export const Footer = ({ link, button, isMenu }) => {
   const isMobile = useResize()
+  const history = useHistory()
 
   if (isMobile) {
     if (isMenu) {
@@ -18,8 +20,16 @@ export const Footer = ({ link, isMenu }) => {
 
     return (
       <Container>
-        {!link.isBack && <Anchor to={link.to}>{link.content}</Anchor>}
-        {link.isBack && <Back>{link.content}</Back>}
+        {button && (
+          <Button onClick={() => history.push(button.to)}>
+            {button.content}
+          </Button>
+        )}
+        {link.isBack ? (
+          <Back>{link.content}</Back>
+        ) : (
+          <Anchor to={link.to}>{link.content}</Anchor>
+        )}
       </Container>
     )
   }
@@ -28,6 +38,10 @@ export const Footer = ({ link, isMenu }) => {
 }
 
 Footer.propTypes = {
+  button: PropTypes.exact({
+    to: PropTypes.string,
+    content: PropTypes.string
+  }),
   link: PropTypes.exact({
     to: PropTypes.string,
     content: PropTypes.string,

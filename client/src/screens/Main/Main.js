@@ -2,6 +2,7 @@ import React from 'react'
 
 import { Login } from 'screens/Auth/components'
 
+import { ErrorBoundary } from 'common/components/ErrorBoundary/ErrorBoundary'
 import { Screen, Left, Right, Title } from './Main.style'
 
 export const Main = () => {
@@ -11,7 +12,9 @@ export const Main = () => {
         <Title>meowter</Title>
       </Left>
       <Right>
-        <Login />
+        <ErrorBoundary>
+          <Login />
+        </ErrorBoundary>
       </Right>
     </Screen>
   )

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, setState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { requestLogin } from 'store/actions/login.actions'
@@ -16,6 +16,8 @@ import {
 export const Login = () => {
   const dispatch = useDispatch()
 
+  const [, setState] = useState()
+
   const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
 
@@ -28,9 +30,15 @@ export const Login = () => {
   )
 
   const getMeows = () => {
-    API.get('meows')
-    API.get('meows?search=1')
-    API.get('meows?search=2')
+    // API.get('meows')
+    // API.get('meows?search=1')
+    // API.get('meows?search=2')
+  }
+
+  const getError = () => {
+    setState(() => {
+      throw new Error('Привет!')
+    })
   }
 
   return (
@@ -43,7 +51,7 @@ export const Login = () => {
         <Field onChange={handleLogin} placeholder='Почта или телефон' />
         <Field onChange={handlePassword} placeholder='Пароль' />
         <Accept onClick={signIn}>Далее</Accept>
-        <Accept onClick={getMeows}>Получить мяуты</Accept>
+        <Accept onClick={getError}>Получить ошибку</Accept>
       </Container>
     </>
   )

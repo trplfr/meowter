@@ -2,11 +2,11 @@ import React from 'react'
 import { Redirect } from 'react-router'
 
 import {
-  Cat,
+  NotFoundCat as Cat,
   Container,
   Description,
   Heading
-} from 'screens/NotFound/NotFound.style'
+} from 'screens/Exception/Exception.style'
 
 export const NotFound = () => {
   return (
