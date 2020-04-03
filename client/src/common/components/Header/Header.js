@@ -1,4 +1,5 @@
 import React from 'react'
+import { Helmet } from 'react-helmet-async'
 import PropTypes from 'prop-types'
 
 import { H1 } from 'core/styles/typography'
@@ -10,6 +11,7 @@ import { Container, Wrapper } from './Header.style'
 
 export const Header = ({
   title,
+  helmet,
   isBorder,
   isBack,
   isBurger,
@@ -20,17 +22,25 @@ export const Header = ({
 
   if (isMobile) {
     return (
-      <Container isBorder={isBorder}>
-        {isBack && <Back />}
-        {isBurger && <></>}
-        {title && (
-          <Wrapper>
-            <H1>{title}</H1>
-          </Wrapper>
+      <>
+        {helmet && (
+          <Helmet>
+            <title>{helmet.title}</title>
+            <meta name='description' content={`${helmet.description}`} />
+          </Helmet>
         )}
-        {isNotifications && <></>}
-        {isMeowt && <></>}
-      </Container>
+        <Container isBorder={isBorder}>
+          {isBack && <Back />}
+          {isBurger && <></>}
+          {title && (
+            <Wrapper>
+              <H1>{title}</H1>
+            </Wrapper>
+          )}
+          {isNotifications && <></>}
+          {isMeowt && <></>}
+        </Container>
+      </>
     )
   }
 
@@ -38,6 +48,10 @@ export const Header = ({
 }
 
 Header.propTypes = {
+  helmet: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string
+  }),
   title: PropTypes.string,
   isBorder: PropTypes.bool,
   isBack: PropTypes.bool,

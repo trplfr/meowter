@@ -11,6 +11,9 @@ export const Auth = () => {
       <LayoutRoute
         path='/login'
         component={Login}
+        helmet={{
+          title: 'вход'
+        }}
         header={{
           isBack: true
         }}
@@ -24,6 +27,9 @@ export const Auth = () => {
       <LayoutRoute
         path='/registration'
         component={Registration}
+        helmet={{
+          title: 'регистрация'
+        }}
         header={{
           isBack: true
         }}

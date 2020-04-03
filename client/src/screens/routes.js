@@ -12,6 +12,10 @@ export const Routes = () => {
         path='/'
         key='Main'
         component={Main}
+        helmet={{
+          title: 'привет',
+          description: 'Добро пожаловать в мяутер!'
+        }}
         footer={{
           button: {
             to: '/registration',
@@ -29,6 +33,9 @@ export const Routes = () => {
         path='/error'
         key='Error'
         component={Error}
+        helmet={{
+          title: 'ошибка'
+        }}
         footer={{
           link: {
             content: 'Назад',
@@ -40,6 +47,9 @@ export const Routes = () => {
         path='/not-logged-in'
         key='NotLoggedIn'
         component={NotLoggedIn}
+        helmet={{
+          title: 'ай'
+        }}
         footer={{
           button: {
             to: '/registration',
@@ -55,6 +65,9 @@ export const Routes = () => {
         path='*'
         key='404'
         component={NotFound}
+        helmet={{
+          title: 'не найдено'
+        }}
         footer={{
           link: {
             content: 'Назад',
