@@ -16,7 +16,8 @@ export const theme = {
     gray: {
       default: 'rgba(48, 48, 48, 0.3)',
       light: 'rgba(48, 48, 48, 0.1)'
-    }
+    },
+    error: '#FF2929'
   },
   fontSizes: {
     tiny: '12px',
