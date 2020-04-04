@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Button, Input } from 'common/components'
 import { H1, H3 } from 'core/styles/typography'
 
-export const Container = styled.div`
+export const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;

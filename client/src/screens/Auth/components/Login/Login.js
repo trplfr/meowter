@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useForm } from 'react-hook-form'
 
 import { requestLogin } from 'store/actions/login.actions'
 
@@ -7,27 +8,24 @@ import { API } from 'core/api'
 
 import {
   Accept,
-  Container,
+  Form,
   Description,
   Field,
   Heading
 } from 'screens/Auth/Auth.style'
+
+import { loginSchema as schema } from './Login.schema'
 
 export const Login = () => {
   const dispatch = useDispatch()
 
   const [, setState] = useState()
 
-  const [login, setLogin] = useState('')
-  const [password, setPassword] = useState('')
+  const { register, errors, handleSubmit } = useForm({
+    validationSchema: schema
+  })
 
-  const handleLogin = ({ target: { value } }) => setLogin(value)
-  const handlePassword = ({ target: { value } }) => setPassword(value)
-
-  const signIn = useCallback(
-    () => dispatch(requestLogin({ login, password })),
-    [login, password]
-  )
+  const onSubmit = data => dispatch(requestLogin(data))
 
   const getMeows = () => {
     // API.get('meows')
@@ -43,18 +41,28 @@ export const Login = () => {
 
   return (
     <>
-      <Container>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <Heading>Авторизация</Heading>
         <Description>
           Войдите в аккаунт, чтобы продолжить обсуждать любимые темы
         </Description>
-        <Field onChange={handleLogin} placeholder='Почта или телефон' />
-        <Field onChange={handlePassword} placeholder='Пароль' />
-        <Accept isLoading onClick={signIn}>
-          Далее
-        </Accept>
+        <Field
+          label='login'
+          register={register}
+          errors={errors}
+          placeholder='Почта или телефон'
+          autoComplete='off'
+        />
+        <Field
+          label='password'
+          register={register}
+          errors={errors}
+          placeholder='Пароль'
+          autoComplete='off'
+        />
+        <Accept type='submit'>Далее</Accept>
         <Accept onClick={getError}>Получить ошибку</Accept>
-      </Container>
+      </Form>
     </>
   )
 }
