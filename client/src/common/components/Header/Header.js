@@ -11,7 +11,6 @@ import { Container, Wrapper } from './Header.style'
 
 export const Header = ({
   title,
-  helmet,
   isBorder,
   isBack,
   isBurger,
@@ -22,25 +21,17 @@ export const Header = ({
 
   if (isMobile) {
     return (
-      <>
-        {helmet && (
-          <Helmet>
-            <title>{helmet.title}</title>
-            <meta name='description' content={`${helmet.description}`} />
-          </Helmet>
+      <Container isBorder={isBorder}>
+        {isBack && <Back />}
+        {isBurger && <></>}
+        {title && (
+          <Wrapper>
+            <H1>{title}</H1>
+          </Wrapper>
         )}
-        <Container isBorder={isBorder}>
-          {isBack && <Back />}
-          {isBurger && <></>}
-          {title && (
-            <Wrapper>
-              <H1>{title}</H1>
-            </Wrapper>
-          )}
-          {isNotifications && <></>}
-          {isMeowt && <></>}
-        </Container>
-      </>
+        {isNotifications && <></>}
+        {isMeowt && <></>}
+      </Container>
     )
   }
 
@@ -48,10 +39,6 @@ export const Header = ({
 }
 
 Header.propTypes = {
-  helmet: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string
-  }),
   title: PropTypes.string,
   isBorder: PropTypes.bool,
   isBack: PropTypes.bool,

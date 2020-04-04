@@ -6,7 +6,7 @@ export const Container = styled.div`
   width: 100%;
   padding: 20px 15px;
   border-bottom: ${props =>
-    props.isBorder && `1px solid ${props.theme.colors.lightGray}`};
+    props.isBorder && `1px solid ${props.theme.colors.gray.light}`};
 `
 
 export const Wrapper = styled.div`

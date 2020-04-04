@@ -10,15 +10,15 @@ export const Input = styled.input`
   font-weight: ${props => props.theme.fontWeights.normal};
   font-size: ${props => props.theme.fontSizes.small};
 
-  border: 1px solid ${props => props.theme.colors.lightGray};
+  border: 1px solid ${props => props.theme.colors.gray.light};
   border-radius: 100px;
 
   :focus {
-    border: 1px solid ${props => props.theme.colors.lightPrimary};
+    border: 1px solid ${props => props.theme.colors.primary.light};
   }
 
   ::placeholder {
     font-size: ${props => props.theme.fontSizes.small};
-    color: ${props => props.theme.colors.gray};
+    color: ${props => props.theme.colors.gray.default};
   }
 `

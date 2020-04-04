@@ -1,4 +1,4 @@
-import React, { useState, useCallback, setState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { requestLogin } from 'store/actions/login.actions'
@@ -50,7 +50,9 @@ export const Login = () => {
         </Description>
         <Field onChange={handleLogin} placeholder='Почта или телефон' />
         <Field onChange={handlePassword} placeholder='Пароль' />
-        <Accept onClick={signIn}>Далее</Accept>
+        <Accept isLoading onClick={signIn}>
+          Далее
+        </Accept>
         <Accept onClick={getError}>Получить ошибку</Accept>
       </Container>
     </>

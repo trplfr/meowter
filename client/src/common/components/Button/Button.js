@@ -1,16 +1,23 @@
-import styled from 'styled-components'
+import React from 'react'
+import PropTypes from 'prop-types'
 
-export const Button = styled.button`
-  width: 100%;
-  height: 50px;
+import { Loader } from 'common/components'
 
-  background: ${props => props.theme.colors.primary};
-  color: ${props => props.theme.colors.white};
+import Uploader from 'assets/icons/upload.svg'
 
-  font-weight: 500;
-  font-size: ${props => props.theme.fontSizes.medium};
+import { Button as Entity } from './Button.style'
 
-  border-radius: 100px;
+export const Button = ({ isLoading, isUploader, children, ...rest }) => {
+  return (
+    <Entity isLoading={isLoading} disabled={isLoading} {...rest}>
+      {isUploader && <Uploader />}
+      {isLoading ? <Loader /> : children}
+    </Entity>
+  )
+}
 
-  cursor: pointer;
-`
+Button.propTypes = {
+  isLoading: PropTypes.bool,
+  isUploader: PropTypes.bool,
+  children: PropTypes.node.isRequired
+}

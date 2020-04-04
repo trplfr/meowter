@@ -5,11 +5,18 @@ import { ThemeProvider } from 'styled-components'
 export const theme = {
   colors: {
     white: '#FFF',
-    primary: '#EB7E44',
+    primary: {
+      default: '#EB7E44',
+      hover: '#F07132',
+      active: '#DD6221',
+      disabled: 'rgb(235, 126, 68, 0.7)',
+      light: 'rgb(235, 126, 68, 0.5)'
+    },
     black: '#303030',
-    gray: 'rgba(48, 48, 48, 0.3)',
-    lightPrimary: 'rgb(235, 126, 68, 0.5)',
-    lightGray: 'rgba(48, 48, 48, 0.1)'
+    gray: {
+      default: 'rgba(48, 48, 48, 0.3)',
+      light: 'rgba(48, 48, 48, 0.1)'
+    }
   },
   fontSizes: {
     tiny: '12px',
