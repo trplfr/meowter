@@ -7,6 +7,26 @@ export const Container = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
+
+  svg {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    cursor: pointer;
+
+    path {
+      fill: ${props =>
+        props.isEyeActive
+          ? props.theme.colors.primary.active
+          : props.theme.colors.gray.default};
+    }
+
+    :hover {
+      path {
+        fill: ${props => props.theme.colors.primary.active};
+      }
+    }
+  }
 `
 
 export const Input = styled.input`
@@ -25,6 +45,7 @@ export const Input = styled.input`
       props.hasError
         ? props.theme.colors.error
         : props.theme.colors.gray.light};
+
   border-radius: 100px;
 
   :focus {

@@ -48,17 +48,18 @@ export const Login = () => {
         </Description>
         <Field
           label='login'
+          placeholder='Почта или телефон'
           register={register}
           errors={errors}
-          placeholder='Почта или телефон'
           autoComplete='off'
         />
         <Field
           label='password'
+          placeholder='Пароль'
           register={register}
           errors={errors}
-          placeholder='Пароль'
           autoComplete='off'
+          isPasswordField
         />
         <Accept type='submit'>Далее</Accept>
         <Accept onClick={getError}>Получить ошибку</Accept>

@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+
+import Eye from 'assets/icons/togglepassword.svg'
 
 import { Container, Input as Entity, Error } from './Input.style'
 
@@ -15,14 +17,20 @@ export const Input = ({
   validate,
   errors,
   className,
+  isPasswordField,
   ...rest
 }) => {
+  const [isPasswordView, togglePasswordView] = useState(isPasswordField)
+
+  const toggleView = () => togglePasswordView(!isPasswordView)
+
   const hasError = errors?.hasOwnProperty(label)
 
   return (
-    <Container className={className}>
+    <Container isEyeActive={!isPasswordView} className={className}>
       {errors && <Error>{errors[label]?.message}</Error>}
       <Entity
+        type={isPasswordView ? 'password' : 'text'}
         name={label}
         hasError={hasError}
         ref={register({
@@ -36,6 +44,7 @@ export const Input = ({
         })}
         {...rest}
       />
+      {isPasswordField && <Eye onClick={toggleView} />}
     </Container>
   )
 }
@@ -72,7 +81,8 @@ Input.propTypes = {
     message: PropTypes.string
   }),
   errors: PropTypes.object,
-  className: PropTypes.any
+  className: PropTypes.any,
+  isPasswordField: PropTypes.bool
 }
 
 /* <Error>{errors?.label?.message}</Error> */
