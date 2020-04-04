@@ -1,5 +1,6 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import PropTypes from 'prop-types'
 
 import { Footer, Header } from 'common/components'
@@ -15,7 +16,13 @@ export const LayoutRoute = ({
 }) => {
   return (
     <Layout>
-      <Header helmet={helmet} {...restHeader} />
+      {helmet && (
+        <Helmet>
+          <title>{helmet.title}</title>
+          <meta name='description' content={`${helmet.description}`} />
+        </Helmet>
+      )}
+      <Header {...restHeader} />
       <Wrapper>
         <Route {...rest} render={props => <Component {...rest} {...props} />} />
       </Wrapper>

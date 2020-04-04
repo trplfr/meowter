@@ -9,7 +9,7 @@ import { configureStore, history } from 'store/index'
 import { Theme as ThemeProvider } from 'core/styles/theme'
 import { GlobalStyle } from 'core/styles/global'
 
-import { ErrorBoundary } from 'common/components/ErrorBoundary/ErrorBoundary'
+import { ErrorBoundary } from 'common/components'
 
 import { App } from './App'
 

@@ -32,5 +32,5 @@ export const Phrase = styled.span`
 export const Anchor = styled(Link)`
   font-weight: ${props => props.theme.fontWeights.normal};
   font-size: ${props => props.theme.fontSizes.tiny};
-  color: ${props => props.theme.colors.primary};
+  color: ${props => props.theme.colors.primary.default};
 `

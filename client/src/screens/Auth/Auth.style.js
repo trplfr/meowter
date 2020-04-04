@@ -42,7 +42,7 @@ export const Heading = styled(H1)`
 export const Description = styled(H3)`
   width: 50%;
   margin: 0 0 20px;
-  color: ${props => props.theme.colors.gray};
+  color: ${props => props.theme.colors.gray.default};
   text-align: center;
   font-weight: ${props => props.theme.fontWeights.normal};
   font-size: ${props => props.theme.fontSizes.small};
