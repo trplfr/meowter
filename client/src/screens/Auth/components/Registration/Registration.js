@@ -30,11 +30,11 @@ export const Registration = () => {
         Заведите аккаунт, чтобы полноценно пользоваться нашим сервисом
       </Description>
       <Field
-        label='login'
+        label='username'
         register={register}
         autoComplete='off'
         errors={errors}
-        placeholder='Логин'
+        placeholder='Никнейм'
       />
       <Field
         label='password'
@@ -46,7 +46,7 @@ export const Registration = () => {
       />
       <Field
         placeholder='Почта или телефон'
-        label='verificationService'
+        label='login'
         register={register}
         autoComplete='off'
         errors={errors}

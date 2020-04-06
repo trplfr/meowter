@@ -65,7 +65,7 @@ export const Input = styled.input`
 export const Error = styled.label`
   display: flex;
   position: absolute;
-  bottom: 40px;
+  bottom: 42px;
   left: 25px;
   align-items: center;
   justify-content: center;
