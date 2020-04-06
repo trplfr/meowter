@@ -2,7 +2,7 @@ import { Injectable, Logger, UnauthorizedException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { JwtService } from '@nestjs/jwt'
 
-import { UserRepository } from './user.repository'
+import { UserRepository } from '../users/user.repository'
 import { AuthCredentialsDTO } from './dto/auth-credentials.dto'
 import { JwtPayload } from './jwt-payload.interface'
 import { AuthJWTDTO } from './dto/auth-jwt.dto'

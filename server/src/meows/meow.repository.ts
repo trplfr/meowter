@@ -4,7 +4,7 @@ import { EntityRepository, Repository } from 'typeorm'
 import { Meow } from './meow.entity'
 import { CreateMeowDTO } from './dto/create-meow.dto'
 import { GetMeowsFilterDTO } from './dto/get-meows-filter.dto'
-import { User } from '../auth/user.entity'
+import { User } from '../users/user.entity'
 
 @EntityRepository(Meow)
 export class MeowRepository extends Repository<Meow> {

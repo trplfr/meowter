@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn
 } from 'typeorm'
 
-import { User } from '../auth/user.entity'
+import { User } from '../users/user.entity'
 
 @Entity()
 export class Meow extends BaseEntity {

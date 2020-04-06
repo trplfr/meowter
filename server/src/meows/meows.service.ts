@@ -5,7 +5,7 @@ import { MeowRepository } from './meow.repository'
 import { CreateMeowDTO } from './dto/create-meow.dto'
 import { GetMeowsFilterDTO } from './dto/get-meows-filter.dto'
 import { Meow } from './meow.entity'
-import { User } from '../auth/user.entity'
+import { User } from '../users/user.entity'
 
 @Injectable()
 export class MeowsService {

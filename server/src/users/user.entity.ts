@@ -7,6 +7,8 @@ import {
   Unique
 } from 'typeorm'
 
+import { Exclude } from 'class-transformer'
+
 import * as bcrypt from 'bcrypt'
 
 import { Meow } from '../meows/meow.entity'
@@ -20,9 +22,11 @@ export class User extends BaseEntity {
   @Column()
   login: string
 
+  @Exclude()
   @Column()
   password: string
 
+  @Exclude()
   @Column()
   salt: string
 

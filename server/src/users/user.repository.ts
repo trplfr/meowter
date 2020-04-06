@@ -3,7 +3,7 @@ import { EntityRepository, Repository } from 'typeorm'
 import * as bcrypt from 'bcrypt'
 
 import { User } from './user.entity'
-import { AuthCredentialsDTO } from './dto/auth-credentials.dto'
+import { AuthCredentialsDTO } from '../auth/dto/auth-credentials.dto'
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -47,5 +47,15 @@ export class UserRepository extends Repository<User> {
     salt: string
   ): Promise<string> {
     return bcrypt.hash(password, salt)
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    const query = this.createQueryBuilder('user')
+
+    try {
+      return await query.getMany()
+    } catch (error) {
+      throw new InternalServerErrorException()
+    }
   }
 }

@@ -24,13 +24,14 @@ If you would like to download the code and try it for yourself:
 4. Open your browser at: `http://localhost:8080`
 
 ## Tools
-Key tools used in this React project are:
+Key tools used in this project are:
 
 | Tool             | Description   |
 | :-------------:|--------------|
 | [React](https://reactjs.org/) | A JavaScript library for building user interfaces |
 | [Redux](https://redux.js.org/) | A Predictable State Container for React |
 | [Router](https://github.com/ReactTraining/react-router) | Declarative routing for React |
+| [NestJS](https://github.com/ReactTraining/react-router) | A progressive Node.js framework for building efficient, reliable and scalable server-side applications |
 
 ## Node.js
 Supports LTS version (v12).
