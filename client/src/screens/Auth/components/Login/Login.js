@@ -19,7 +19,7 @@ import { loginSchema as schema } from './Login.schema'
 export const Login = () => {
   const dispatch = useDispatch()
 
-  const [, setState] = useState()
+  const [, setError] = useState()
 
   const { register, errors, handleSubmit } = useForm({
     validationSchema: schema
@@ -34,36 +34,34 @@ export const Login = () => {
   }
 
   const getError = () => {
-    setState(() => {
+    setError(() => {
       throw new Error('Привет!')
     })
   }
 
   return (
-    <>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Heading>Авторизация</Heading>
-        <Description>
-          Войдите в аккаунт, чтобы продолжить обсуждать любимые темы
-        </Description>
-        <Field
-          label='login'
-          placeholder='Почта или телефон'
-          register={register}
-          errors={errors}
-          autoComplete='off'
-        />
-        <Field
-          label='password'
-          placeholder='Пароль'
-          register={register}
-          errors={errors}
-          autoComplete='off'
-          isPasswordField
-        />
-        <Accept type='submit'>Далее</Accept>
-        <Accept onClick={getError}>Получить ошибку</Accept>
-      </Form>
-    </>
+    <Form onSubmit={handleSubmit(onSubmit)}>
+      <Heading>Авторизация</Heading>
+      <Description>
+        Войдите в аккаунт, чтобы продолжить обсуждать любимые темы
+      </Description>
+      <Field
+        label='login'
+        placeholder='Почта или телефон'
+        register={register}
+        errors={errors}
+        autoComplete='off'
+      />
+      <Field
+        label='password'
+        placeholder='Пароль'
+        register={register}
+        errors={errors}
+        autoComplete='off'
+        isPasswordField
+      />
+      <Accept type='submit'>Далее</Accept>
+      <Accept onClick={getError}>Получить ошибку</Accept>
+    </Form>
   )
 }

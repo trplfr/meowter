@@ -11,4 +11,8 @@ export const Container = styled.div`
   button :not(:only-child) {
     margin: 0 0 20px 0;
   }
+
+  a {
+    margin-top: 20px;
+  }
 `

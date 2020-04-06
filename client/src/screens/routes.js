@@ -1,8 +1,9 @@
 import React from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Link } from 'react-router-dom'
 
 import { Main, Auth, NotFound, Error, NotLoggedIn } from 'screens'
-import { LayoutRoute } from 'common/components'
+import { LayoutRoute, Button, Back } from 'common/components'
+import { Anchor } from 'core/styles/typography'
 
 export const Routes = () => {
   return (
@@ -17,14 +18,14 @@ export const Routes = () => {
           description: 'Добро пожаловать в мяутер!'
         }}
         footer={{
-          button: {
-            to: '/registration',
-            content: 'Зарегистрироваться'
-          },
-          link: {
-            to: '/login',
-            content: 'Войти в аккаунт'
-          }
+          body: (
+            <>
+              <Button as={Link} to='/registration'>
+                Зарегистрироваться
+              </Button>
+              <Anchor to='/login'>Войти в аккаунт</Anchor>
+            </>
+          )
         }}
       />
       <Route path='/login' key='Login' component={Auth} />
@@ -37,10 +38,7 @@ export const Routes = () => {
           title: 'ошибка'
         }}
         footer={{
-          link: {
-            content: 'Назад',
-            isBack: true
-          }
+          body: <Back>Назад</Back>
         }}
       />
       <LayoutRoute
@@ -51,14 +49,14 @@ export const Routes = () => {
           title: 'ай'
         }}
         footer={{
-          button: {
-            to: '/registration',
-            content: 'Зарегистрироваться'
-          },
-          link: {
-            to: '/login',
-            content: 'Войти в аккаунт'
-          }
+          body: (
+            <>
+              <Button as={Link} to='/registration'>
+                Зарегистрироваться
+              </Button>
+              <Anchor to='/login'>Войти в аккаунт</Anchor>
+            </>
+          )
         }}
       />
       <LayoutRoute
@@ -69,10 +67,7 @@ export const Routes = () => {
           title: 'не найдено'
         }}
         footer={{
-          link: {
-            content: 'Назад',
-            isBack: true
-          }
+          body: <Back>Назад</Back>
         }}
       />
     </Switch>

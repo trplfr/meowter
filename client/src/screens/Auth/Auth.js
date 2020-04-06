@@ -4,6 +4,7 @@ import { Switch } from 'react-router'
 import { LayoutRoute } from 'common/components'
 
 import { Login, Registration } from 'screens/Auth/components'
+import { Anchor } from 'core/styles/typography'
 
 export const Auth = () => {
   return (
@@ -18,10 +19,7 @@ export const Auth = () => {
           isBack: true
         }}
         footer={{
-          link: {
-            to: '/recovery',
-            content: 'Восстановить пароль'
-          }
+          body: <Anchor to='/recovery'>Восстановить пароль</Anchor>
         }}
       />
       <LayoutRoute
@@ -34,10 +32,7 @@ export const Auth = () => {
           isBack: true
         }}
         footer={{
-          link: {
-            to: '/login',
-            content: 'Войти в аккаунт'
-          }
+          body: <Anchor to='/login'>Войти в аккаунт</Anchor>
         }}
       />
     </Switch>
