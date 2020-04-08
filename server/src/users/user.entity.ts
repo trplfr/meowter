@@ -3,8 +3,7 @@ import {
   Column,
   Entity,
   OneToMany,
-  PrimaryGeneratedColumn,
-  Unique
+  PrimaryGeneratedColumn
 } from 'typeorm'
 
 import { Exclude } from 'class-transformer'
@@ -14,13 +13,25 @@ import * as bcrypt from 'bcrypt'
 import { Meow } from '../meows/meow.entity'
 
 @Entity()
-@Unique(['login'])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column()
+  @Column({ unique: true })
+  username: string
+
+  @Exclude()
+  @Column({ unique: true })
   login: string
+
+  @Column({ nullable: true })
+  about: string
+
+  @Column({ name: 'first_name', nullable: true })
+  firstName: string
+
+  @Column({ name: 'last_name', nullable: true })
+  lastName: string
 
   @Exclude()
   @Column()

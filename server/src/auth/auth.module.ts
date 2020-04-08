@@ -7,13 +7,18 @@ import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
 import { UserRepository } from '../users/user.repository'
 import { JwtStrategy } from './jwt.strategy'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: process.env.JWT_EXPIREIN }
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get('JWT_SECRET'),
+        signOptions: { expiresIn: +`${configService.get('JWT_EXPIREIN')}` }
+      }),
+      inject: [ConfigService]
     }),
     TypeOrmModule.forFeature([UserRepository])
   ],

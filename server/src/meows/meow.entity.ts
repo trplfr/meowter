@@ -22,9 +22,9 @@ export class Meow extends BaseEntity {
     user => user.meows,
     { eager: false }
   )
-  @JoinColumn({ name: 'creator_id' })
+  @JoinColumn({ name: 'author_id' })
   user: User
 
-  @Column({ name: 'creator_id' })
-  creatorId: number
+  @Column({ name: 'author_id' })
+  authorId: number
 }

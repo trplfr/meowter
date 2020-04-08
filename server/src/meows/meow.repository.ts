@@ -15,7 +15,7 @@ export class MeowRepository extends Repository<Meow> {
 
     const query = this.createQueryBuilder('meow')
 
-    query.where('meow.creator_id = :creatorId', { creatorId: user.id })
+    query.where('meow.author_id = :authorId', { authorId: user.id })
 
     if (search) {
       query.andWhere('meow.content LIKE :search', { search: `%${search}%` })
@@ -26,7 +26,7 @@ export class MeowRepository extends Repository<Meow> {
     } catch (error) {
       this.logger.error(
         `Failed to get meows for user '${
-          user.login
+          user.username
         }'. Filters: ${JSON.stringify(filterDTO)}`,
         error.stack
       )
@@ -46,7 +46,7 @@ export class MeowRepository extends Repository<Meow> {
       await meow.save()
     } catch (error) {
       this.logger.error(
-        `Failed to create meow for user '${user.login}'`,
+        `Failed to create meow for user '${user.username}'`,
         error.stack
       )
       throw new InternalServerErrorException()

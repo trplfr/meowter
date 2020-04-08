@@ -20,7 +20,7 @@ export class MeowsService {
 
   async getMeowById(id: number, user: User): Promise<Meow> {
     const foundMeow = await this.meowRepository.findOne({
-      where: { id, creatorId: user.id }
+      where: { id, authorId: user.id }
     })
 
     if (!foundMeow) {
@@ -35,7 +35,7 @@ export class MeowsService {
   }
 
   async deleteMeow(id: number, user: User): Promise<void> {
-    const result = await this.meowRepository.delete({ id, creatorId: user.id })
+    const result = await this.meowRepository.delete({ id, authorId: user.id })
 
     if (result.affected === 0) {
       throw new NotFoundException(`Meow with ID ${id} not found!`)

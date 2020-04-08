@@ -1,7 +1,6 @@
-import { IsString, IsJWT } from 'class-validator'
+import { IsJWT } from 'class-validator'
 
 export class AuthJWTDTO {
-  @IsString()
   @IsJWT()
   refreshToken: string
 }

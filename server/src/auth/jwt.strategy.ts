@@ -5,21 +5,24 @@ import { Strategy, ExtractJwt } from 'passport-jwt'
 
 import { JwtPayload } from './jwt-payload.interface'
 import { UserRepository } from '../users/user.repository'
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @InjectRepository(UserRepository)
-    private userRepository: UserRepository
+    private userRepository: UserRepository,
+    configService: ConfigService
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_SECRET
+      secretOrKey: configService.get('JWT_SECRET')
     })
   }
 
   async validate(payload: JwtPayload) {
     const { login } = payload
+
     const user = await this.userRepository.findOne({ login })
 
     if (!user) {

@@ -37,7 +37,7 @@ export class MeowsController {
     @GetUser() user: User
   ): Promise<Meow[]> {
     this.logger.verbose(
-      `User '${user.login}' retrieving all meows. Filters: ${JSON.stringify(
+      `User '${user.username}' retrieving all meows. Filters: ${JSON.stringify(
         filterDTO
       )}'`
     )
@@ -50,7 +50,9 @@ export class MeowsController {
     @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User
   ): Promise<Meow> {
-    this.logger.verbose(`User '${user.login}' retrieving meow with id: ${id}`)
+    this.logger.verbose(
+      `User '${user.username}' retrieving meow with id: ${id}`
+    )
 
     return this.meowsService.getMeowById(id, user)
   }
@@ -61,7 +63,7 @@ export class MeowsController {
     @Body() createMeowDTO: CreateMeowDTO,
     @GetUser() user: User
   ): Promise<Meow> {
-    this.logger.verbose(`User '${user.login}' creating a new meow`)
+    this.logger.verbose(`User '${user.username}' creating a new meow`)
 
     return this.meowsService.createMeow(createMeowDTO, user)
   }
@@ -71,7 +73,7 @@ export class MeowsController {
     @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User
   ): Promise<void> {
-    this.logger.verbose(`User '${user.login}' deleted meow with id: ${id}`)
+    this.logger.verbose(`User '${user.username}' deleted meow with id: ${id}`)
 
     return this.meowsService.deleteMeow(id, user)
   }

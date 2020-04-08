@@ -3,15 +3,19 @@ import { EntityRepository, Repository } from 'typeorm'
 import * as bcrypt from 'bcrypt'
 
 import { User } from './user.entity'
-import { AuthCredentialsDTO } from '../auth/dto/auth-credentials.dto'
+import {
+  LoginCredentialsDTO,
+  RegisterCredentialsDTO
+} from '../auth/dto/auth-credentials.dto'
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  async signUp(authCredentialsDTO: AuthCredentialsDTO): Promise<void> {
-    const { login, password } = authCredentialsDTO
+  async signUp(authCredentialsDTO: RegisterCredentialsDTO): Promise<void> {
+    const { username, login, password } = authCredentialsDTO
 
     const user = new User()
 
+    user.username = username
     user.login = login
     user.salt = await bcrypt.genSalt()
     user.password = await UserRepository.hashPassword(password, user.salt)
@@ -19,8 +23,11 @@ export class UserRepository extends Repository<User> {
     try {
       await user.save()
     } catch (error) {
-      if (error.code === '23505') {
-        // duplicate
+      if (error.detail?.includes('username')) {
+        throw new ConflictException('Username already exists')
+      }
+
+      if (error.detail?.includes('login')) {
         throw new ConflictException('Login already exists')
       }
 
@@ -29,7 +36,7 @@ export class UserRepository extends Repository<User> {
   }
 
   async validateUserPassword(
-    authCredentialsDTO: AuthCredentialsDTO
+    authCredentialsDTO: LoginCredentialsDTO
   ): Promise<string> {
     const { login, password } = authCredentialsDTO
 
