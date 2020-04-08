@@ -20,8 +20,8 @@ export class User extends BaseEntity {
   @Column({ unique: true })
   username: string
 
-  @Exclude()
-  @Column({ unique: true })
+  @Exclude({ toPlainOnly: true })
+  @Column({ unique: true, select: false })
   login: string
 
   @Column({ nullable: true })
@@ -33,12 +33,12 @@ export class User extends BaseEntity {
   @Column({ name: 'last_name', nullable: true })
   lastName: string
 
-  @Exclude()
-  @Column()
+  @Exclude({ toPlainOnly: true })
+  @Column({ select: false })
   password: string
 
-  @Exclude()
-  @Column()
+  @Exclude({ toPlainOnly: true })
+  @Column({ select: false })
   salt: string
 
   @OneToMany(

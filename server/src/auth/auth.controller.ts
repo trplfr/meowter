@@ -8,6 +8,8 @@ import {
 } from './dto/auth-credentials.dto'
 import { AuthJWTDTO } from './dto/auth-jwt.dto'
 
+import { ISignIn } from './interfaces/auth-service.interface'
+
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -22,7 +24,7 @@ export class AuthController {
   @Post('/login')
   signIn(
     @Body(ValidationPipe) authCredentialsDTO: LoginCredentialsDTO
-  ): Promise<{ accessToken: string }> {
+  ): Promise<ISignIn> {
     return this.authService.signIn(authCredentialsDTO)
   }
 

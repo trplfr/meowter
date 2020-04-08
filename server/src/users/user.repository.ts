@@ -40,7 +40,10 @@ export class UserRepository extends Repository<User> {
   ): Promise<string> {
     const { login, password } = authCredentialsDTO
 
-    const user = await this.findOne({ login })
+    const user = await this.createQueryBuilder('user')
+      .where('user.login = :login', { login })
+      .select(['user.password', 'user.salt', 'user.login'])
+      .getOne()
 
     if (user && (await user.validatePassword(password))) {
       return user.login
@@ -61,6 +64,18 @@ export class UserRepository extends Repository<User> {
 
     try {
       return await query.getMany()
+    } catch (error) {
+      throw new InternalServerErrorException()
+    }
+  }
+
+  async getCurrentUser(login: string): Promise<User> {
+    const user = await this.createQueryBuilder(
+      'user'
+    ).where('user.login = :login', { login })
+
+    try {
+      return await user.getOne()
     } catch (error) {
       throw new InternalServerErrorException()
     }
