@@ -4,7 +4,7 @@ import { Provider as StoreProvider } from 'react-redux'
 import { ConnectedRouter as ConnectedRouterProvider } from 'connected-react-router'
 import { HelmetProvider } from 'react-helmet-async'
 
-import { configureStore, history } from 'store/index'
+import { configureStore, history } from 'store'
 
 import { Theme as ThemeProvider } from 'core/styles/theme'
 import { GlobalStyle } from 'core/styles/global'
