@@ -46,11 +46,7 @@ LayoutRoute.propTypes = {
     isMeowt: PropTypes.bool
   }),
   footer: PropTypes.shape({
-    link: PropTypes.exact({
-      to: PropTypes.string,
-      content: PropTypes.string,
-      isBack: PropTypes.bool
-    }),
+    body: PropTypes.element,
     isMenu: PropTypes.bool
   })
 }

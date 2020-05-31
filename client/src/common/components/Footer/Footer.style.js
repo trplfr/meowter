@@ -8,7 +8,8 @@ export const Container = styled.div`
   width: 100%;
   padding: 20px 30px;
 
-  button :not(:only-child) {
+  button :not(:only-child),
+  a :not(:only-child) {
     margin: 0 0 20px 0;
   }
 `

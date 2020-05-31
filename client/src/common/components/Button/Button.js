@@ -9,7 +9,7 @@ import { Button as Entity } from './Button.style'
 
 export const Button = ({ isLoading, isUploader, children, ...rest }) => {
   return (
-    <Entity isLoading={isLoading} disabled={isLoading} {...rest}>
+    <Entity disabled={isLoading} {...rest}>
       {isUploader && <Uploader />}
       {isLoading ? <Loader /> : children}
     </Entity>

@@ -1,40 +1,57 @@
-import React, { useState, useCallback } from 'react'
+import React from 'react'
 import { useDispatch } from 'react-redux'
+import { useForm } from 'react-hook-form'
 
 import { requestRegister } from 'store/actions/register.actions'
 
 import {
   Accept,
-  Container,
+  Form,
   Description,
   Field,
   Heading
 } from 'screens/Auth/Auth.style'
 
+import { registrationSchema as schema } from './Registration.schema'
+
 export const Registration = () => {
   const dispatch = useDispatch()
 
-  const [login, setLogin] = useState('')
-  const [password, setPassword] = useState('')
+  const { register, errors, handleSubmit } = useForm({
+    validationSchema: schema
+  })
 
-  const handleLogin = ({ target: { value } }) => setLogin(value)
-  const handlePassword = ({ target: { value } }) => setPassword(value)
-
-  const signUp = useCallback(
-    () => dispatch(requestRegister({ login, password })),
-    [login, password]
-  )
+  const onSubmit = data => dispatch(requestRegister(data))
 
   return (
-    <Container>
+    <Form onSubmit={handleSubmit(onSubmit)}>
       <Heading>Давайте начинать</Heading>
       <Description>
         Заведите аккаунт, чтобы полноценно пользоваться нашим сервисом
       </Description>
-      <Field onChange={handleLogin} placeholder='Логин' />
-      <Field onChange={handlePassword} placeholder='Пароль' />
-      <Field placeholder='Почта или телефон' />
-      <Accept onClick={signUp}>Далее</Accept>
-    </Container>
+      <Field
+        label='username'
+        register={register}
+        autoComplete='off'
+        errors={errors}
+        placeholder='Никнейм'
+      />
+      <Field
+        label='password'
+        register={register}
+        autoComplete='off'
+        errors={errors}
+        placeholder='Пароль'
+        isPasswordField
+      />
+      <Field
+        placeholder='Почта или телефон'
+        label='login'
+        register={register}
+        autoComplete='off'
+        errors={errors}
+      />
+      <Accept type='submit'>Далее</Accept>
+    </Form>
   )
 }

@@ -9,7 +9,7 @@ export const Button = styled.button`
   height: 50px;
 
   background: ${props =>
-    props.isLoading
+    props.disabled
       ? props.theme.colors.primary.disabled
       : props.theme.colors.primary.default};
   color: ${props => props.theme.colors.white};
@@ -19,11 +19,11 @@ export const Button = styled.button`
 
   border-radius: 100px;
 
-  cursor: ${props => (props.isLoading ? 'default' : 'pointer')};
+  cursor: ${props => (props.disabled ? 'default' : 'pointer')};
 
   :hover {
     background: ${props =>
-      props.isLoading
+      props.disabled
         ? props.theme.colors.primary.disabled
         : props.theme.colors.primary.hover};
   }
