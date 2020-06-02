@@ -1,5 +1,4 @@
 import React from 'react'
-import { Helmet } from 'react-helmet-async'
 import PropTypes from 'prop-types'
 
 import { H1 } from 'core/styles/typography'
