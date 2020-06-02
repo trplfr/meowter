@@ -3,27 +3,42 @@ import {
   Column,
   Entity,
   OneToMany,
-  PrimaryGeneratedColumn,
-  Unique
+  PrimaryGeneratedColumn
 } from 'typeorm'
+
+import { Exclude } from 'class-transformer'
 
 import * as bcrypt from 'bcrypt'
 
 import { Meow } from '../meows/meow.entity'
 
 @Entity()
-@Unique(['login'])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column()
+  @Column({ unique: true })
+  username: string
+
+  @Exclude({ toPlainOnly: true })
+  @Column({ unique: true, select: false })
   login: string
 
-  @Column()
+  @Column({ nullable: true })
+  about: string
+
+  @Column({ name: 'first_name', nullable: true })
+  firstName: string
+
+  @Column({ name: 'last_name', nullable: true })
+  lastName: string
+
+  @Exclude({ toPlainOnly: true })
+  @Column({ select: false })
   password: string
 
-  @Column()
+  @Exclude({ toPlainOnly: true })
+  @Column({ select: false })
   salt: string
 
   @OneToMany(
