@@ -6,8 +6,8 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import { routerMiddleware } from 'connected-react-router'
 import createSagaMiddleware from 'redux-saga'
 
-import { rootReducer } from 'store/reducers/root.reducer'
-import { rootSaga } from 'store/sagas/root.saga'
+import { rootReducer } from 'store/root.reducer'
+import { rootSaga } from 'store/root.saga'
 
 export const history = createBrowserHistory()
 
@@ -31,7 +31,7 @@ export const configureStore = initialState => {
   sagaMiddleware.run(rootSaga)
 
   if (module.hot) {
-    module.hot.accept('store/reducers/root.reducer', () =>
+    module.hot.accept('store/root.reducer', () =>
       store.replaceReducer(rootReducer(history))
     )
   }

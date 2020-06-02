@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Loader } from 'common/components'
+import { Loader } from 'components'
 
 import Uploader from 'assets/icons/upload.svg'
 

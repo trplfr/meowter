@@ -4,7 +4,7 @@ import {
   requestRegister,
   acceptRegister,
   abortRegister
-} from 'store/actions/register.actions'
+} from 'store/auth/register.actions'
 
 const initialState = {
   token: null

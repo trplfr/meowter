@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { useResize } from 'common/helpers'
+import { useResize } from 'helpers'
 
 import { Container } from './Footer.style'
 

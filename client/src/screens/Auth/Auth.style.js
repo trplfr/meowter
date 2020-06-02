@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { Button, Input } from 'common/components'
+import { Button, Input } from 'components'
 import { H1, H3 } from 'core/styles/typography'
 
 export const Form = styled.form`

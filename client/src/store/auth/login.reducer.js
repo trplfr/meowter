@@ -1,10 +1,6 @@
 import { handleActions } from 'redux-actions'
 
-import {
-  requestLogin,
-  acceptLogin,
-  abortLogin
-} from 'store/actions/login.actions'
+import { requestLogin, acceptLogin, abortLogin } from 'store/auth/login.actions'
 
 const initialState = {
   token: null

@@ -7,7 +7,7 @@ import {
   acceptRegister,
   abortRegister,
   requestRegister
-} from 'store/actions/register.actions'
+} from 'store/auth/register.actions'
 
 function* registerUser(action) {
   try {

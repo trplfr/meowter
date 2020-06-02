@@ -2,7 +2,7 @@ import React from 'react'
 import { Switch, Route, Link } from 'react-router-dom'
 
 import { Main, Auth, NotFound, Error, NotLoggedIn } from 'screens'
-import { LayoutRoute, Button, Back } from 'common/components'
+import { LayoutRoute, Button, Back } from 'components'
 import { Anchor } from 'core/styles/typography'
 
 export const Routes = () => {

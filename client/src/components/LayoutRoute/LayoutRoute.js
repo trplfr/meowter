@@ -3,7 +3,7 @@ import { Route } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import PropTypes from 'prop-types'
 
-import { Footer, Header } from 'common/components'
+import { Footer, Header } from 'components'
 
 import { Layout, Wrapper } from './LayoutRoute.style'
 

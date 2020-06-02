@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 
 import { H1 } from 'core/styles/typography'
 
-import { Back } from 'common/components'
-import { useResize } from 'common/helpers'
+import { Back } from 'components'
+import { useResize } from 'helpers'
 
 import { Container, Wrapper } from './Header.style'
 

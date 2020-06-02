@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 
-import { requestLogin } from 'store/actions/login.actions'
+import { requestLogin } from 'store/auth/login.actions'
 
 import { API } from 'core/api'
 

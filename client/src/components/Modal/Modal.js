@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
-import { Container } from 'common/components/Modal/Modal.style'
+import { Container } from 'components/Modal/Modal.style'
 
 export const Modal = ({ node, title, content, accept, decline }) => {
   const target = document.querySelector(node || '#root')

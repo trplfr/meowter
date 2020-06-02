@@ -84,5 +84,3 @@ Input.propTypes = {
   className: PropTypes.any,
   isPasswordField: PropTypes.bool
 }
-
-/* <Error>{errors?.label?.message}</Error> */

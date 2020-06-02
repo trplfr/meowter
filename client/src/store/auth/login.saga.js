@@ -4,11 +4,7 @@ import { push } from 'connected-react-router'
 import { API } from 'core/api'
 import { setToken } from 'core/token'
 
-import {
-  requestLogin,
-  abortLogin,
-  acceptLogin
-} from 'store/actions/login.actions'
+import { requestLogin, abortLogin, acceptLogin } from 'store/auth/login.actions'
 
 function* loginUser(action) {
   try {

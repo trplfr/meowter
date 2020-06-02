@@ -1,7 +1,7 @@
 import React from 'react'
 import { Switch } from 'react-router'
 
-import { LayoutRoute } from 'common/components'
+import { LayoutRoute } from 'components'
 
 import { Login, Registration } from 'screens/Auth/components'
 import { Anchor } from 'core/styles/typography'

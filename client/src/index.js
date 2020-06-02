@@ -9,9 +9,9 @@ import { configureStore, history } from 'store'
 import { Theme as ThemeProvider } from 'core/styles/theme'
 import { GlobalStyle } from 'core/styles/global'
 
-import { ErrorBoundary } from 'common/components'
+import { ErrorBoundary } from 'components'
 
-import { App } from './App'
+import { App } from 'core/App'
 
 const store = configureStore()
 
@@ -34,7 +34,7 @@ const renderApp = () => {
 }
 
 if (module.hot) {
-  module.hot.accept('./App', renderApp)
+  module.hot.accept('core/App', renderApp)
 }
 
 renderApp()

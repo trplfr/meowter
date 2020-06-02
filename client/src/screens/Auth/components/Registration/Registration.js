@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 
-import { requestRegister } from 'store/actions/register.actions'
+import { requestRegister } from 'store/auth/register.actions'
 
 import {
   Accept,
