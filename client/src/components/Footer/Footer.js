@@ -6,7 +6,7 @@ import { useResize } from 'helpers'
 import { Container } from './Footer.style'
 
 export const Footer = ({ isMenu, body }) => {
-  const isMobile = useResize()
+  const { isMobile } = useResize()
 
   if (isMobile) {
     if (isMenu) {

@@ -15,5 +15,5 @@ export const useResize = () => {
     return () => window.removeEventListener('resize', handleSizeChange)
   })
 
-  return isMobile
+  return { isMobile }
 }

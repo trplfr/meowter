@@ -2,8 +2,8 @@ import React from 'react'
 import { Switch } from 'react-router'
 
 import { LayoutRoute } from 'components'
+import { Login, Registration, Step } from 'screens/Auth/components'
 
-import { Login, Registration } from 'screens/Auth/components'
 import { Anchor } from 'core/styles/typography'
 
 export const Auth = () => {
@@ -13,10 +13,8 @@ export const Auth = () => {
         path='/login'
         component={Login}
         helmet={{
-          title: 'вход'
-        }}
-        header={{
-          isBack: true
+          title: 'вход',
+          description: 'Страница авторизации'
         }}
         footer={{
           body: <Anchor to='/recovery'>Восстановить пароль</Anchor>
@@ -26,13 +24,22 @@ export const Auth = () => {
         path='/registration'
         component={Registration}
         helmet={{
-          title: 'регистрация'
-        }}
-        header={{
-          isBack: true
+          title: 'регистрация',
+          description: 'Страница регистрации'
         }}
         footer={{
           body: <Anchor to='/login'>Войти в аккаунт</Anchor>
+        }}
+      />
+      <LayoutRoute
+        path='/avatar'
+        component={Step}
+        helmet={{
+          title: 'аватар',
+          description: 'Страница выбора аватара'
+        }}
+        footer={{
+          body: <Anchor to='/feed'>Пропустить</Anchor>
         }}
       />
     </Switch>

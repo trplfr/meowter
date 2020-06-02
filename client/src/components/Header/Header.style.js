@@ -2,7 +2,9 @@ import styled from 'styled-components'
 
 export const Container = styled.div`
   display: flex;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   padding: 20px 15px;
   border-bottom: ${props =>

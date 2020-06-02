@@ -3,13 +3,12 @@ import { Route } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import PropTypes from 'prop-types'
 
-import { Footer, Header } from 'components'
+import { Footer } from 'components'
 
 import { Layout, Wrapper } from './LayoutRoute.style'
 
 export const LayoutRoute = ({
   component: Component,
-  header: { ...restHeader },
   footer: { ...restFooter },
   helmet,
   ...rest
@@ -22,7 +21,6 @@ export const LayoutRoute = ({
           <meta name='description' content={`${helmet.description}`} />
         </Helmet>
       )}
-      <Header {...restHeader} />
       <Wrapper>
         <Route {...rest} render={props => <Component {...rest} {...props} />} />
       </Wrapper>
@@ -36,14 +34,6 @@ LayoutRoute.propTypes = {
   helmet: PropTypes.exact({
     title: PropTypes.string.isRequired,
     description: PropTypes.string
-  }),
-  header: PropTypes.shape({
-    title: PropTypes.string,
-    isBorder: PropTypes.bool,
-    isBack: PropTypes.bool,
-    isBurger: PropTypes.bool,
-    isNotifications: PropTypes.bool,
-    isMeowt: PropTypes.bool
   }),
   footer: PropTypes.shape({
     body: PropTypes.element,

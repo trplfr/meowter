@@ -30,12 +30,14 @@ export const Routes = () => {
       />
       <Route path='/login' key='Login' component={Auth} />
       <Route path='/registration' key='Registration' component={Auth} />
+      <Route path='/avatar' key='Registration step' component={Auth} />
       <LayoutRoute
         path='/error'
         key='Error'
         component={Error}
         helmet={{
-          title: 'ошибка'
+          title: 'ошибка',
+          description: 'Страница ошибки'
         }}
         footer={{
           body: <Back>Назад</Back>
@@ -46,7 +48,8 @@ export const Routes = () => {
         key='NotLoggedIn'
         component={NotLoggedIn}
         helmet={{
-          title: 'ай'
+          title: 'ай',
+          description: 'Страница отказа в доступе'
         }}
         footer={{
           body: (
@@ -64,7 +67,8 @@ export const Routes = () => {
         key='404'
         component={NotFound}
         helmet={{
-          title: 'не найдено'
+          title: 'не найдено',
+          description: 'Страница не найдена'
         }}
         footer={{
           body: <Back>Назад</Back>

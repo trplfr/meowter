@@ -9,7 +9,7 @@ export const Container = styled.div`
   padding: 20px 30px;
 
   button :not(:only-child),
-  a :not(:only-child) {
+  a :not(:only-child) :first-child {
     margin: 0 0 20px 0;
   }
 `

@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
+
+import { Back, Header } from 'components'
 
 import { requestLogin } from 'store/auth/login.actions'
 
@@ -11,15 +13,14 @@ import {
   Form,
   Description,
   Field,
-  Heading
+  Heading,
+  Screen
 } from 'screens/Auth/Auth.style'
 
 import { loginSchema as schema } from './Login.schema'
 
 export const Login = () => {
   const dispatch = useDispatch()
-
-  const [, setError] = useState()
 
   const { register, errors, handleSubmit } = useForm({
     validationSchema: schema
@@ -28,40 +29,37 @@ export const Login = () => {
   const onSubmit = data => dispatch(requestLogin(data))
 
   const getMeows = () => {
-    // API.get('meows')
-    // API.get('meows?search=1')
-    // API.get('meows?search=2')
-  }
-
-  const getError = () => {
-    setError(() => {
-      throw new Error('Привет!')
-    })
+    API.get('meows')
+    API.get('meows?search=1')
+    API.get('meows?search=2')
   }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
-      <Heading>Авторизация</Heading>
-      <Description>
-        Войдите в аккаунт, чтобы продолжить обсуждать любимые темы
-      </Description>
-      <Field
-        label='login'
-        placeholder='Почта или телефон'
-        register={register}
-        errors={errors}
-        autoComplete='off'
-      />
-      <Field
-        label='password'
-        placeholder='Пароль'
-        register={register}
-        errors={errors}
-        autoComplete='off'
-        isPasswordField
-      />
-      <Accept type='submit'>Далее</Accept>
-      <Accept onClick={getError}>Получить ошибку</Accept>
-    </Form>
+    <Screen>
+      <Header left={<Back />} />
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <Heading>Авторизация</Heading>
+        <Description>
+          Войдите в аккаунт, чтобы продолжить обсуждать любимые темы
+        </Description>
+        <Field
+          label='login'
+          placeholder='Почта или телефон'
+          register={register}
+          errors={errors}
+          autoComplete='off'
+        />
+        <Field
+          label='password'
+          placeholder='Пароль'
+          register={register}
+          errors={errors}
+          autoComplete='off'
+          isPasswordField
+        />
+        <Accept type='submit'>Далее</Accept>
+        <Accept onClick={getMeows}>Получить мяуты</Accept>
+      </Form>
+    </Screen>
   )
 }
