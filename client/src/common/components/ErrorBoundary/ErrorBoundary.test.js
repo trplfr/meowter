@@ -12,32 +12,64 @@ enzyme.configure({ adapter: new Adapter() });
 
 const store = configureStore();
 
-it("redirects to /error pathname on error", () => {
+describe("on error", () => {
+    it("redirects to /error pathname on error", () => {
 
-    const errorPathname = '/error';
+        const errorPathname = '/error';
 
-    const ErrorComponent = () => {
-        return <div>any content</div>
-    }
+        const ErrorComponent = () => {
+            return <div>any content</div>
+        }
 
-    let wrapper = mount(
-        <StoreProvider store={store}>
-            <ConnectedRouterProvider history={history}>
-                <ErrorBoundary>
-                    <div><ErrorComponent/></div>
-                </ErrorBoundary>
-            </ConnectedRouterProvider>
-        </StoreProvider>
-    );
+        let wrapper = mount(
+            <StoreProvider store={store}>
+                <ConnectedRouterProvider history={history}>
+                    <ErrorBoundary>
+                        <div><ErrorComponent/></div>
+                    </ErrorBoundary>
+                </ConnectedRouterProvider>
+            </StoreProvider>
+        );
 
-    const error = new Error('test');
+        const error = new Error('test');
 
-    act(()=> {
-        wrapper.find(ErrorComponent).simulateError(error);
+        act(()=> {
+            wrapper.find(ErrorComponent).simulateError(error);
+        });
+
+        expect(wrapper.find('Router').prop('history').location.state.error).toBe(error);
+
+        wrapper.unmount();
     });
 
-    expect(wrapper.find('Router').prop('history').location.pathname).toBe(errorPathname);
+    it("saves error and exception in location.state", () => {
 
-    wrapper.unmount();
+        const ErrorComponent = () => {
+            return <div>any content</div>
+        }
+
+        let wrapper = mount(
+            <StoreProvider store={store}>
+                <ConnectedRouterProvider history={history}>
+                    <ErrorBoundary>
+                        <div><ErrorComponent/></div>
+                    </ErrorBoundary>
+                </ConnectedRouterProvider>
+            </StoreProvider>
+        );
+
+        const error = new Error('test');
+
+        act(()=> {
+            wrapper.find(ErrorComponent).simulateError(error);
+        });
+
+        expect(wrapper.find('Router').prop('history').location.state.error).toBe(error);
+        expect(wrapper.find('Router').prop('history').location.state).toHaveProperty('exception');
+
+        wrapper.unmount();
+    });
 });
+
+
 

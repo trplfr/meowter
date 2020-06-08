@@ -17,33 +17,36 @@ enzyme.configure({ adapter: new Adapter() });
 
 const store = configureStore();
 
-describe("passes props", () => {
 
-    const helmetTitle = 'helmet title';
-    const helmetDescription = 'helmet description';
+const helmetTitle = 'helmet title';
+const helmetDescription = 'helmet description';
 
-    const helmetProp = {
-        title: helmetTitle,
-        description: helmetDescription
-    };
-    const path = '/';
+const helmetProp = {
+    title: helmetTitle,
+    description: helmetDescription
+};
+const path = '/';
 
-    const restRouteProps = {
-      path,
-      testPropForRoute: 'test',
-    };
+const restRouteProps = {
+    path,
+    testPropForRoute: 'test',
+};
 
-    const headerProps = {
-        isBack: true
-    };
+const headerProps = {
+    isBack: true
+};
 
-    const footerBody = <div>body</div>;
+const footerBody = <div>body</div>;
 
-    const footerProps = {
-        body: footerBody
-    };
+const footerProps = {
+    body: footerBody
+};
 
-    const TestComponent = () => <div>test component</div>;
+const TestComponent = () => <div>test component</div>;
+
+describe("pass props", () => {
+
+
 
     it("passes helmet title and description", () => {
 
@@ -147,6 +150,12 @@ describe("passes props", () => {
         wrapper.unmount();
     });
 
+
+
+});
+
+
+describe("render", () => {
     it("renders component for / Route", () => {
 
         let wrapper = mount(
@@ -202,8 +211,6 @@ describe("passes props", () => {
 
         wrapper.unmount();
     });
-
 });
-
 
 

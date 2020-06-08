@@ -17,53 +17,58 @@ enzyme.configure({ adapter: new Adapter() });
 
 jest.mock("common/helpers");
 
+describe('render', () => {
+    test("renders null if not mobile", () => {
 
-test("renders null if not mobile", () => {
+        useResize.mockReturnValue(false);
 
-    useResize.mockReturnValue(false);
+        const { container } = render(<Header />);
+        expect(container.firstChild).toBeNull();
 
-    const { container } = render(<Header />);
-    expect(container.firstChild).toBeNull();
+    });
 
+    test("renders Back if isBack", () => {
+
+        useResize.mockReturnValue(true);
+
+        const {container: container1, debug: debug1, unmount} = render(<Back />);
+        const backHTML = container1.firstChild.outerHTML;
+
+        unmount();
+
+        const { getByRole, debug, container } = render(<Header isBack={true} />);
+
+        expect(container.innerHTML).toEqual(expect.stringContaining(backHTML));
+
+    });
+
+    test("renders title", () => {
+
+        useResize.mockReturnValue(true);
+        const title = "Some title string";
+        const { getByText} = render(<Header title={title} />);
+        expect(getByText(title)).toBeInTheDocument();
+
+    });
 });
 
-test("renders Back if isBack", () => {
 
-    useResize.mockReturnValue(true);
+describe('pass props', () => {
+    it("passes isBorder to container", () => {
 
-    const {container: container1, debug: debug1, unmount} = render(<Back />);
-    const backHTML = container1.firstChild.outerHTML;
+        useResize.mockReturnValue(true);
 
-    unmount();
+        const isBorder = true;
 
-    const { getByRole, debug, container } = render(<Header isBack={true} />);
+        const wrapper = mount(
+            <ThemeProvider theme={theme}>
+                <Header isBorder={isBorder} />
+            </ThemeProvider>
+        );
 
-    expect(container.innerHTML).toEqual(expect.stringContaining(backHTML));
+        expect(wrapper.find(Container).props().isBorder).toBe(true);
 
+        wrapper.unmount();
+    });
 });
 
-test("renders title", () => {
-
-    useResize.mockReturnValue(true);
-    const title = "Some title string";
-    const { getByText} = render(<Header title={title} />);
-    expect(getByText(title)).toBeInTheDocument();
-
-});
-
-it("passes isBorder to container", () => {
-
-    useResize.mockReturnValue(true);
-
-    const isBorder = true;
-
-    const wrapper = mount(
-        <ThemeProvider theme={theme}>
-            <Header isBorder={isBorder} />
-        </ThemeProvider>
-    );
-
-    expect(wrapper.find(Container).props().isBorder).toBe(true);
-
-    wrapper.unmount();
-});
