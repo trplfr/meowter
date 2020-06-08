@@ -1,7 +1,7 @@
 import React from 'react';
 import Adapter from 'enzyme-adapter-react-16';
-import { ThemeProvider } from 'styled-components';
 import enzyme, { mount } from 'enzyme';
+import { ThemeProvider } from 'styled-components';
 import { Button } from "./Button";
 import { act } from "react-dom/test-utils";
 import { theme } from "core/styles/theme";

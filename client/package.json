@@ -12,6 +12,7 @@
     "build:analyze": "npm run build -- --env.addon=bundleanalyze --env.addon=bundlevisualizer"
   },
   "dependencies": {
+    "@testing-library/react": "^10.2.1",
     "axios": "^0.19.2",
     "connected-react-router": "^6.6.1",
     "date-fns": "^2.10.0",
@@ -38,6 +39,7 @@
     "@babel/plugin-syntax-throw-expressions": "^7.8.3",
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-react": "^7.10.1",
+    "@testing-library/jest-dom": "^5.9.0",
     "babel-eslint": "^10.0.3",
     "babel-jest": "^26.0.1",
     "babel-loader": "^8.0.6",
@@ -70,16 +72,21 @@
     "webpack-visualizer-plugin": "^0.1.11"
   },
   "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>/__mocks__/mocks.js"
+    ],
     "transform": {
       "^.+\\.svg$": "jest-svg-transformer",
       "^.+\\.jsx?$": "babel-jest"
     },
     "moduleNameMapper": {
-      "^common(.*)$": "<rootDir>/src/common$1",
-      "^assets(.*)$": "<rootDir>/src/assets$1",
-      "^core(.*)$": "<rootDir>/src/core$1",
-      "^screens(.*)$": "<rootDir>/src/screens$1",
-      "^store(.*)$": "<rootDir>/src/store$1"
+      "\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "^common/(.*)$": "<rootDir>/src/common/$1",
+      "^assets/(.*)$": "<rootDir>/src/assets/$1",
+      "^core/(.*)$": "<rootDir>/src/core/$1",
+      "^screens/(.*)$": "<rootDir>/src/screens/$1",
+      "^store(.*)$": "<rootDir>/src/store$1",
+      "^test-utils$": "<rootDir>/utils/test-utils.js"
     }
   }
 }

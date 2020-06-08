@@ -23,7 +23,7 @@ it("renders as arrow without children", () => {
         </Router>,
     );
 
-    expect(wrapper.find(Back).contains(<Button onClick={historyMock.goBack}><Arrow /></Button>)).toBe(true);
+    expect(wrapper.find(Back).contains(<Arrow />)).toBe(true);
 
     wrapper.unmount();
 
@@ -38,7 +38,7 @@ it("renders children content", () => {
     let wrapper = mount(
         <Router history={historyMock}>
             <ThemeProvider theme={theme}>
-                <Back children={childrenText} />
+                <Back>{childrenText}</Back>
             </ThemeProvider>
         </Router>
     );
@@ -52,7 +52,7 @@ it("renders children content", () => {
     wrapper = mount(
         <Router history={historyMock}>
             <ThemeProvider theme={theme} >
-                <Back children={childrenElement} />
+                <Back>{childrenElement}</Back>
             </ThemeProvider>
         </Router>
     );
