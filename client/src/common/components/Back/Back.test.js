@@ -77,11 +77,11 @@ it("calls goBack with children", () => {
     );
 
     act(() => {
-        wrapper.find(Anchor).simulate('click');
+        wrapper.find(Back).simulate('click');
     });
 
     act(() => {
-        wrapper.find(Anchor).simulate('click');
+        wrapper.find(Back).simulate('click');
     });
 
     expect(historyMock.goBack.mock.calls.length).toBe(2);
@@ -103,11 +103,11 @@ it("calls goBack without children", () => {
     );
 
     act(() => {
-        wrapper.find(Button).simulate('click');
+        wrapper.find(Back).simulate('click');
     });
 
     act(() => {
-        wrapper.find(Button).simulate('click');
+        wrapper.find(Back).simulate('click');
     });
 
     expect(historyMock.goBack.mock.calls.length).toBe(2);
