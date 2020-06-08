@@ -6,7 +6,7 @@
   "author": "Valentine C. <trplfr@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "jest",
+    "test": "jest --verbose",
     "start": "webpack-dev-server --config utils/webpack.config.js --env.env=development",
     "build": "webpack --config utils/webpack.config.js --env.env=production",
     "build:analyze": "npm run build -- --env.addon=bundleanalyze --env.addon=bundlevisualizer"
