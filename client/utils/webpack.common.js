@@ -41,7 +41,8 @@ module.exports = {
       common: path.resolve(__dirname, '../', 'src/common'),
       core: path.resolve(__dirname, '../', 'src/core'),
       screens: path.resolve(__dirname, '../', 'src/screens'),
-      store: path.resolve(__dirname, '../', 'src/store')
+      store: path.resolve(__dirname, '../', 'src/store'),
+      'test-utils$': path.resolve(__dirname, '../', 'utils/test-utils.js')
     },
     extensions: ['*', '.js', '.jsx']
   },
