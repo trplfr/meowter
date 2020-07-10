@@ -1,14 +1,11 @@
 import React from 'react'
-import Adapter from 'enzyme-adapter-react-16'
-import enzyme, { mount } from 'enzyme'
+import { mount } from 'enzyme'
 import { ThemeProvider } from 'styled-components'
-import { Input } from './Input'
 import { act } from 'react-dom/test-utils'
 import { theme } from 'core/styles/theme'
-import { Container, Input as Entity, Error } from './Input.style'
 import Eye from 'assets/icons/togglepassword.svg'
-
-enzyme.configure({ adapter: new Adapter() })
+import { Container, Input as Entity, Error } from './Input.style'
+import { Input } from './Input'
 
 describe('effects', () => {
   it('calls register with right arguments and passes as ref', () => {
@@ -51,7 +48,7 @@ describe('effects', () => {
       ...params
     }
 
-    let wrapper = mount(
+    const wrapper = mount(
       <ThemeProvider theme={theme}>
         <Input {...props} />
       </ThemeProvider>
@@ -77,7 +74,7 @@ describe('render', () => {
       errors: { [label]: { message } }
     }
 
-    let wrapper = mount(
+    const wrapper = mount(
       <ThemeProvider theme={theme}>
         <Input {...props} />
       </ThemeProvider>
@@ -94,7 +91,7 @@ describe('events', () => {
 
     const props = { register: jest.fn(), label, isPasswordField: true }
 
-    let wrapper = mount(
+    const wrapper = mount(
       <ThemeProvider theme={theme}>
         <Input {...props} />
       </ThemeProvider>
@@ -134,7 +131,7 @@ describe('pass props', () => {
       ...rest
     }
 
-    let wrapper = mount(
+    const wrapper = mount(
       <ThemeProvider theme={theme}>
         <Input {...props} />
       </ThemeProvider>

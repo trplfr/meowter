@@ -1,18 +1,14 @@
 import React from 'react'
-import Adapter from 'enzyme-adapter-react-16'
-import enzyme, { mount } from 'enzyme'
+import { mount } from 'enzyme'
 import { ThemeProvider } from 'styled-components'
-import { act } from 'react-dom/test-utils'
 import { ConnectedRouter as ConnectedRouterProvider } from 'connected-react-router'
 import { HelmetProvider, Helmet as HelmetComponent } from 'react-helmet-async'
 import { configureStore, history } from 'store'
 import { Provider as StoreProvider } from 'react-redux'
 import { Route } from 'react-router-dom'
-import { LayoutRoute } from './LayoutRoute'
 import { theme } from 'core/styles/theme'
 import { Footer, Header } from 'common/components'
-
-enzyme.configure({ adapter: new Adapter() })
+import { LayoutRoute } from './LayoutRoute'
 
 const store = configureStore()
 
@@ -44,7 +40,7 @@ const TestComponent = () => <div>test component</div>
 
 describe('pass props', () => {
   it('passes helmet title and description', () => {
-    let wrapper = mount(
+    const wrapper = mount(
       <StoreProvider store={store}>
         <ConnectedRouterProvider history={history}>
           <HelmetProvider>
@@ -80,7 +76,7 @@ describe('pass props', () => {
   })
 
   it('passes Header rest props', () => {
-    let wrapper = mount(
+    const wrapper = mount(
       <StoreProvider store={store}>
         <ConnectedRouterProvider history={history}>
           <HelmetProvider>
@@ -104,7 +100,7 @@ describe('pass props', () => {
   })
 
   it('passes Footer rest props', () => {
-    let wrapper = mount(
+    const wrapper = mount(
       <StoreProvider store={store}>
         <ConnectedRouterProvider history={history}>
           <HelmetProvider>
@@ -128,7 +124,7 @@ describe('pass props', () => {
   })
 
   it('passes Route props', () => {
-    let wrapper = mount(
+    const wrapper = mount(
       <StoreProvider store={store}>
         <ConnectedRouterProvider history={history}>
           <HelmetProvider>
@@ -155,7 +151,7 @@ describe('pass props', () => {
 
 describe('render', () => {
   it('renders component for / Route', () => {
-    let wrapper = mount(
+    const wrapper = mount(
       <StoreProvider store={store}>
         <ConnectedRouterProvider history={history}>
           <HelmetProvider>
@@ -180,14 +176,14 @@ describe('render', () => {
   })
 
   it('not renders component for not / Route', () => {
-    let wrapper = mount(
+    const wrapper = mount(
       <StoreProvider store={store}>
         <ConnectedRouterProvider history={history}>
           <HelmetProvider>
             <ThemeProvider theme={theme}>
               <LayoutRoute
                 {...restRouteProps}
-                path={'/not-root'}
+                path='/not-root'
                 component={TestComponent}
                 helmet={helmetProp}
                 header={headerProps}

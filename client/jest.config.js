@@ -1,7 +1,7 @@
 const { defaults } = require('jest-config')
 
 module.exports = {
-  setupFilesAfterEnv: ['<rootDir>/__mocks__/mocks.js'],
+  setupFilesAfterEnv: ['<rootDir>/__mocks__/mocks.js', '<rootDir>/utils/jest-setup.js'],
   transform: {
     '^.+\\.svg$': 'jest-svg-transformer',
     '^.+\\.jsx?$': 'babel-jest'

@@ -1,9 +1,9 @@
 import React from 'react'
 
 import { render, fireEvent, waitFor, screen } from 'test-utils'
+import { useResize } from 'common/helpers'
 import { Footer } from './Footer'
 
-import { useResize } from 'common/helpers'
 jest.mock('common/helpers')
 
 describe('conditional render', () => {
@@ -35,7 +35,7 @@ describe('conditional render', () => {
     const body = <div>{text}</div>
 
     const { queryByText, container, debug } = render(
-      <Footer body={body} isMenu={true} />
+      <Footer body={body} isMenu />
     )
     expect(queryByText(text)).not.toBeInTheDocument()
     expect(container.firstChild).toBeNull()

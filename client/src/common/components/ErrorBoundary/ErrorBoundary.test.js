@@ -1,14 +1,10 @@
 import React from 'react'
-import Adapter from 'enzyme-adapter-react-16'
-import enzyme, { mount } from 'enzyme'
-import { Redirect } from 'react-router'
+import { mount } from 'enzyme'
 import { act } from 'react-dom/test-utils'
 import { ConnectedRouter as ConnectedRouterProvider } from 'connected-react-router'
 import { configureStore, history } from 'store'
-import { ErrorBoundary } from './ErrorBoundary'
 import { Provider as StoreProvider } from 'react-redux'
-
-enzyme.configure({ adapter: new Adapter() })
+import { ErrorBoundary } from './ErrorBoundary'
 
 const store = configureStore()
 
@@ -20,7 +16,7 @@ describe('on error', () => {
       return <div>any content</div>
     }
 
-    let wrapper = mount(
+    const wrapper = mount(
       <StoreProvider store={store}>
         <ConnectedRouterProvider history={history}>
           <ErrorBoundary>
@@ -50,7 +46,7 @@ describe('on error', () => {
       return <div>any content</div>
     }
 
-    let wrapper = mount(
+    const wrapper = mount(
       <StoreProvider store={store}>
         <ConnectedRouterProvider history={history}>
           <ErrorBoundary>

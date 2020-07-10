@@ -1,21 +1,18 @@
 import React from 'react'
-import Adapter from 'enzyme-adapter-react-16'
-import enzyme, { mount } from 'enzyme'
+import { mount } from 'enzyme'
 import { ThemeProvider } from 'styled-components'
-import { Button } from './Button'
 import { act } from 'react-dom/test-utils'
 import { theme } from 'core/styles/theme'
-import { Button as Entity } from './Button.style'
 import Uploader from 'assets/icons/upload.svg'
 import { Loader } from 'common/components'
-
-enzyme.configure({ adapter: new Adapter() })
+import { Button } from './Button'
+import { Button as Entity } from './Button.style'
 
 describe('render', () => {
   it('renders uploader', () => {
-    let wrapper = mount(
+    const wrapper = mount(
       <ThemeProvider theme={theme}>
-        <Button isUploader={true}>Upload!</Button>
+        <Button isUploader>Upload!</Button>
       </ThemeProvider>
     )
 
@@ -24,9 +21,9 @@ describe('render', () => {
   })
 
   it('renders loader', () => {
-    let wrapper = mount(
+    const wrapper = mount(
       <ThemeProvider theme={theme}>
-        <Button isLoading={true}>Wait for loading</Button>
+        <Button isLoading>Wait for loading</Button>
       </ThemeProvider>
     )
 
@@ -38,7 +35,7 @@ describe('render', () => {
   it('renders children test', () => {
     const children = 'Some children text'
 
-    let wrapper = mount(
+    const wrapper = mount(
       <ThemeProvider theme={theme}>
         <Button>{children}</Button>
       </ThemeProvider>
@@ -58,7 +55,7 @@ describe('pass props', () => {
   it('passes rest props to entity', () => {
     const restProps = { onClick: jest.fn(), foo: 'bar', bool: true }
 
-    let wrapper = mount(
+    const wrapper = mount(
       <ThemeProvider theme={theme}>
         <Button {...restProps}>Click me!</Button>
       </ThemeProvider>

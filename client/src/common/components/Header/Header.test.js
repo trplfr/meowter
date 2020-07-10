@@ -1,19 +1,15 @@
 import React from 'react'
 
-import enzyme, { mount } from 'enzyme'
+import { mount } from 'enzyme'
 import { ThemeProvider } from 'styled-components'
-import Adapter from 'enzyme-adapter-react-16'
 
 import { render, fireEvent, waitFor, screen, cleanup } from 'test-utils'
 
 import { Back } from 'common/components'
-import { Header } from './Header'
-import { Container } from './Header.style'
-
 import { useResize } from 'common/helpers'
 import { theme } from 'core/styles/theme'
-
-enzyme.configure({ adapter: new Adapter() })
+import { Header } from './Header'
+import { Container } from './Header.style'
 
 jest.mock('common/helpers')
 
@@ -33,7 +29,7 @@ describe('render', () => {
 
     unmount()
 
-    const { getByRole, debug, container } = render(<Header isBack={true} />)
+    const { getByRole, debug, container } = render(<Header isBack />)
 
     expect(container.innerHTML).toEqual(expect.stringContaining(backHTML))
   })

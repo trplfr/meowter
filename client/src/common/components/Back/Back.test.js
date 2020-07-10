@@ -1,16 +1,12 @@
 import React from 'react'
 import { Router } from 'react-router-dom'
-import Adapter from 'enzyme-adapter-react-16'
 import { ThemeProvider } from 'styled-components'
-import enzyme, { mount } from 'enzyme'
+import { mount } from 'enzyme'
 import { act } from 'react-dom/test-utils'
-import { Back } from './Back'
 import Arrow from 'assets/icons/arrow.svg'
-import { Button } from 'common/components/Back/Back.style'
 import { theme } from 'core/styles/theme'
-import { Anchor } from 'core/styles/typography'
+import { Back } from './Back'
 
-enzyme.configure({ adapter: new Adapter() })
 
 describe('conditional render', () => {
   it('renders as arrow without children', () => {
