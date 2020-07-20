@@ -1,75 +1,76 @@
-import React from 'react';
-import Adapter from 'enzyme-adapter-react-16';
-import enzyme, { mount } from 'enzyme';
-import { Redirect } from 'react-router'
-import { act } from "react-dom/test-utils";
+import React from 'react'
+import { mount } from 'enzyme'
+import { act } from 'react-dom/test-utils'
 import { ConnectedRouter as ConnectedRouterProvider } from 'connected-react-router'
 import { configureStore, history } from 'store'
-import { ErrorBoundary } from "./ErrorBoundary";
-import {Provider as StoreProvider} from "react-redux";
+import { Provider as StoreProvider } from 'react-redux'
+import { ErrorBoundary } from './ErrorBoundary'
 
-enzyme.configure({ adapter: new Adapter() });
+const store = configureStore()
 
-const store = configureStore();
+describe('on error', () => {
+  it('redirects to /error pathname on error', () => {
+    const errorPathname = '/error'
 
-describe("on error", () => {
-    it("redirects to /error pathname on error", () => {
+    const ErrorComponent = () => {
+      return <div>any content</div>
+    }
 
-        const errorPathname = '/error';
+    const wrapper = mount(
+      <StoreProvider store={store}>
+        <ConnectedRouterProvider history={history}>
+          <ErrorBoundary>
+            <div>
+              <ErrorComponent />
+            </div>
+          </ErrorBoundary>
+        </ConnectedRouterProvider>
+      </StoreProvider>
+    )
 
-        const ErrorComponent = () => {
-            return <div>any content</div>
-        }
+    const error = new Error('test')
 
-        let wrapper = mount(
-            <StoreProvider store={store}>
-                <ConnectedRouterProvider history={history}>
-                    <ErrorBoundary>
-                        <div><ErrorComponent/></div>
-                    </ErrorBoundary>
-                </ConnectedRouterProvider>
-            </StoreProvider>
-        );
+    act(() => {
+      wrapper.find(ErrorComponent).simulateError(error)
+    })
 
-        const error = new Error('test');
+    expect(wrapper.find('Router').prop('history').location.state.error).toBe(
+      error
+    )
 
-        act(()=> {
-            wrapper.find(ErrorComponent).simulateError(error);
-        });
+    wrapper.unmount()
+  })
 
-        expect(wrapper.find('Router').prop('history').location.state.error).toBe(error);
+  it('saves error and exception in location.state', () => {
+    const ErrorComponent = () => {
+      return <div>any content</div>
+    }
 
-        wrapper.unmount();
-    });
+    const wrapper = mount(
+      <StoreProvider store={store}>
+        <ConnectedRouterProvider history={history}>
+          <ErrorBoundary>
+            <div>
+              <ErrorComponent />
+            </div>
+          </ErrorBoundary>
+        </ConnectedRouterProvider>
+      </StoreProvider>
+    )
 
-    it("saves error and exception in location.state", () => {
+    const error = new Error('test')
 
-        const ErrorComponent = () => {
-            return <div>any content</div>
-        }
+    act(() => {
+      wrapper.find(ErrorComponent).simulateError(error)
+    })
 
-        let wrapper = mount(
-            <StoreProvider store={store}>
-                <ConnectedRouterProvider history={history}>
-                    <ErrorBoundary>
-                        <div><ErrorComponent/></div>
-                    </ErrorBoundary>
-                </ConnectedRouterProvider>
-            </StoreProvider>
-        );
+    expect(wrapper.find('Router').prop('history').location.state.error).toBe(
+      error
+    )
+    expect(
+      wrapper.find('Router').prop('history').location.state
+    ).toHaveProperty('exception')
 
-        const error = new Error('test');
-
-        act(()=> {
-            wrapper.find(ErrorComponent).simulateError(error);
-        });
-
-        expect(wrapper.find('Router').prop('history').location.state.error).toBe(error);
-        expect(wrapper.find('Router').prop('history').location.state).toHaveProperty('exception');
-
-        wrapper.unmount();
-    });
-});
-
-
-
+    wrapper.unmount()
+  })
+})
