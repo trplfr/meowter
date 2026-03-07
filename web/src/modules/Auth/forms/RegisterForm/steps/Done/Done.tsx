@@ -4,12 +4,12 @@ import { ImageIcon } from 'lucide-react'
 
 import { Button } from '@ui/index'
 
-import { $avatarPreview } from '../../../../models'
+import { $avatarPreview, registerCompleted } from '../../../../models'
 
 import s from '../steps.module.scss'
 
 export const Done = () => {
-  const avatarPreview = useUnit($avatarPreview)
+  const [avatarPreview, onComplete] = useUnit([$avatarPreview, registerCompleted])
 
   if (!avatarPreview) {
     return (
@@ -25,7 +25,7 @@ export const Done = () => {
           <Trans>Скорее ставь аватарку, чтобы друзья смогли тебя найти</Trans>
         </p>
 
-        <Button variant="primary" fullWidth>
+        <Button variant="primary" fullWidth onClick={onComplete}>
           <Trans>Далее</Trans>
         </Button>
       </div>
@@ -45,7 +45,7 @@ export const Done = () => {
         <Trans>Теперь ваши друзья найдут вас быстрее, ведь вы выбрали, как выглядеть</Trans>
       </p>
 
-      <Button variant="primary" fullWidth>
+      <Button variant="primary" fullWidth onClick={onComplete}>
         <Trans>Далее</Trans>
       </Button>
     </div>

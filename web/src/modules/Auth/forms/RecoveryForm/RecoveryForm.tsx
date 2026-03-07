@@ -8,17 +8,17 @@ import { Input, Button } from '@ui/index'
 import {
   $recoveryForm,
   $recoverySent,
-  $recoveryError,
   $isSubmitting,
   recoveryFieldChanged,
-  recoverySubmitted
+  recoverySubmitted,
+  recoveryValidation
 } from '../../models'
 
 import s from '../form.module.scss'
 
 const RecoveryRequest = () => {
   const { t } = useLingui()
-  const [form, error, isSubmitting] = useUnit([$recoveryForm, $recoveryError, $isSubmitting])
+  const [form, errors, isSubmitting] = useUnit([$recoveryForm, recoveryValidation.$errors, $isSubmitting])
   const [onChange, onSubmit] = useUnit([recoveryFieldChanged, recoverySubmitted])
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -40,11 +40,10 @@ const RecoveryRequest = () => {
           placeholder={t`Электронная почта`}
           type="email"
           value={form.email}
+          error={errors.email ?? undefined}
           onChange={(e) => onChange({ field: 'email', value: e.target.value })}
         />
       </div>
-
-      {error && <p className={s.error}>{error}</p>}
 
       <Button type="submit" variant="primary" fullWidth isLoading={isSubmitting}>
         <Trans>Я жду новый пароль!</Trans>

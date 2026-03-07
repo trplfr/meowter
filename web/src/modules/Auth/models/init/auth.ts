@@ -1,4 +1,10 @@
 import { sample } from 'effector'
+import { redirect } from 'atomic-router'
+
+import { routes } from '@core/router'
+
+import { sessionReceived } from '@logic/session'
+import { errorOccurred } from '@logic/notifications'
 
 import {
   $loginForm,
@@ -6,25 +12,23 @@ import {
   $recoveryForm,
   $registerStep,
   $recoverySent,
-  $loginError,
-  $registerError,
-  $recoveryError,
   $isSubmitting,
   loginFieldChanged,
-  loginSubmitted,
   registerFieldChanged,
-  registerSubmitted,
   registerStepChanged,
   avatarSkipped,
   avatarFileSelected,
+  registerCompleted,
   $avatarPreview,
   $isUploading,
   recoveryFieldChanged,
-  recoverySubmitted,
   loginFx,
   registerFx,
   recoveryFx,
   uploadAvatarFx,
+  loginValidation,
+  registerValidation,
+  recoveryValidation,
   AuthStep
 } from '../models'
 
@@ -38,8 +42,7 @@ sample({
 })
 
 sample({
-  clock: loginSubmitted,
-  source: $loginForm,
+  clock: loginValidation.validated,
   target: loginFx
 })
 
@@ -53,8 +56,7 @@ sample({
 })
 
 sample({
-  clock: registerSubmitted,
-  source: $registerForm,
+  clock: registerValidation.validated,
   target: registerFx
 })
 
@@ -83,6 +85,7 @@ sample({
 
 sample({
   clock: uploadAvatarFx.doneData,
+  fn: ({ avatarUrl }) => avatarUrl,
   target: $avatarPreview
 })
 
@@ -102,8 +105,7 @@ sample({
 })
 
 sample({
-  clock: recoverySubmitted,
-  source: $recoveryForm,
+  clock: recoveryValidation.validated,
   target: recoveryFx
 })
 
@@ -120,48 +122,59 @@ sample({
   target: $isSubmitting
 })
 
-/* Errors */
+/* Field touch -> clear error */
 
 sample({
-  clock: loginFx.failData,
-  fn: (error) => error.message,
-  target: $loginError
+  clock: loginFieldChanged,
+  fn: ({ field }) => field,
+  target: loginValidation.fieldTouched
 })
 
 sample({
-  clock: loginFx,
-  fn: () => null,
-  target: $loginError
+  clock: registerFieldChanged,
+  fn: ({ field }) => field,
+  target: registerValidation.fieldTouched
 })
 
 sample({
-  clock: registerFx.failData,
-  fn: (error) => error.message,
-  target: $registerError
+  clock: recoveryFieldChanged,
+  fn: ({ field }) => field,
+  target: recoveryValidation.fieldTouched
+})
+
+/* API errors -> toast */
+
+sample({
+  clock: [loginFx.failData, registerFx.failData, recoveryFx.failData, uploadAvatarFx.failData],
+  target: errorOccurred
+})
+
+/* Success -> session + next step */
+
+sample({
+  clock: loginFx.doneData,
+  target: sessionReceived
 })
 
 sample({
-  clock: registerFx,
-  fn: () => null,
-  target: $registerError
+  clock: registerFx.doneData,
+  target: sessionReceived
 })
-
-sample({
-  clock: recoveryFx.failData,
-  fn: (error) => error.message,
-  target: $recoveryError
-})
-
-sample({
-  clock: recoveryFx,
-  fn: () => null,
-  target: $recoveryError
-})
-
-/* Success -> next step */
 
 sample({
   clock: registerFx.done,
   fn: () => AuthStep.AVATAR,
   target: $registerStep
+})
+
+/* Redirect */
+
+redirect({
+  clock: loginFx.done,
+  route: routes.feed
+})
+
+redirect({
+  clock: registerCompleted,
+  route: routes.feed
 })

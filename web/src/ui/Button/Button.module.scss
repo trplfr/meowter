@@ -9,11 +9,10 @@
   font-size: $font-size-base;
   font-weight: 500;
   cursor: pointer;
-  transition: opacity 0.2s, background-color 0.2s;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
   user-select: none;
 
   &:disabled {
-    opacity: 0.5;
     cursor: not-allowed;
   }
 }
@@ -23,21 +22,38 @@
   color: $color-white;
 
   &:hover:not(:disabled) {
-    opacity: 0.9;
+    background-color: $color-primary-hover;
   }
 
   &:active:not(:disabled) {
-    opacity: 0.8;
+    background-color: $color-primary-active;
+  }
+
+  &:disabled {
+    background-color: $color-primary-disabled;
+    color: $color-white;
   }
 }
 
 .outline {
   background-color: transparent;
-  border: $separator-height solid $color-separator;
-  color: $color-text;
+  border: $separator-height solid $color-primary;
+  color: $color-primary;
 
   &:hover:not(:disabled) {
-    background-color: $color-separator;
+    background-color: $color-primary;
+    color: $color-white;
+  }
+
+  &:active:not(:disabled) {
+    background-color: $color-primary-active;
+    border-color: $color-primary-active;
+    color: $color-white;
+  }
+
+  &:disabled {
+    border-color: $color-primary-disabled;
+    color: $color-primary-disabled;
   }
 }
 
@@ -48,7 +64,15 @@
   height: auto;
 
   &:hover:not(:disabled) {
-    opacity: 0.8;
+    color: $color-primary-hover;
+  }
+
+  &:active:not(:disabled) {
+    color: $color-primary-active;
+  }
+
+  &:disabled {
+    color: $color-primary-disabled;
   }
 }
 

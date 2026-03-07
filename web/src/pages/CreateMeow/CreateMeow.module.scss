@@ -1,0 +1,53 @@
+.mobile {
+  display: block;
+
+  @media (min-width: $breakpoint-desktop) {
+    display: none;
+  }
+}
+
+.desktop {
+  display: none;
+
+  @media (min-width: $breakpoint-desktop) {
+    display: block;
+  }
+}
+
+.layout {
+  padding: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  height: $header-height;
+  gap: $spacing-sm;
+  padding: 0 $spacing-md;
+  border-bottom: $separator-height solid $color-separator;
+}
+
+.back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-primary;
+}
+
+.title {
+  flex: 1;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-primary;
+
+  &:disabled {
+    color: $color-primary-disabled;
+  }
+}

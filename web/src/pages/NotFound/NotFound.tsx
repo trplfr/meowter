@@ -1,5 +1,7 @@
+import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
 import { ArrowLeft } from 'lucide-react'
+import { Helmet } from 'react-helmet-async'
 
 import { routes } from '@core/router'
 import { Layout } from '@ui/index'
@@ -13,6 +15,10 @@ export const route = routes.notFound
 export const NotFound = () => {
   return (
     <Layout>
+      <Helmet>
+        <title>{t`404 / Мяутер`}</title>
+      </Helmet>
+
       <header className={s.header}>
         <button className={s.back} onClick={() => history.back()}>
           <ArrowLeft size={24} />
@@ -27,12 +33,12 @@ export const NotFound = () => {
         <p className={s.description}>
           <Trans>Такой страницы нет...</Trans>
         </p>
-      </div>
 
-      <div className={s.actions}>
-        <button className={s.link} onClick={() => history.back()}>
-          <Trans>Назад</Trans>
-        </button>
+        <div className={s.actions}>
+          <button className={s.link} onClick={() => history.back()}>
+            <Trans>Назад</Trans>
+          </button>
+        </div>
       </div>
     </Layout>
   )

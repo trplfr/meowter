@@ -14,18 +14,18 @@
     "build": "yarn workspaces foreach -A run build",
     "lint": "yarn workspaces foreach -A run lint",
     "test": "yarn workspaces foreach -A run test",
+    "test:api": "yarn workspace api test",
+    "test:web": "yarn workspace web test",
     "lingui:extract": "yarn workspace web lingui extract",
+    "db": "yarn workspace api drizzle-kit generate && yarn workspace api drizzle-kit migrate",
     "db:migrate": "yarn workspace api drizzle-kit migrate",
     "db:generate": "yarn workspace api drizzle-kit generate",
+    "db:view": "yarn workspace api drizzle-kit studio",
     "prepare": "husky"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3"
-  },
-  "dependencies": {
-    "lucide-react": "^0.577.0",
-    "react-dropzone": "^15.0.0"
   }
 }

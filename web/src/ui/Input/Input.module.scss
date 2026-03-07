@@ -1,7 +1,5 @@
 .wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-xs;
+  position: relative;
 }
 
 .field {
@@ -19,10 +17,14 @@
   font-size: $font-size-sm;
   color: $color-text;
   background: $color-bg;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, color 0.2s;
 
   &::placeholder {
     color: $color-text-secondary;
+  }
+
+  &:hover:not(:focus) {
+    border-color: $color-primary;
   }
 
   &:focus {
@@ -32,6 +34,12 @@
 
 .hasError .input {
   border-color: $color-error;
+  color: $color-error;
+
+  &:hover,
+  &:focus {
+    border-color: $color-error;
+  }
 }
 
 .toggle {
@@ -48,7 +56,16 @@
 }
 
 .error {
-  font-size: $font-size-xs;
+  position: absolute;
+  top: 0;
+  left: $spacing-md;
+  z-index: 1;
+  transform: translateY(-50%);
+  padding: 0 4px;
+  background: $color-bg;
+  font-size: 10px;
+  line-height: 1;
   color: $color-error;
-  padding-left: $spacing-md;
+  white-space: nowrap;
+  pointer-events: none;
 }

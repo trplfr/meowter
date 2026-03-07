@@ -1,11 +1,13 @@
+import { type ErrorCode } from './error'
+
 export interface PaginatedResponse<T> {
   data: T[]
   cursor: string | null
   hasMore: boolean
 }
 
-export interface ApiError {
+export interface ApiErrorResponse {
   statusCode: number
+  code: ErrorCode
   message: string
-  error: string
 }

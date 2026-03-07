@@ -1,0 +1,42 @@
+.header {
+  height: $header-height;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 $spacing-lg;
+}
+
+.cat {
+  margin-bottom: $spacing-lg;
+}
+
+.title {
+  font-size: $font-size-title;
+  font-weight: 700;
+  margin-bottom: $spacing-xs;
+}
+
+.description {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-md;
+  width: 100%;
+  margin-top: $spacing-xl;
+}
+
+.link {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}

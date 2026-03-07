@@ -1,2 +1,2 @@
 import './session/init'
-import '@modules/Auth/models/init'
+import './notifications/init'

@@ -32,7 +32,9 @@ export default defineConfig({
       jsc: {
         experimental: {
           plugins: [
-            ['@effector/swc-plugin', {}],
+            ['@effector/swc-plugin', {
+              factories: ['@withease/factories']
+            }],
             ['@lingui/swc-plugin', {}]
           ]
         }
@@ -74,7 +76,11 @@ export default defineConfig({
     }
   },
   server: {
-    port: 3000
+    port: 3000,
+    proxy: {
+      '/api': 'http://localhost:4000',
+      '/uploads': 'http://localhost:4000'
+    }
   },
   dev: {
     setupMiddlewares: (middlewares, context) => {
@@ -84,23 +90,33 @@ export default defineConfig({
       middlewares.unshift(async (req, res, next) => {
         const url = req.url || '/'
 
-        // пропускаем статику и HMR
-        if (url.startsWith('/__') || url.includes('.')) {
+        // пропускаем API, uploads, статику и HMR
+        if (url.startsWith('/api') || url.startsWith('/uploads') || url.startsWith('/__') || url.includes('.')) {
           return next()
         }
 
         try {
           const bundle = await environments.node.loadBundle<typeof import('./src/server')>('index')
+          const result = await bundle.render(
+            url,
+            req.headers.host,
+            req.headers.cookie
+          )
+
+          // effector-гарды сделали редирект (например / -> /feed)
+          if ('redirect' in result) {
+            res.writeHead(302, { Location: result.redirect })
+            res.end()
+            return
+          }
+
           const template = await environments.web.getTransformedHtml('index')
-
-          const { html: appHtml, scopeData } = await bundle.render(url, req.headers.host)
-
           const html = template
             .replace(
               '</head>',
-              `<script>self.__SSR_STATE__ = ${JSON.stringify(scopeData)}</script></head>`
+              `<script>self.__SSR_STATE__ = ${JSON.stringify(result.scopeData)}</script></head>`
             )
-            .replace('<!--app-content-->', appHtml)
+            .replace('<!--app-content-->', result.html)
 
           res.writeHead(200, { 'Content-Type': 'text/html' })
           res.end(html)

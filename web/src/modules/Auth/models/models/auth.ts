@@ -1,20 +1,27 @@
 import { createEvent, createStore } from 'effector'
 
-import { AuthStep, type LoginForm, type RegisterForm, type RecoveryForm } from '../types'
+import { type LoginRequest, type RegisterRequest, type RecoveryRequest } from '@logic/api/auth'
+
+import {
+  AuthStep,
+  type LoginFieldChange,
+  type RegisterFieldChange,
+  type RecoveryFieldChange
+} from '../types'
 
 /* Login */
 
-export const $loginForm = createStore<LoginForm>({
-  login: '',
+export const $loginForm = createStore<LoginRequest>({
+  email: '',
   password: ''
 })
 
-export const loginFieldChanged = createEvent<{ field: keyof LoginForm; value: string }>()
+export const loginFieldChanged = createEvent<LoginFieldChange>()
 export const loginSubmitted = createEvent()
 
 /* Register */
 
-export const $registerForm = createStore<RegisterForm>({
+export const $registerForm = createStore<RegisterRequest>({
   username: '',
   password: '',
   email: ''
@@ -22,11 +29,12 @@ export const $registerForm = createStore<RegisterForm>({
 
 export const $registerStep = createStore<AuthStep>(AuthStep.CREDENTIALS)
 
-export const registerFieldChanged = createEvent<{ field: keyof RegisterForm; value: string }>()
+export const registerFieldChanged = createEvent<RegisterFieldChange>()
 export const registerSubmitted = createEvent()
 export const registerStepChanged = createEvent<AuthStep>()
 export const avatarSkipped = createEvent()
 export const avatarFileSelected = createEvent<File>()
+export const registerCompleted = createEvent()
 
 /* Avatar */
 
@@ -35,18 +43,15 @@ export const $isUploading = createStore(false)
 
 /* Recovery */
 
-export const $recoveryForm = createStore<RecoveryForm>({
+export const $recoveryForm = createStore<RecoveryRequest>({
   email: ''
 })
 
 export const $recoverySent = createStore(false)
 
-export const recoveryFieldChanged = createEvent<{ field: keyof RecoveryForm; value: string }>()
+export const recoveryFieldChanged = createEvent<RecoveryFieldChange>()
 export const recoverySubmitted = createEvent()
 
 /* Common */
 
-export const $loginError = createStore<string | null>(null)
-export const $registerError = createStore<string | null>(null)
-export const $recoveryError = createStore<string | null>(null)
 export const $isSubmitting = createStore(false)

@@ -6,6 +6,7 @@ import { Provider } from 'effector-react'
 import { createBrowserHistory } from 'history'
 
 import { router } from '@core/router'
+import { appStarted } from '@logic/session'
 
 import { App } from './App'
 
@@ -24,6 +25,7 @@ const scope = fork(serverState ? { values: serverState } : undefined)
 const history = createBrowserHistory()
 
 const init = async () => {
+  await allSettled(appStarted, { scope })
   await allSettled(router.setHistory, { scope, params: history })
 
   const app = (

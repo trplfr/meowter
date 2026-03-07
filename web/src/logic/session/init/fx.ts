@@ -1,6 +1,6 @@
-// TODO: подключить реальный API
-import { fetchSessionFx } from '../models'
+import { fetchMe, logout } from '@logic/api/auth'
 
-fetchSessionFx.use(async () => {
-  throw new Error('Not implemented')
-})
+import { fetchSessionFx, logoutFx } from '../models'
+
+fetchSessionFx.use(fetchMe)
+logoutFx.use(logout)

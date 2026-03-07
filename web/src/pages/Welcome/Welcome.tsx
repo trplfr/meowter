@@ -1,5 +1,7 @@
+import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
 import { Link } from 'atomic-router-react'
+import { Helmet } from 'react-helmet-async'
 
 import { routes } from '@core/router'
 import { Layout, Button } from '@ui/index'
@@ -13,27 +15,35 @@ export const route = routes.welcome
 export const Welcome = () => {
   return (
     <Layout>
+      <Helmet>
+        <title>{t`Мяутер`}</title>
+      </Helmet>
+
       <div className={s.header} />
 
       <div className={s.content}>
-        <img className={s.cat} src={helloCat} alt="" />
+        <img className={s.cat} src={helloCat} alt='' />
         <h1 className={s.title}>
-          <Trans>Добро пожаловать</Trans>
+          <Trans>
+            Добро пожаловать
+            <br /> в Мяутер
+          </Trans>
         </h1>
         <p className={s.description}>
           <Trans>
-            Если вам хочется принять участие в обсуждении последних новостей, вместо того, чтобы работать
+            Если вам хочется принять участие в обсуждении последних новостей,
+            вместо того, чтобы работать
           </Trans>
         </p>
 
         <div className={s.actions}>
-          <Button variant="primary" fullWidth asChild>
-            <Link to={routes.register}>
-              <Trans>Зарегистрироваться</Trans>
+          <Button variant='primary' fullWidth asChild>
+            <Link to={routes.login}>
+              <Trans>Войти в аккаунт</Trans>
             </Link>
           </Button>
-          <Link to={routes.login} className={s.link}>
-            <Trans>Войти в аккаунт</Trans>
+          <Link to={routes.register} className={s.link}>
+            <Trans>Зарегистрироваться</Trans>
           </Link>
         </div>
       </div>

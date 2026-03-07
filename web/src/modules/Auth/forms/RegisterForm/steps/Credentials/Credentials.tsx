@@ -7,17 +7,17 @@ import { Input, Button } from '@ui/index'
 
 import {
   $registerForm,
-  $registerError,
   $isSubmitting,
   registerFieldChanged,
-  registerSubmitted
+  registerSubmitted,
+  registerValidation
 } from '../../../../models'
 
 import s from '../steps.module.scss'
 
 export const Credentials = () => {
   const { t } = useLingui()
-  const [form, error, isSubmitting] = useUnit([$registerForm, $registerError, $isSubmitting])
+  const [form, errors, isSubmitting] = useUnit([$registerForm, registerValidation.$errors, $isSubmitting])
   const [onChange, onSubmit] = useUnit([registerFieldChanged, registerSubmitted])
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -38,23 +38,24 @@ export const Credentials = () => {
         <Input
           placeholder={t`Логин`}
           value={form.username}
+          error={errors.username ?? undefined}
           onChange={(e) => onChange({ field: 'username', value: e.target.value })}
         />
         <Input
           placeholder={t`Пароль`}
           isPassword
           value={form.password}
+          error={errors.password ?? undefined}
           onChange={(e) => onChange({ field: 'password', value: e.target.value })}
         />
         <Input
           placeholder={t`Электронная почта`}
           type="email"
           value={form.email}
+          error={errors.email ?? undefined}
           onChange={(e) => onChange({ field: 'email', value: e.target.value })}
         />
       </div>
-
-      {error && <p className={s.error}>{error}</p>}
 
       <Button type="submit" variant="primary" fullWidth isLoading={isSubmitting}>
         <Trans>Далее</Trans>

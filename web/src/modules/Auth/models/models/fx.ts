@@ -1,12 +1,17 @@
 import { createEffect } from 'effector'
 
-import { type LoginForm, type RegisterForm, type RecoveryForm } from '../types'
+import {
+  type LoginRequest,
+  type RegisterRequest,
+  type RecoveryRequest,
+  type AuthResponse,
+  type AvatarResponse
+} from '@logic/api/auth'
 
-// TODO: подключить к API когда будет готов бэкенд
-export const loginFx = createEffect<LoginForm, void>()
-export const registerFx = createEffect<RegisterForm, void>()
-export const recoveryFx = createEffect<RecoveryForm, void>()
+export const loginFx = createEffect<LoginRequest, AuthResponse>()
+export const registerFx = createEffect<RegisterRequest, AuthResponse>()
+export const recoveryFx = createEffect<RecoveryRequest, void>()
 
 /* Avatar */
 
-export const uploadAvatarFx = createEffect<File, string>()
+export const uploadAvatarFx = createEffect<File, AvatarResponse>()

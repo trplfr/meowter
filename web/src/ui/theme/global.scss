@@ -5,8 +5,24 @@ body {
   font-size: $font-size-base;
   color: $color-text;
   background-color: $color-bg;
+
+  --font-family: #{$font-family};
 }
 
 #root {
   min-height: 100dvh;
+}
+
+/* Toast */
+
+.toast-error {
+  background-color: $color-error !important;
+  color: $color-white !important;
+  border-color: $color-error !important;
+}
+
+.toast-success {
+  background-color: $color-success !important;
+  color: $color-white !important;
+  border-color: $color-success !important;
 }

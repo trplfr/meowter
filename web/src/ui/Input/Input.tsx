@@ -29,6 +29,7 @@ export const Input = ({
 
   return (
     <div className={clsx(s.wrapper, error && s.hasError, className)}>
+      {error && <span className={s.error}>{error}</span>}
       <div className={s.field}>
         <input
           className={s.input}
@@ -46,7 +47,6 @@ export const Input = ({
           </button>
         )}
       </div>
-      {error && <span className={s.error}>{error}</span>}
     </div>
   )
 }

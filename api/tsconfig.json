@@ -15,11 +15,10 @@
     "declaration": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "rootDir": "src",
     "outDir": "dist",
     "paths": {
       "@shared/*": ["../shared/src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "../shared/src"]
 }

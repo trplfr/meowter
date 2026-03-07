@@ -1,0 +1,35 @@
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: $bottom-nav-height;
+  background: $color-bg;
+  border-top: $separator-height solid $color-separator;
+
+  @media (min-width: $breakpoint-desktop) {
+    display: none;
+  }
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  color: $color-icon-muted;
+  transition: color 0.15s;
+
+  &:active {
+    color: $color-primary-active;
+  }
+}
+
+.active {
+  color: $color-primary;
+}

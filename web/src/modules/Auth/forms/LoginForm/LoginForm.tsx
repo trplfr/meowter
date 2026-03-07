@@ -7,17 +7,17 @@ import { Input, Button } from '@ui/index'
 
 import {
   $loginForm,
-  $loginError,
   $isSubmitting,
   loginFieldChanged,
-  loginSubmitted
+  loginSubmitted,
+  loginValidation
 } from '../../models'
 
 import s from '../form.module.scss'
 
 export const LoginForm = () => {
   const { t } = useLingui()
-  const [form, error, isSubmitting] = useUnit([$loginForm, $loginError, $isSubmitting])
+  const [form, errors, isSubmitting] = useUnit([$loginForm, loginValidation.$errors, $isSubmitting])
   const [onChange, onSubmit] = useUnit([loginFieldChanged, loginSubmitted])
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -37,18 +37,18 @@ export const LoginForm = () => {
       <div className={s.fields}>
         <Input
           placeholder={t`Электронная почта`}
-          value={form.login}
-          onChange={(e) => onChange({ field: 'login', value: e.target.value })}
+          value={form.email}
+          error={errors.email ?? undefined}
+          onChange={(e) => onChange({ field: 'email', value: e.target.value })}
         />
         <Input
           placeholder={t`Пароль`}
           isPassword
           value={form.password}
+          error={errors.password ?? undefined}
           onChange={(e) => onChange({ field: 'password', value: e.target.value })}
         />
       </div>
-
-      {error && <p className={s.error}>{error}</p>}
 
       <Button type="submit" variant="primary" fullWidth isLoading={isSubmitting}>
         <Trans>Далее</Trans>

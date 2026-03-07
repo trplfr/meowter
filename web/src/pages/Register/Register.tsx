@@ -1,4 +1,6 @@
+import { t } from '@lingui/core/macro'
 import { ArrowLeft } from 'lucide-react'
+import { Helmet } from 'react-helmet-async'
 
 import { routes } from '@core/router'
 import { Layout } from '@ui/index'
@@ -11,6 +13,10 @@ export const route = routes.register
 export const Register = () => {
   return (
     <Layout>
+      <Helmet>
+        <title>{t`Регистрация / Мяутер`}</title>
+      </Helmet>
+
       <header className={s.header}>
         <button className={s.back} onClick={() => history.back()}>
           <ArrowLeft size={24} />

@@ -1,20 +1,22 @@
+import { type LoginRequest, type RegisterRequest, type RecoveryRequest } from '@logic/api/auth'
+
 export enum AuthStep {
   CREDENTIALS = 'CREDENTIALS',
   AVATAR = 'AVATAR',
   DONE = 'DONE'
 }
 
-export interface LoginForm {
-  login: string
-  password: string
+export interface LoginFieldChange {
+  field: keyof LoginRequest
+  value: string
 }
 
-export interface RegisterForm {
-  username: string
-  password: string
-  email: string
+export interface RegisterFieldChange {
+  field: keyof RegisterRequest
+  value: string
 }
 
-export interface RecoveryForm {
-  email: string
+export interface RecoveryFieldChange {
+  field: keyof RecoveryRequest
+  value: string
 }

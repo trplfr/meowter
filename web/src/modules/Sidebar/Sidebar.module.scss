@@ -1,0 +1,119 @@
+/* Overlay (mobile only) */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+
+  &.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (min-width: $breakpoint-desktop) {
+    display: none;
+  }
+}
+
+/* Sidebar */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 201;
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  background: $color-bg;
+  transform: translateX(-100%);
+
+  &.animated {
+    transition: transform 0.25s ease;
+  }
+
+  &.open {
+    transform: translateX(0);
+  }
+
+  @media (min-width: $breakpoint-desktop) {
+    position: static;
+    width: 100%;
+    z-index: auto;
+    transform: none;
+    transition: none;
+  }
+}
+
+.profile {
+  padding: $spacing-xl $spacing-lg $spacing-lg;
+}
+
+.avatar {
+  width: $avatar-lg;
+  height: $avatar-lg;
+  border-radius: $radius-round;
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  width: $avatar-lg;
+  height: $avatar-lg;
+  border-radius: $radius-round;
+  background: $color-separator;
+}
+
+.displayName {
+  margin-top: $spacing-sm;
+  font-size: $font-size-base;
+  font-weight: 700;
+  color: $color-text;
+}
+
+.username {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.separator {
+  height: $separator-height;
+  background: $color-separator;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  padding: $spacing-sm 0;
+}
+
+.navItem {
+  padding: $spacing-sm $spacing-lg;
+  font-size: $font-size-base;
+  font-weight: 500;
+  color: $color-text;
+  transition: background 0.15s;
+
+  &:active {
+    background: $color-separator;
+  }
+}
+
+.footer {
+  margin-top: auto;
+  padding: $spacing-lg;
+}
+
+.logoutCat {
+  display: block;
+  margin-bottom: $spacing-sm;
+}
+
+.logoutButton {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}

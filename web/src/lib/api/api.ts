@@ -1,0 +1,69 @@
+import ky, { HTTPError } from 'ky'
+
+import { type ApiErrorResponse, ErrorCode } from '@shared/types'
+
+export class AppError extends Error {
+  constructor(
+    public readonly code: ErrorCode,
+    public readonly status: number,
+    message: string
+  ) {
+    super(message)
+  }
+}
+
+const parseError = async (error: unknown): Promise<never> => {
+  if (error instanceof HTTPError) {
+    const body = await error.response.json().catch(() => ({})) as Partial<ApiErrorResponse>
+
+    throw new AppError(
+      body.code || ErrorCode.INTERNAL_ERROR,
+      error.response.status,
+      body.message || 'Unknown error'
+    )
+  }
+
+  throw new AppError(ErrorCode.INTERNAL_ERROR, 0, 'Network error')
+}
+
+export const api = ky.create({
+  prefixUrl: typeof window !== 'undefined' ? '/api' : 'http://localhost:4000/api',
+  credentials: 'include',
+  retry: 0,
+  hooks: {
+    beforeError: [
+      async (error) => {
+        await parseError(error)
+        return error
+      }
+    ],
+    afterResponse: [
+      async (request, options, response) => {
+        if (response.status !== 401) {
+          return response
+        }
+
+        // не пытаемся рефрешить сам рефреш, логин и auth/me
+        if (
+          request.url.includes('auth/refresh') ||
+          request.url.includes('auth/login') ||
+          request.url.includes('auth/me')
+        ) {
+          return response
+        }
+
+        const refreshed = await ky.post('auth/refresh', {
+          prefixUrl: typeof window !== 'undefined' ? '/api' : 'http://localhost:4000/api',
+          credentials: 'include',
+          throwHttpErrors: false
+        })
+
+        if (refreshed.ok) {
+          return ky(request, options)
+        }
+
+        return response
+      }
+    ]
+  }
+})

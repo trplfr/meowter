@@ -1,11 +1,15 @@
 // цвета
 $color-primary: #EB7E44;
+$color-primary-hover: #D4702E;
+$color-primary-active: #C46325;
+$color-primary-disabled: #F0C3A0;
 $color-bg: #FFFFFF;
 $color-white: #FFFFFF;
 $color-separator: #EEEEEE;
 $color-text: #333333;
 $color-text-secondary: #999999;
 $color-icon-muted: #DDDDDD;
+$color-bg-secondary: #F8F8F8;
 $color-error: #E53935;
 $color-success: #43A047;
 
@@ -36,6 +40,8 @@ $breakpoint-desktop: 769px;
 
 // layout
 $content-width: 500px;
+$sidebar-width: 300px;
+$panel-width: 350px;
 $header-height: 55px;
 $bottom-nav-height: 60px;
 $separator-height: 1px;
