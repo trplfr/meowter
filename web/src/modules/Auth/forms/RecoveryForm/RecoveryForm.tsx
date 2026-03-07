@@ -29,7 +29,7 @@ const RecoveryRequest = () => {
   return (
     <form className={s.form} onSubmit={handleSubmit}>
       <h1 className={s.title}>
-        <Trans>Новый пароль</Trans>
+        <Trans>Восстановление пароля</Trans>
       </h1>
       <p className={s.description}>
         <Trans>Мы пришлем новый пароль на почтовый адрес, указанный при регистрации</Trans>

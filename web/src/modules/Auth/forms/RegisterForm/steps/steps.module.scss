@@ -6,6 +6,7 @@
 }
 
 .title {
+  text-align: center;
   font-size: $font-size-title;
   font-weight: 700;
   margin-bottom: $spacing-sm;
@@ -37,6 +38,7 @@
   font-size: $font-size-sm;
   color: $color-primary;
   margin-top: $spacing-lg;
+  cursor: pointer;
 }
 
 .avatarPlaceholder {

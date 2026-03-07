@@ -28,10 +28,10 @@ export const Credentials = () => {
   return (
     <form className={s.form} onSubmit={handleSubmit}>
       <h1 className={s.title}>
-        <Trans>Давайте начинать</Trans>
+        <Trans>Давайте знакомиться</Trans>
       </h1>
       <p className={s.description}>
-        <Trans>Заведите аккаунт, чтобы полноценно пользоваться сервисом</Trans>
+        <Trans>Заведите аккаунт, чтобы начать общаться</Trans>
       </p>
 
       <div className={s.fields}>

@@ -12,7 +12,9 @@ export const route = routes.welcome
 
 export const Welcome = () => {
   return (
-    <Layout className={s.welcome}>
+    <Layout>
+      <div className={s.header} />
+
       <div className={s.content}>
         <img className={s.cat} src={helloCat} alt="" />
         <h1 className={s.title}>
@@ -23,17 +25,17 @@ export const Welcome = () => {
             Если вам хочется принять участие в обсуждении последних новостей, вместо того, чтобы работать
           </Trans>
         </p>
-      </div>
 
-      <div className={s.actions}>
-        <Button variant="primary" fullWidth asChild>
-          <Link to={routes.register}>
-            <Trans>Зарегистрироваться</Trans>
+        <div className={s.actions}>
+          <Button variant="primary" fullWidth asChild>
+            <Link to={routes.register}>
+              <Trans>Зарегистрироваться</Trans>
+            </Link>
+          </Button>
+          <Link to={routes.login} className={s.link}>
+            <Trans>Войти в аккаунт</Trans>
           </Link>
-        </Button>
-        <Link to={routes.login} className={s.link}>
-          <Trans>Войти в аккаунт</Trans>
-        </Link>
+        </div>
       </div>
     </Layout>
   )
