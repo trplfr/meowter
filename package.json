@@ -1,0 +1,27 @@
+{
+  "name": "meowter",
+  "private": true,
+  "workspaces": [
+    "web",
+    "api",
+    "shared"
+  ],
+  "packageManager": "yarn@4.13.0",
+  "scripts": {
+    "dev": "concurrently \"yarn workspace api dev\" \"yarn workspace web dev\"",
+    "dev:api": "yarn workspace api dev",
+    "dev:web": "yarn workspace web dev",
+    "build": "yarn workspaces foreach -A run build",
+    "lint": "yarn workspaces foreach -A run lint",
+    "test": "yarn workspaces foreach -A run test",
+    "lingui:extract": "yarn workspace web lingui extract",
+    "db:migrate": "yarn workspace api drizzle-kit migrate",
+    "db:generate": "yarn workspace api drizzle-kit generate",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3"
+  }
+}

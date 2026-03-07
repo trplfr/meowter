@@ -1,0 +1,10 @@
+{
+  "name": "api",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'API not configured yet'",
+    "build": "echo 'API not configured yet'",
+    "test": "echo 'API not configured yet'"
+  }
+}

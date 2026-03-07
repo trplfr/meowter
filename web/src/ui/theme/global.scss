@@ -1,0 +1,13 @@
+@use 'reset';
+@use 'variables' as *;
+
+body {
+  font-family: $font-family;
+  font-size: $font-size-base;
+  color: $color-text;
+  background-color: $color-bg;
+}
+
+#root {
+  min-height: 100dvh;
+}

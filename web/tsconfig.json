@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["../shared/src/*"],
+      "@screens/*": ["src/screens/*"],
+      "@modules/*": ["src/modules/*"],
+      "@ui/*": ["src/ui/*"],
+      "@logic/*": ["src/logic/*"],
+      "@lib/*": ["src/lib/*"],
+      "@core/*": ["src/core/*"],
+      "@assets/*": ["src/assets/*"]
+    }
+  },
+  "include": ["src", "../shared/src"]
+}
