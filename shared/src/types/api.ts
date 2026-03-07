@@ -1,10 +1,10 @@
-export interface IPaginatedResponse<T> {
+export interface PaginatedResponse<T> {
   data: T[]
   cursor: string | null
   hasMore: boolean
 }
 
-export interface IApiError {
+export interface ApiError {
   statusCode: number
   message: string
   error: string

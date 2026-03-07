@@ -1,8 +1,18 @@
+import { createRoutesView, RouterProvider } from 'atomic-router-react'
+
+import { router } from '@core/router'
+
+import { pages } from './pages'
+
+const RoutesView = createRoutesView({
+  routes: pages,
+  otherwise: () => <div><h1>404</h1></div>
+})
+
 export const App = () => {
   return (
-    <div>
-      <h1>Meowter</h1>
-      <p>v2</p>
-    </div>
+    <RouterProvider router={router}>
+      <RoutesView />
+    </RouterProvider>
   )
 }

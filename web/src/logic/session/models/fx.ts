@@ -1,5 +1,5 @@
 import { createEffect } from 'effector'
 
-import { type IUser } from '@shared/types'
+import { type User } from '@shared/types'
 
-export const fetchSessionFx = createEffect<void, IUser>()
+export const fetchSessionFx = createEffect<void, User>()

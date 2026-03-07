@@ -31,7 +31,7 @@ meowter/
 │   ├── api.Dockerfile
 │   └── nginx.conf
 │
-├── docs/
+├── reports/
 │   ├── screens/                # PNG скриншоты из Figma
 │   └── legacy/                 # полезные артефакты из старого кода
 │
@@ -40,7 +40,7 @@ meowter/
 │       └── deploy.yml
 │
 ├── package.json                # workspaces: web, api, shared
-├── .yarnrc.yml                 # Yarn 4.5.2, nodeLinker: node-modules
+├── .yarnrc.yml                 # Yarn 4.13.0, nodeLinker: node-modules
 ├── tsconfig.base.json          # strict, shared paths
 ├── lingui.config.ts            # locales: ru, en; sourceLocale: ru
 ├── .editorconfig
@@ -59,17 +59,17 @@ meowter/
   "name": "meowter",
   "private": true,
   "workspaces": ["web", "api", "shared"],
-  "packageManager": "yarn@4.5.2",
+  "packageManager": "yarn@4.13.0",
   "scripts": {
-    "dev": "concurrently \"yarn workspace @api dev\" \"yarn workspace @web dev\"",
-    "dev:api": "yarn workspace @api dev",
-    "dev:web": "yarn workspace @web dev",
+    "dev": "concurrently \"yarn workspace api dev\" \"yarn workspace web dev\"",
+    "dev:api": "yarn workspace api dev",
+    "dev:web": "yarn workspace web dev",
     "build": "yarn workspaces foreach -A run build",
     "lint": "yarn workspaces foreach -A run lint",
     "test": "yarn workspaces foreach -A run test",
-    "lingui:extract": "yarn workspace @web lingui extract",
-    "db:migrate": "yarn workspace @api drizzle-kit migrate",
-    "db:generate": "yarn workspace @api drizzle-kit generate",
+    "lingui:extract": "yarn workspace web lingui extract",
+    "db:migrate": "yarn workspace api drizzle-kit migrate",
+    "db:generate": "yarn workspace api drizzle-kit generate",
     "prepare": "husky"
   }
 }
@@ -81,9 +81,9 @@ meowter/
 
 | Воркспейс | package.json `name` | Импорт |
 |-----------|---------------------|--------|
-| `web` | `@web` | `import { ... } from '@web/...'` |
-| `api` | `@api` | `import { ... } from '@api/...'` |
-| `shared` | `@shared` | `import { type User } from '@shared/types'` |
+| `web` | `web` | алиасы через tsconfig paths (`@pages/*`, `@ui/*`, ...) |
+| `api` | `api` | алиасы через tsconfig paths (`@shared/*`) |
+| `shared` | `shared` | `import { type IUser } from '@shared/types'` (через tsconfig alias) |
 
 ### tsconfig.base.json
 
@@ -121,7 +121,7 @@ meowter/
     "baseUrl": ".",
     "paths": {
       "@shared/*": ["../shared/src/*"],
-      "@screens/*": ["src/screens/*"],
+      "@pages/*": ["src/pages/*"],
       "@modules/*": ["src/modules/*"],
       "@ui/*": ["src/ui/*"],
       "@logic/*": ["src/logic/*"],
@@ -361,8 +361,8 @@ VPS: 2 core, 2 GB RAM, 40 GB, Ubuntu (переустановить на 24.04)
 ## Порядок работы в Claude Code CLI
 
 1. `git checkout -b v2` — новая ветка
-2. Изучить старый код (`client/`, `server/`), сохранить полезное в `docs/legacy/`
-3. Очистить всё кроме `.git/`, `.gitignore`, `docs/legacy/`
+2. Изучить старый код (`client/`, `server/`), сохранить полезное в `reports/legacy/`
+3. Очистить всё кроме `.git/`, `.gitignore`, `reports/legacy/`
 4. Инициализировать монорепо: корневой `package.json`, `tsconfig.base.json`, `.yarnrc.yml`
 5. Создать `CLAUDE.md`, `LICENSE`, `README.md`
 6. Создать `shared/` — общие типы и контракты, настроить path alias `@shared/*` в tsconfig обоих apps
@@ -373,7 +373,7 @@ VPS: 2 core, 2 GB RAM, 40 GB, Ubuntu (переустановить на 24.04)
 11. Docker-compose.prod + Dockerfiles + nginx.conf
 12. GitHub Actions deploy
 13. Настроить VPS, первый деплой
-14. Начать верстать UI по скриншотам из `docs/screens/`
+14. Начать верстать UI по скриншотам из `reports/screens/`
 
 ---
 

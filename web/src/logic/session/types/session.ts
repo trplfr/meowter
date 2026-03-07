@@ -1,3 +1,3 @@
-import { type IUser } from '@shared/types'
+import { type User } from '@shared/types'
 
-export type Session = IUser | null
+export type Session = User | null

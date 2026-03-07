@@ -1,16 +1,16 @@
-import { type IUser } from './user'
+import { type User } from './user'
 
-export interface IMeowTag {
+export interface MeowTag {
   id: string
   tag: string
   position: number
 }
 
-export interface IMeow {
+export interface Meow {
   id: string
   content: string
-  tags: IMeowTag[]
-  author: IUser
+  tags: MeowTag[]
+  author: User
   likesCount: number
   commentsCount: number
   isLiked: boolean

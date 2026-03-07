@@ -1,9 +1,9 @@
-import { type IUser } from './user'
+import { type User } from './user'
 
-export interface IComment {
+export interface Comment {
   id: string
   meowId: string
-  author: IUser
+  author: User
   content: string
   parentId: string | null
   createdAt: string

@@ -5,7 +5,7 @@ export enum NotificationType {
   REMEOW = 'REMEOW'
 }
 
-export interface INotification {
+export interface Notification {
   id: string
   userId: string
   type: NotificationType

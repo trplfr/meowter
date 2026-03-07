@@ -37,6 +37,7 @@
     "sonner": "^2.0.7"
   },
   "devDependencies": {
+    "@effector/swc-plugin": "1.0.0",
     "@lingui/cli": "^5.9.2",
     "@lingui/swc-plugin": "^5.11.0",
     "@rsbuild/core": "^1.7.3",

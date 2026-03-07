@@ -89,34 +89,36 @@ SSR: Rsbuild SSR (ручная настройка, два entry)
 ```
 web/
 ├── src/
-│   ├── App.tsx                 # корневой компонент
-│   ├── index.ts                # client entry
-│   ├── server.ts               # server entry (SSR)
+│   ├── App.tsx                 # корневой компонент (RouterProvider + RoutesView)
+│   ├── index.tsx               # client entry (гидрация / SPA)
+│   ├── server.tsx              # server entry (SSR render)
 │   │
-│   ├── core/                   # инициализация, провайдеры, конфиги
-│   │   ├── providers.tsx       # LinguiProvider, RouterProvider, etc.
-│   │   ├── helmet.tsx          # дефолтные мета-теги
+│   ├── core/                   # инфраструктура приложения
+│   │   ├── router/             # atomic-router
+│   │   │   ├── router.ts       # routes, routesMap, router
+│   │   │   ├── types.ts        # IRouteConfig
+│   │   │   └── index.ts
 │   │   └── index.ts
 │   │
-│   ├── screens/                # экраны (привязаны к роутам)
-│   │   ├── Feed/
+│   ├── pages/                  # страницы (привязаны к роутам)
+│   │   ├── Welcome/            # /
+│   │   ├── Login/              # /login
+│   │   ├── Register/           # /register
+│   │   ├── Feed/               # /feed
 │   │   ├── CatProfile/         # /cat/:username
 │   │   ├── MeowThread/         # /cat/:username/meow/:meowId
-│   │   ├── Login/
-│   │   ├── Register/
-│   │   ├── Search/
-│   │   ├── Notifications/
-│   │   ├── Settings/
+│   │   ├── Search/             # /search
+│   │   ├── Notifications/      # /notifications
+│   │   ├── Settings/           # /settings
 │   │   ├── CreateMeow/         # /meow
-│   │   ├── Welcome/            # / (неавторизован)
 │   │   ├── NotFound/
-│   │   └── Error/
+│   │   └── index.ts            # pages[] для createRoutesView
 │   │
 │   ├── modules/                # логические модули (компонент + models)
 │   │   ├── Auth/               # PascalCase!
 │   │   │   ├── Auth.tsx
 │   │   │   ├── Auth.module.scss
-│   │   │   ├── models/         # Effector модель (паттерн ниже)
+│   │   │   ├── models/         # Effector модель (паттерн)
 │   │   │   └── index.ts
 │   │   ├── Meow/
 │   │   ├── Feed/
@@ -125,41 +127,30 @@ web/
 │   │   └── Notifications/
 │   │
 │   ├── ui/                     # глупый UI-кит, без логики
-│   │   ├── Button/
-│   │   ├── Input/
-│   │   ├── Avatar/
-│   │   ├── Spinner/
-│   │   ├── Toast/              # обёртка над sonner
 │   │   ├── icons/              # SVG-иконки из Figma
 │   │   ├── theme/              # SCSS переменные, миксины, глобальные стили
 │   │   │   ├── _variables.scss
 │   │   │   ├── _mixins.scss
 │   │   │   ├── _reset.scss
-│   │   │   └── _global.scss
+│   │   │   └── global.scss
 │   │   └── index.ts
 │   │
 │   ├── lib/                    # утилиты
-│   │   ├── parseTildes.ts      # парсинг ~слов из текста
-│   │   ├── formatDate.ts       # обёртка над date-fns
 │   │   └── index.ts
 │   │
-│   ├── logic/                  # агностичная логика (Effector без привязки к UI)
-│   │   ├── session/            # текущий пользователь, токен, refresh
-│   │   └── router/             # atomic-router конфиг, все роуты
+│   ├── logic/                  # Effector-модели без UI
+│   │   ├── session/            # effector-паттерн (types/models/init)
+│   │   └── index.ts            # import всех init-слоев
 │   │
 │   └── assets/                 # статика (лого, картинки котов)
 │
 ├── locales/                    # lingui каталоги
 │   ├── ru/
-│   │   └── messages.po
 │   └── en/
-│       └── messages.po
 │
-├── public/
 ├── package.json
 ├── tsconfig.json
-├── rsbuild.config.ts
-└── rstest.config.ts            # extends withRsbuildConfig()
+└── rsbuild.config.ts
 ```
 
 ---
@@ -202,12 +193,12 @@ models/{layer}/
 
 Два environments: `client` и `server`. Rspack под капотом.
 
-Алиасы из tsconfig дублируются в `source.alias`:
+Алиасы из tsconfig дублируются в `resolve.alias`:
 ```typescript
 export default {
-  source: {
+  resolve: {
     alias: {
-      '@screens': './src/screens',
+      '@pages': './src/pages',
       '@modules': './src/modules',
       '@ui': './src/ui',
       '@logic': './src/logic',
@@ -219,24 +210,24 @@ export default {
 }
 ```
 
-### server.ts (серверный entry)
+SSR реализован через `dev.setupMiddlewares` в rsbuild.config.ts. Два environments: `web` (target: web) и `node` (target: node). Dev-сервер перехватывает HTML-запросы, вызывает `render()` из серверного бандла и вставляет результат в HTML-шаблон.
 
-1. Получить запрос (URL + Host заголовок)
-2. Определить locale по домену (meowter.ru → ru, meowter.app → en)
-3. Создать Effector scope через `fork()`
-4. Определить роут через atomic-router
-5. Загрузить данные через `allSettled` (farfetched queries)
-6. Рендер React в HTML через `renderToString` (или `renderToReadableStream`)
-7. Собрать мета-теги через `react-helmet-async`
-8. Сериализовать scope для клиента
-9. Вставить всё в HTML-шаблон, отдать
+### server.tsx (серверный entry)
 
-### index.ts (клиентский entry)
+1. `fork()` — создать изолированный Effector scope
+2. Определить locale по домену (meowter.ru -> ru, meowter.app -> en)
+3. `createMemoryHistory({ initialEntries: [url] })` — серверный history
+4. `allSettled(router.setHistory, { scope, params: history })` — определить роут
+5. `renderToString(<Provider value={scope}><App /></Provider>)` — рендер в HTML
+6. `serialize(scope)` — сериализовать стейт
+7. Вернуть `{ html, scopeData, locale }`
 
-1. Десериализовать scope из HTML
-2. Определить locale
-3. Гидрировать React через `hydrateRoot`
-4. Дальше работает как SPA (клиентская навигация)
+### index.tsx (клиентский entry)
+
+1. Прочитать `__SSR_STATE__` из `globalThis`
+2. `fork({ values: serverState })` — восстановить серверный scope
+3. `allSettled(router.setHistory, { scope, params: browserHistory })` — запустить роутинг
+4. `hydrateRoot` (если есть серверный стейт) или `createRoot` (dev без SSR)
 
 ---
 
