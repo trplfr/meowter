@@ -1,0 +1,10 @@
+.layout {
+  width: 100%;
+  max-width: $content-width;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+  display: flex;
+  flex-direction: column;
+  background-color: $color-bg;
+}

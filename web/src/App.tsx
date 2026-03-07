@@ -1,5 +1,7 @@
+import { I18nProvider } from '@lingui/react'
 import { createRoutesView, RouterProvider } from 'atomic-router-react'
 
+import { i18n } from '@core/i18n'
 import { router } from '@core/router'
 
 import { pages } from './pages'
@@ -11,8 +13,10 @@ const RoutesView = createRoutesView({
 
 export const App = () => {
   return (
-    <RouterProvider router={router}>
-      <RoutesView />
-    </RouterProvider>
+    <I18nProvider i18n={i18n}>
+      <RouterProvider router={router}>
+        <RoutesView />
+      </RouterProvider>
+    </I18nProvider>
   )
 }

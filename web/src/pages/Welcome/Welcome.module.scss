@@ -1,0 +1,43 @@
+.welcome {
+  padding-bottom: 40px;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 $spacing-lg;
+}
+
+.cat {
+  align-self: center;
+  margin-bottom: $spacing-lg;
+}
+
+.title {
+  font-size: $font-size-title;
+  font-weight: 700;
+  margin-bottom: $spacing-sm;
+}
+
+.description {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-md;
+  padding: 0 $spacing-lg;
+}
+
+.link {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}

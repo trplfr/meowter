@@ -18,13 +18,23 @@ const alias = {
 }
 
 export default defineConfig({
-  plugins: [pluginReact(), pluginSass()],
+  plugins: [
+    pluginReact(),
+    pluginSass({
+      sassLoaderOptions: {
+        additionalData: `@use '@ui/theme/variables' as *; @use '@ui/theme/mixins' as *;`
+      }
+    })
+  ],
   resolve: { alias },
   tools: {
     swc: {
       jsc: {
         experimental: {
-          plugins: [['@effector/swc-plugin', {}]]
+          plugins: [
+            ['@effector/swc-plugin', {}],
+            ['@lingui/swc-plugin', {}]
+          ]
         }
       }
     }
@@ -80,7 +90,7 @@ export default defineConfig({
         }
 
         try {
-          const bundle = await environments.node.loadBundle('index')
+          const bundle = await environments.node.loadBundle<typeof import('./src/server')>('index')
           const template = await environments.web.getTransformedHtml('index')
 
           const { html: appHtml, scopeData } = await bundle.render(url, req.headers.host)

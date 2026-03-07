@@ -1,6 +1,7 @@
 import * as Welcome from './Welcome'
 import * as Login from './Login'
 import * as Register from './Register'
+import * as Recovery from './Recovery'
 import * as Feed from './Feed'
 import * as CatProfile from './CatProfile'
 import * as MeowThread from './MeowThread'
@@ -14,6 +15,7 @@ export const pages = [
   { route: Welcome.route, view: Welcome.view },
   { route: Login.route, view: Login.view },
   { route: Register.route, view: Register.view },
+  { route: Recovery.route, view: Recovery.view },
   { route: Feed.route, view: Feed.view },
   { route: CatProfile.route, view: CatProfile.view },
   { route: MeowThread.route, view: MeowThread.view },

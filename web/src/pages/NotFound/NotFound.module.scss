@@ -1,0 +1,48 @@
+.header {
+  display: flex;
+  align-items: center;
+  height: $header-height;
+
+  @media (min-width: $breakpoint-desktop) {
+    display: none;
+  }
+}
+
+.back {
+  color: $color-primary;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 $spacing-lg;
+}
+
+.cat {
+  margin-bottom: $spacing-lg;
+}
+
+.title {
+  font-size: $font-size-title;
+  font-weight: 700;
+  margin-bottom: $spacing-xs;
+}
+
+.description {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 40px;
+}
+
+.link {
+  font-size: $font-size-sm;
+  color: $color-primary;
+}

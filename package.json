@@ -23,5 +23,9 @@
     "concurrently": "^9.1.2",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3"
+  },
+  "dependencies": {
+    "lucide-react": "^0.577.0",
+    "react-dropzone": "^15.0.0"
   }
 }

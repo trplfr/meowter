@@ -1,0 +1,54 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  height: 50px;
+  padding: 0 $spacing-md;
+  border: $separator-height solid $color-separator;
+  border-radius: $radius-lg;
+  font-size: $font-size-sm;
+  color: $color-text;
+  background: $color-bg;
+  transition: border-color 0.2s;
+
+  &::placeholder {
+    color: $color-text-secondary;
+  }
+
+  &:focus {
+    border-color: $color-primary;
+  }
+}
+
+.hasError .input {
+  border-color: $color-error;
+}
+
+.toggle {
+  position: absolute;
+  right: $spacing-md;
+  display: flex;
+  align-items: center;
+  color: $color-text-secondary;
+  transition: color 0.2s;
+}
+
+.active {
+  color: $color-primary;
+}
+
+.error {
+  font-size: $font-size-xs;
+  color: $color-error;
+  padding-left: $spacing-md;
+}

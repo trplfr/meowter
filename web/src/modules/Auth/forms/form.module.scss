@@ -1,0 +1,40 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.title {
+  font-size: $font-size-title;
+  font-weight: 700;
+  margin-bottom: $spacing-sm;
+}
+
+.description {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  text-align: center;
+  margin-bottom: $spacing-xl;
+  line-height: 1.5;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  width: 100%;
+  margin-bottom: $spacing-lg;
+}
+
+.error {
+  font-size: $font-size-xs;
+  color: $color-error;
+  margin-bottom: $spacing-sm;
+}
+
+.link {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  margin-top: $spacing-lg;
+}

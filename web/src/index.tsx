@@ -23,7 +23,9 @@ const scope = fork(serverState ? { values: serverState } : undefined)
 // запускаем клиентский роутинг и рендерим после инициализации
 const history = createBrowserHistory()
 
-allSettled(router.setHistory, { scope, params: history }).then(() => {
+const init = async () => {
+  await allSettled(router.setHistory, { scope, params: history })
+
   const app = (
     <Provider value={scope}>
       <App />
@@ -35,4 +37,6 @@ allSettled(router.setHistory, { scope, params: history }).then(() => {
   } else {
     createRoot(root).render(app)
   }
-})
+}
+
+init()

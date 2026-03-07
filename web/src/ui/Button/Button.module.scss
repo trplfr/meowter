@@ -1,0 +1,61 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  height: 50px;
+  padding: 0 $spacing-lg;
+  border-radius: $radius-button;
+  font-size: $font-size-base;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s, background-color 0.2s;
+  user-select: none;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.primary {
+  background-color: $color-primary;
+  color: $color-white;
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  &:active:not(:disabled) {
+    opacity: 0.8;
+  }
+}
+
+.outline {
+  background-color: transparent;
+  border: $separator-height solid $color-separator;
+  color: $color-text;
+
+  &:hover:not(:disabled) {
+    background-color: $color-separator;
+  }
+}
+
+.ghost {
+  background-color: transparent;
+  color: $color-primary;
+  padding: 0;
+  height: auto;
+
+  &:hover:not(:disabled) {
+    opacity: 0.8;
+  }
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.loading {
+  pointer-events: none;
+}
