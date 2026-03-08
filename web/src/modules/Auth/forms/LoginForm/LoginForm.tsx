@@ -36,12 +36,16 @@ export const LoginForm = () => {
 
       <div className={s.fields}>
         <Input
+          id="login-email"
+          name="email"
           placeholder={t`Электронная почта`}
           value={form.email}
           error={errors.email ?? undefined}
           onChange={(e) => onChange({ field: 'email', value: e.target.value })}
         />
         <Input
+          id="login-password"
+          name="password"
           placeholder={t`Пароль`}
           isPassword
           value={form.password}

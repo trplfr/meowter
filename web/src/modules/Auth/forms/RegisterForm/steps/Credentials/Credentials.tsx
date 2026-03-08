@@ -36,12 +36,16 @@ export const Credentials = () => {
 
       <div className={s.fields}>
         <Input
+          id="register-username"
+          name="username"
           placeholder={t`Логин`}
           value={form.username}
           error={errors.username ?? undefined}
           onChange={(e) => onChange({ field: 'username', value: e.target.value })}
         />
         <Input
+          id="register-password"
+          name="password"
           placeholder={t`Пароль`}
           isPassword
           value={form.password}
@@ -49,6 +53,8 @@ export const Credentials = () => {
           onChange={(e) => onChange({ field: 'password', value: e.target.value })}
         />
         <Input
+          id="register-email"
+          name="email"
           placeholder={t`Электронная почта`}
           type="email"
           value={form.email}

@@ -1,4 +1,4 @@
-import { type User } from '@shared/types'
+import { type CatProfile } from '@shared/types'
 
 export interface LoginRequest {
   email: string
@@ -15,9 +15,27 @@ export interface RecoveryRequest {
   email: string
 }
 
-export type AuthResponse = User
+export interface UpdateProfileRequest {
+  displayName?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  bio?: string | null
+  contacts?: string | null
+  sex?: string | null
+}
+
+export interface ChangePasswordRequest {
+  oldPassword: string
+  newPassword: string
+}
+
+export type AuthResponse = CatProfile
 
 export interface AvatarResponse {
   id: string
   avatarUrl: string
+}
+
+export interface ChangePasswordResponse {
+  ok: boolean
 }

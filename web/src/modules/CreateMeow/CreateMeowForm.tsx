@@ -17,7 +17,7 @@ import {
   createMeowFx
 } from './models'
 
-import { highlightTildes } from './lib/highlightTildes'
+import { highlightTildes } from '@lib/meow'
 
 import s from './CreateMeowForm.module.scss'
 
@@ -56,6 +56,9 @@ export const CreateMeowForm = () => {
           {highlightTildes(text)}
         </div>
         <textarea
+          id="meow-content"
+          name="content"
+          aria-label={t`Расскажи, что сегодня случилось?`}
           className={s.textarea}
           value={text}
           onChange={(e) => onTextChange(e.target.value)}
@@ -77,12 +80,14 @@ export const CreateMeowForm = () => {
         {preview ? (
           <div className={s.preview}>
             <img className={s.previewImage} src={preview} alt="" />
-            <button className={s.previewRemove} onClick={() => onImageRemove()}>
+            <button type="button" aria-label="Удалить изображение" className={s.previewRemove} onClick={() => onImageRemove()}>
               <X size={14} />
             </button>
           </div>
         ) : (
           <button
+            type="button"
+            aria-label="Прикрепить изображение"
             className={s.imageButton}
             onClick={() => fileRef.current?.click()}
           >

@@ -3,5 +3,7 @@ import { toast } from 'sonner'
 import { showErrorToastFx } from '../models'
 
 showErrorToastFx.use((message) => {
-  toast.error(message)
+  const id = toast.error(message, {
+    onClick: () => toast.dismiss(id)
+  })
 })

@@ -1,5 +1,7 @@
 import { sample } from 'effector'
 
+import { meowCreated } from '@logic/feed'
+
 import {
   $text,
   $image,
@@ -37,10 +39,10 @@ sample({
 sample({
   clock: submitted,
   source: {
-    text: $text,
+    content: $text,
     image: $image
   },
-  filter: ({ text }) => text.trim().length > 0,
+  filter: ({ content }) => content.trim().length > 0,
   target: createMeowFx
 })
 
@@ -54,4 +56,10 @@ sample({
   clock: [createMeowFx.done, formReset],
   fn: () => null,
   target: [$image, $imagePreview]
+})
+
+// добавляем новый мяут в ленту
+sample({
+  clock: createMeowFx.doneData,
+  target: meowCreated
 })

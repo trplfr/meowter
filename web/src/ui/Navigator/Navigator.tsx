@@ -19,13 +19,14 @@ interface NavigatorProps {
 
 export const Navigator = ({ items }: NavigatorProps) => {
   return (
-    <nav className={s.nav}>
+    <nav className={s.nav} aria-label="Навигация">
       {items.map((item, i) => (
         <Link
           key={i}
           to={item.route}
           params={item.params ?? {}}
           className={clsx(s.item, item.active && s.active)}
+          aria-current={item.active ? 'page' : undefined}
         >
           <item.icon size={24} />
         </Link>

@@ -1,11 +1,12 @@
-import { useState, type ReactNode } from 'react'
+import { useState, useEffect, type ReactNode } from 'react'
 import { Link } from 'atomic-router-react'
 import { useUnit } from 'effector-react'
 import clsx from 'clsx'
-import { Menu, Bell, Home, User, Search, PenLine } from 'lucide-react'
+import { Menu, Bell, ArrowLeft, Newspaper, User, Search, PenLine } from 'lucide-react'
 
 import { routes } from '@core/router'
 import { Navigator } from '@ui/index'
+import { $unreadCount, startPolling, stopPolling } from '@logic/notifications'
 
 import { CreateMeowForm } from '@modules/CreateMeow'
 import { Sidebar } from '@modules/Sidebar'
@@ -16,11 +17,27 @@ interface AuthLayoutProps {
   title: ReactNode
   panel?: ReactNode
   contentClassName?: string
+  headerAction?: ReactNode
+  backButton?: boolean
   children: ReactNode
 }
 
-export const AuthLayout = ({ title, panel, contentClassName, children }: AuthLayoutProps) => {
+export const AuthLayout = ({
+  title,
+  panel,
+  contentClassName,
+  headerAction,
+  backButton,
+  children
+}: AuthLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const unreadCount = useUnit($unreadCount)
+  const [onStartPolling, onStopPolling] = useUnit([startPolling, stopPolling])
+
+  useEffect(() => {
+    onStartPolling()
+    return () => onStopPolling()
+  }, [])
 
   const isActive = useUnit({
     feed: routes.feed.$isOpened,
@@ -30,11 +47,18 @@ export const AuthLayout = ({ title, panel, contentClassName, children }: AuthLay
   })
 
   const navItems = [
-    { route: routes.feed, icon: Home, active: isActive.feed },
-    { route: routes.catProfile, params: { username: 'me' }, icon: User, active: isActive.catProfile },
+    { route: routes.feed, icon: Newspaper, active: isActive.feed },
+    {
+      route: routes.catProfile,
+      params: { username: 'me' },
+      icon: User,
+      active: isActive.catProfile
+    },
     { route: routes.search, icon: Search, active: isActive.search },
     { route: routes.createMeow, icon: PenLine, active: isActive.createMeow }
   ]
+
+  const badgeText = unreadCount > 99 ? '99+' : String(unreadCount)
 
   return (
     <div className={s.shell}>
@@ -42,26 +66,35 @@ export const AuthLayout = ({ title, panel, contentClassName, children }: AuthLay
 
       <main className={s.main}>
         <header className={s.header}>
-          <button className={s.burger} onClick={() => setSidebarOpen(true)}>
-            <Menu size={24} />
-          </button>
-          <span className={s.burgerDesktop}>
-            <Menu size={24} />
-          </span>
+          {backButton ? (
+            <button className={s.backButton} type="button" aria-label="Назад" onClick={() => window.history.back()}>
+              <ArrowLeft size={24} />
+            </button>
+          ) : (
+            <>
+              <button className={s.burger} type="button" aria-label="Меню" onClick={() => setSidebarOpen(true)}>
+                <Menu size={24} />
+              </button>
+              <span className={s.burgerDesktop}>
+                <Menu size={24} />
+              </span>
+            </>
+          )}
           <h1 className={s.title}>{title}</h1>
-          <Link to={routes.notifications} className={s.bell}>
-            <Bell size={24} />
-          </Link>
+          {headerAction || (
+            <Link to={routes.notifications} className={s.bell} aria-label="Уведомления">
+              <Bell size={24} />
+              {unreadCount > 0 && (
+                <span className={s.badge} aria-live="polite">{badgeText}</span>
+              )}
+            </Link>
+          )}
         </header>
 
-        <div className={clsx(s.content, contentClassName)}>
-          {children}
-        </div>
+        <div className={clsx(s.content, contentClassName)}>{children}</div>
       </main>
 
-      <aside className={s.panel}>
-        {panel ?? <CreateMeowForm />}
-      </aside>
+      <aside className={s.panel}>{panel ?? <CreateMeowForm />}</aside>
 
       <Navigator items={navItems} />
     </div>

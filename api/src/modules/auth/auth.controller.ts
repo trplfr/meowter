@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Patch, Post, Req, Res, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import type { FastifyReply, FastifyRequest } from 'fastify'
 
@@ -6,7 +6,7 @@ import { CurrentUser, type JwtPayload } from '../../common/decorators'
 import { JwtAuthGuard } from '../../common/guards'
 
 import { AuthService } from './auth.service'
-import { RegisterDto, LoginDto } from './dto'
+import { RegisterDto, LoginDto, UpdateProfileDto, ChangePasswordDto } from './dto'
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -86,6 +86,23 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Не авторизован' })
   async me(@CurrentUser() user: JwtPayload) {
     return this.auth.me(user)
+  }
+
+  @Patch('profile')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Обновление профиля' })
+  @ApiResponse({ status: 200, description: 'Профиль обновлен' })
+  async updateProfile(@Body() dto: UpdateProfileDto, @CurrentUser() user: JwtPayload) {
+    return this.auth.updateProfile(user.sub, dto)
+  }
+
+  @Patch('password')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Смена пароля' })
+  @ApiResponse({ status: 200, description: 'Пароль изменен' })
+  @ApiResponse({ status: 401, description: 'Неверный старый пароль' })
+  async changePassword(@Body() dto: ChangePasswordDto, @CurrentUser() user: JwtPayload) {
+    return this.auth.changePassword(user.sub, dto)
   }
 
   private setCookies(res: FastifyReply, accessToken: string, refreshToken: string) {

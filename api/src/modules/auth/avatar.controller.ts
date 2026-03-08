@@ -1,5 +1,10 @@
 import { Controller, Post, Req, UseGuards } from '@nestjs/common'
-import { ApiTags, ApiOperation, ApiResponse, ApiConsumes } from '@nestjs/swagger'
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiConsumes
+} from '@nestjs/swagger'
 import type { FastifyRequest } from 'fastify'
 import { join, extname } from 'path'
 import { mkdir, writeFile } from 'fs/promises'
@@ -32,17 +37,29 @@ export class AvatarController {
     const file = await req.file({ limits: { fileSize: MAX_SIZE } })
 
     if (!file) {
-      throw new AppException(ErrorCode.FILE_NOT_PROVIDED, 400, 'File not provided')
+      throw new AppException(
+        ErrorCode.FILE_NOT_PROVIDED,
+        400,
+        'File not provided'
+      )
     }
 
     if (!ALLOWED_MIMES.includes(file.mimetype)) {
-      throw new AppException(ErrorCode.FILE_INVALID_TYPE, 400, 'Only PNG, JPEG and WebP allowed')
+      throw new AppException(
+        ErrorCode.FILE_INVALID_TYPE,
+        400,
+        'Only PNG, JPEG and WebP allowed'
+      )
     }
 
     const buffer = await file.toBuffer()
 
     if (buffer.length > MAX_SIZE) {
-      throw new AppException(ErrorCode.FILE_TOO_LARGE, 400, 'File too large (max 5MB)')
+      throw new AppException(
+        ErrorCode.FILE_TOO_LARGE,
+        400,
+        'File too large (max 5MB)'
+      )
     }
 
     const ext = extname(file.filename) || '.jpg'

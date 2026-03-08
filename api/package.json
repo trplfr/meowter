@@ -3,11 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "nest start --watch",
+    "dev": "yarn workspace shared build && nest start --watch",
     "build": "yarn workspace shared build && nest build",
     "start": "node dist/main.js",
     "test": "vitest run",
-    "lint": "eslint src/"
+    "lint": "eslint src/",
+    "seed": "npx tsx --env-file=.env src/db/seed.ts"
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",

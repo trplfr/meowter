@@ -1,0 +1,132 @@
+/* Card */
+
+.card {
+  padding: $spacing-md;
+  background: $color-bg;
+  border-bottom: $separator-height solid $color-separator;
+}
+
+/* Top: avatar + meta */
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-sm;
+}
+
+.avatarLink {
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: $avatar-md;
+  height: $avatar-md;
+  border-radius: $radius-round;
+  object-fit: cover;
+  display: block;
+}
+
+.avatarPlaceholder {
+  width: $avatar-md;
+  height: $avatar-md;
+  border-radius: $radius-round;
+  background: $color-separator;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-secondary;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.authorName {
+  font-size: $font-size-base;
+  font-weight: 700;
+  color: $color-text;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.time {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+/* Content */
+
+.content {
+  font-size: $font-size-base;
+  line-height: 1.5;
+  color: $color-text;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  margin-bottom: $spacing-sm;
+}
+
+.tilde {
+  color: $color-primary;
+  background: rgba($color-primary, 0.12);
+  border-radius: 3px;
+  padding: 1px 4px;
+}
+
+/* Image */
+
+.imageWrap {
+  margin-bottom: $spacing-sm;
+  border-radius: $radius-md;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  display: block;
+  border-radius: $radius-md;
+}
+
+/* Actions */
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  height: 18px;
+  color: $color-icon-muted;
+  font-size: $font-size-sm;
+  text-decoration: none;
+  transition: color 0.15s;
+
+  &:active {
+    color: $color-text-secondary;
+  }
+}
+
+.likeAction {
+  &:active {
+    color: $color-primary;
+  }
+}
+
+.liked {
+  color: $color-primary;
+}
+
+.count {
+  font-size: $font-size-sm;
+  line-height: 18px;
+  color: inherit;
+}

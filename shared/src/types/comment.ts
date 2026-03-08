@@ -6,5 +6,7 @@ export interface Comment {
   author: User
   content: string
   parentId: string | null
+  isLiked: boolean
+  likesCount: number
   createdAt: string
 }

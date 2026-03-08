@@ -9,6 +9,7 @@ export interface MeowTag {
 export interface Meow {
   id: string
   content: string
+  imageUrl: string | null
   tags: MeowTag[]
   author: User
   likesCount: number

@@ -2,6 +2,8 @@ import { sample } from 'effector'
 import { redirect } from 'atomic-router'
 
 import { routes } from '@core/router'
+import { followChanged } from '@logic/feed'
+import { stopPolling } from '@logic/notifications'
 
 import {
   $session,
@@ -64,7 +66,7 @@ sample({
 
 sample({
   clock: logoutFx.done,
-  target: sessionReset
+  target: [sessionReset, stopPolling]
 })
 
 redirect({
@@ -85,6 +87,52 @@ redirect({
     ],
     source: $isAuthenticated,
     filter: (isAuth) => !isAuth
+  }),
+  route: routes.unauthorized
+})
+
+// /me = авторизованный, /cat/:username = публичный
+redirect({
+  clock: sample({
+    clock: routes.catProfile.opened,
+    source: {
+      isAuth: $isAuthenticated,
+      params: routes.catProfile.$params
+    },
+    filter: ({ isAuth, params }) => !isAuth && !params.username
+  }),
+  route: routes.unauthorized
+})
+
+/* Follow changed: update session followingCount */
+
+sample({
+  clock: followChanged,
+  source: $session,
+  filter: (session) => session !== null,
+  fn: (session, { delta }) => ({
+    ...session!,
+    followingCount: session!.followingCount + delta
+  }),
+  target: $session
+})
+
+/* Session check failed: redirect to unauthorized if on auth-required page */
+
+redirect({
+  clock: sample({
+    clock: fetchSessionFx.fail,
+    source: {
+      feed: routes.feed.$isOpened,
+      search: routes.search.$isOpened,
+      notifications: routes.notifications.$isOpened,
+      settings: routes.settings.$isOpened,
+      createMeow: routes.createMeow.$isOpened,
+      catProfile: routes.catProfile.$isOpened
+    },
+    filter: (opened) =>
+      opened.feed || opened.search || opened.notifications ||
+      opened.settings || opened.createMeow || opened.catProfile
   }),
   route: routes.unauthorized
 })

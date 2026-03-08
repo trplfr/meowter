@@ -11,6 +11,5 @@ export interface CatProfileParams {
 }
 
 export interface MeowThreadParams {
-  username: string
   meowId: string
 }

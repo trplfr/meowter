@@ -12,18 +12,34 @@ export class AppError extends Error {
   }
 }
 
+// колбек для глобальной обработки ошибок (устанавливается из клиентского entry)
+let onApiError: ((error: AppError) => void) | null = null
+
+export const setApiErrorHandler = (handler: (error: AppError) => void) => {
+  onApiError = handler
+}
+
 const parseError = async (error: unknown): Promise<never> => {
+  let appError: AppError
+
   if (error instanceof HTTPError) {
     const body = await error.response.json().catch(() => ({})) as Partial<ApiErrorResponse>
 
-    throw new AppError(
+    appError = new AppError(
       body.code || ErrorCode.INTERNAL_ERROR,
       error.response.status,
       body.message || 'Unknown error'
     )
+  } else {
+    appError = new AppError(ErrorCode.INTERNAL_ERROR, 0, 'Network error')
   }
 
-  throw new AppError(ErrorCode.INTERNAL_ERROR, 0, 'Network error')
+  // 401 не показываем — обрабатывается refresh логикой
+  if (appError.status !== 401 && onApiError) {
+    onApiError(appError)
+  }
+
+  throw appError
 }
 
 export const api = ky.create({

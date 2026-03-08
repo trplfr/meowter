@@ -26,3 +26,15 @@ body {
   color: $color-white !important;
   border-color: $color-success !important;
 }
+
+/* Focus visible */
+:focus-visible {
+  outline: 2px solid $color-primary;
+  outline-offset: 2px;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+}

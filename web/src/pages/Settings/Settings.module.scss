@@ -1,0 +1,177 @@
+.content {
+  padding: $spacing-md;
+  gap: $spacing-lg;
+}
+
+/* Header check button */
+
+.headerCheck {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-primary;
+  transition: opacity 0.15s;
+
+  &:disabled {
+    color: $color-primary-disabled;
+  }
+}
+
+/* Avatar */
+
+.avatarSection {
+  display: flex;
+  justify-content: center;
+  padding: $spacing-lg 0;
+}
+
+.avatarWrap {
+  position: relative;
+  width: $avatar-profile;
+  height: $avatar-profile;
+}
+
+.avatar {
+  width: $avatar-profile;
+  height: $avatar-profile;
+  border-radius: $radius-round;
+  object-fit: cover;
+  display: block;
+}
+
+.avatarPlaceholder {
+  width: $avatar-profile;
+  height: $avatar-profile;
+  border-radius: $radius-round;
+  background: $color-separator;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-secondary;
+}
+
+.avatarUpload {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-round;
+  background: $color-primary;
+  color: $color-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 3px solid $color-bg;
+}
+
+.avatarInput {
+  display: none;
+}
+
+/* Section */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.sectionTitle {
+  font-size: $font-size-base;
+  font-weight: 700;
+  color: $color-text;
+}
+
+/* Fields */
+
+.fieldWrap {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.fieldError {
+  font-size: $font-size-xs;
+  color: $color-error;
+  padding: 0 $spacing-md;
+}
+
+.input {
+  width: 100%;
+  padding: $spacing-sm $spacing-md;
+  font-size: $font-size-base;
+  font-family: $font-family;
+  color: $color-text;
+  background: $color-bg;
+  border: $separator-height solid $color-separator;
+  border-radius: $radius-lg;
+  outline: none;
+  transition: border-color 0.15s;
+
+  &::placeholder {
+    color: $color-text-secondary;
+  }
+
+  &:focus {
+    border-color: $color-primary;
+  }
+}
+
+.selectWrap {
+  position: relative;
+}
+
+.select {
+  composes: input;
+  appearance: none;
+  padding-right: calc($spacing-md + 24px);
+  cursor: pointer;
+}
+
+.selectIcon {
+  position: absolute;
+  right: $spacing-md;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $color-text-secondary;
+  pointer-events: none;
+}
+
+.textarea {
+  composes: input;
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+/* Submit = desktop only */
+
+.submit {
+  display: none;
+
+  @media (min-width: $breakpoint-desktop) {
+    display: block;
+    width: 100%;
+    padding: $spacing-sm;
+    font-size: $font-size-base;
+    font-weight: 700;
+    font-family: $font-family;
+    color: $color-white;
+    background: $color-primary;
+    border: none;
+    border-radius: $radius-button;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+
+    &:active {
+      background: $color-primary-active;
+    }
+
+    &:disabled {
+      background: $color-primary-disabled;
+      cursor: default;
+    }
+  }
+}

@@ -112,6 +112,7 @@ export default defineConfig({
 
           const template = await environments.web.getTransformedHtml('index')
           const html = template
+            .replace('lang=""', `lang="${result.locale}"`)
             .replace(
               '</head>',
               `<script>self.__SSR_STATE__ = ${JSON.stringify(result.scopeData)}</script></head>`

@@ -1,16 +1,21 @@
+import { type User } from './user'
+import { type Meow } from './meow'
+
 export enum NotificationType {
-  LIKE = 'LIKE',
-  COMMENT = 'COMMENT',
   FOLLOW = 'FOLLOW',
-  REMEOW = 'REMEOW'
+  MEOW_LIKE = 'MEOW_LIKE',
+  COMMENT_LIKE = 'COMMENT_LIKE'
 }
 
 export interface Notification {
   id: string
-  userId: string
   type: NotificationType
-  actorId: string
-  meowId: string | null
+  actor: User
+  meow: Meow | null
   read: boolean
   createdAt: string
+}
+
+export interface UnreadCount {
+  count: number
 }

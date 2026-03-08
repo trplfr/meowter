@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
-import { eq, or } from 'drizzle-orm'
+import { eq, or, sql } from 'drizzle-orm'
 import * as bcrypt from 'bcrypt'
 import type Redis from 'ioredis'
 import { randomUUID } from 'crypto'
@@ -10,11 +10,11 @@ import { ErrorCode } from '@shared/types'
 
 import { DB, type Db } from '../../db/db.module'
 import { REDIS } from '../../db/redis.module'
-import { cats } from '../../db/schema'
+import { cats, follows } from '../../db/schema'
 import { AppException } from '../../common/exceptions'
 import type { JwtPayload } from '../../common/decorators'
 
-import type { RegisterDto, LoginDto } from './dto'
+import type { RegisterDto, LoginDto, UpdateProfileDto, ChangePasswordDto } from './dto'
 
 @Injectable()
 export class AuthService {
@@ -138,6 +138,7 @@ export class AuthService {
         lastName: cats.lastName,
         bio: cats.bio,
         contacts: cats.contacts,
+        sex: cats.sex,
         avatarUrl: cats.avatarUrl,
         createdAt: cats.createdAt
       })
@@ -149,7 +150,105 @@ export class AuthService {
       throw new AppException(ErrorCode.USER_NOT_FOUND, 404, 'User not found')
     }
 
-    return user
+    const [{ count: followingCount }] = await this.db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(follows)
+      .where(eq(follows.followerId, user.id))
+
+    const [{ count: followersCount }] = await this.db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(follows)
+      .where(eq(follows.followingId, user.id))
+
+    return {
+      ...user,
+      followingCount,
+      followersCount,
+      isFollowing: false,
+      isOwn: true
+    }
+  }
+
+  async updateProfile(userId: string, dto: UpdateProfileDto) {
+    // если displayName задан явно = используем его, иначе fallback на firstName + lastName
+    const displayName = dto.displayName !== undefined
+      ? dto.displayName
+      : [dto.firstName, dto.lastName].filter(Boolean).join(' ') || undefined
+
+    const [user] = await this.db
+      .update(cats)
+      .set({
+        firstName: dto.firstName,
+        lastName: dto.lastName,
+        bio: dto.bio,
+        contacts: dto.contacts,
+        sex: dto.sex,
+        ...(displayName ? { displayName } : {}),
+        updatedAt: new Date()
+      })
+      .where(eq(cats.id, userId))
+      .returning({
+        id: cats.id,
+        username: cats.username,
+        email: cats.email,
+        displayName: cats.displayName,
+        firstName: cats.firstName,
+        lastName: cats.lastName,
+        bio: cats.bio,
+        contacts: cats.contacts,
+        sex: cats.sex,
+        avatarUrl: cats.avatarUrl,
+        createdAt: cats.createdAt
+      })
+
+    if (!user) {
+      throw new AppException(ErrorCode.USER_NOT_FOUND, 404, 'User not found')
+    }
+
+    const [{ count: followingCount }] = await this.db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(follows)
+      .where(eq(follows.followerId, user.id))
+
+    const [{ count: followersCount }] = await this.db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(follows)
+      .where(eq(follows.followingId, user.id))
+
+    return {
+      ...user,
+      followingCount,
+      followersCount,
+      isFollowing: false,
+      isOwn: true
+    }
+  }
+
+  async changePassword(userId: string, dto: ChangePasswordDto) {
+    const [user] = await this.db
+      .select({ passwordHash: cats.passwordHash })
+      .from(cats)
+      .where(eq(cats.id, userId))
+      .limit(1)
+
+    if (!user) {
+      throw new AppException(ErrorCode.USER_NOT_FOUND, 404, 'User not found')
+    }
+
+    const valid = await bcrypt.compare(dto.oldPassword, user.passwordHash)
+
+    if (!valid) {
+      throw new AppException(ErrorCode.WRONG_PASSWORD, 401, 'Old password is incorrect')
+    }
+
+    const passwordHash = await bcrypt.hash(dto.newPassword, 10)
+
+    await this.db
+      .update(cats)
+      .set({ passwordHash, updatedAt: new Date() })
+      .where(eq(cats.id, userId))
+
+    return { ok: true }
   }
 
   async updateAvatar(userId: string, avatarUrl: string) {

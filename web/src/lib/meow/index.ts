@@ -1,0 +1,1 @@
+export { highlightTildes } from './highlightTildes'

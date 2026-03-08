@@ -1,6 +1,5 @@
+import { createMeow } from '@logic/api/meows'
+
 import { createMeowFx } from '../models'
 
-// TODO: подключить API когда будет готов эндпоинт
-createMeowFx.use(async (params) => {
-  console.log('create meow', params)
-})
+createMeowFx.use((params) => createMeow(params))

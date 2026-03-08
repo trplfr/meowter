@@ -1,4 +1,4 @@
-import { createHistoryRouter, createRoute } from 'atomic-router'
+import { createHistoryRouter, createRoute, createRouterControls } from 'atomic-router'
 
 import { type CatProfileParams, type MeowThreadParams, type RouteConfig } from './types'
 
@@ -28,15 +28,18 @@ export const routesMap: RouteConfig[] = [
   { path: '/register', route: routes.register },
   { path: '/recovery', route: routes.recovery },
   { path: '/feed', route: routes.feed },
+  { path: '/me', route: routes.catProfile },
   { path: '/cat/:username', route: routes.catProfile },
-  { path: '/cat/:username/meow/:meowId', route: routes.meowThread },
   { path: '/search', route: routes.search },
   { path: '/notifications', route: routes.notifications },
   { path: '/settings', route: routes.settings },
   { path: '/meow', route: routes.createMeow },
+  { path: '/meow/:meowId', route: routes.meowThread },
   { path: '/unauthorized', route: routes.unauthorized }
 ]
 
 /* Router */
 
-export const router = createHistoryRouter({ routes: routesMap })
+export const controls = createRouterControls()
+
+export const router = createHistoryRouter({ routes: routesMap, controls })

@@ -7,6 +7,8 @@ import { createBrowserHistory } from 'history'
 
 import { router } from '@core/router'
 import { appStarted } from '@logic/session'
+import { errorOccurred } from '@logic/notifications'
+import { setApiErrorHandler } from '@lib/api'
 
 import { App } from './App'
 
@@ -17,6 +19,8 @@ const root = document.getElementById('root')
 if (!root) {
   throw new Error('Root element not found')
 }
+
+setApiErrorHandler((error) => errorOccurred(error))
 
 const serverState = (globalThis as any).__SSR_STATE__
 const scope = fork(serverState ? { values: serverState } : undefined)

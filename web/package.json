@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "rsbuild dev",
+    "dev": "yarn workspace shared build && rsbuild dev",
     "build": "rsbuild build",
     "preview": "rsbuild preview",
     "test": "rstest run",

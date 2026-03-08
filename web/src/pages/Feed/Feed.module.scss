@@ -1,3 +1,25 @@
 .content {
   background: $color-bg-secondary;
+  padding: 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+
+  & > :last-child {
+    margin-bottom: $spacing-xs;
+  }
+}
+
+.empty {
+  padding: $spacing-xl $spacing-md;
+  text-align: center;
+  font-size: $font-size-base;
+  color: $color-text-secondary;
+}
+
+.sentinel {
+  height: 1px;
 }

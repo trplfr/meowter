@@ -20,6 +20,8 @@
     "db": "yarn workspace api drizzle-kit generate && yarn workspace api drizzle-kit migrate",
     "db:migrate": "yarn workspace api drizzle-kit migrate",
     "db:generate": "yarn workspace api drizzle-kit generate",
+    "db:push": "yarn workspace api drizzle-kit push",
+    "db:seed": "yarn workspace api seed",
     "db:view": "yarn workspace api drizzle-kit studio",
     "prepare": "husky"
   },

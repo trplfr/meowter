@@ -21,6 +21,8 @@
   display: flex;
   align-items: center;
   height: $header-height;
+  min-height: $header-height;
+  flex-shrink: 0;
   padding: 0 $spacing-md;
   border-bottom: $separator-height solid $color-separator;
   gap: $spacing-sm;
@@ -30,11 +32,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: $color-text;
+  color: $color-icon-muted;
 
   @media (min-width: $breakpoint-desktop) {
     display: none;
   }
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-primary;
 }
 
 .burgerDesktop {
@@ -56,10 +65,30 @@
 }
 
 .bell {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   color: $color-icon-muted;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -6px;
+  left: -8px;
+  width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: $radius-round;
+  background: $color-primary;
+  color: $color-white;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
 }
 
 /* Main */
@@ -68,11 +97,12 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  height: 100dvh;
+  max-height: 100dvh;
   padding-bottom: $bottom-nav-height;
 
   @media (min-width: $breakpoint-desktop) {
     max-width: $content-width;
-    min-height: 100dvh;
     width: 100%;
     margin: 0 auto;
     padding-bottom: 0;
@@ -88,6 +118,8 @@
   display: flex;
   flex-direction: column;
   padding: 0 $spacing-md;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 /* Panel */

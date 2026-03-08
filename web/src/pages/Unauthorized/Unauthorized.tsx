@@ -22,7 +22,7 @@ export const Unauthorized = () => {
       <div className={s.header} />
 
       <div className={s.content}>
-        <img className={s.cat} src={credentialsCat} alt="" />
+        <img className={s.cat} src={credentialsCat} alt='' />
         <h1 className={s.title}>
           <Trans>Ай!</Trans>
         </h1>
@@ -31,13 +31,13 @@ export const Unauthorized = () => {
         </p>
 
         <div className={s.actions}>
-          <Button variant="primary" fullWidth asChild>
-            <Link to={routes.register}>
-              <Trans>Зарегистрироваться</Trans>
+          <Button variant='primary' fullWidth asChild>
+            <Link to={routes.login}>
+              <Trans>Войти в аккаунт</Trans>
             </Link>
           </Button>
-          <Link to={routes.login} className={s.link}>
-            <Trans>Войти в аккаунт</Trans>
+          <Link to={routes.register} className={s.link}>
+            <Trans>Зарегистрироваться</Trans>
           </Link>
         </div>
       </div>

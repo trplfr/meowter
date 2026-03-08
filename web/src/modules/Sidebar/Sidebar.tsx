@@ -31,7 +31,7 @@ export const Sidebar = ({ open, onClose }: SidebarProps) => {
 
   return (
     <>
-      <div className={clsx(s.overlay, open && s.visible)} onClick={onClose} />
+      <div className={clsx(s.overlay, open && s.visible)} role="button" aria-label="Закрыть меню" onClick={onClose} />
       <aside className={clsx(s.sidebar, hasBeenOpened.current && s.animated, open && s.open)}>
         <div className={s.profile}>
           {session?.avatarUrl ? (
@@ -46,7 +46,7 @@ export const Sidebar = ({ open, onClose }: SidebarProps) => {
 
         <div className={s.separator} />
 
-        <nav className={s.nav}>
+        <nav className={s.nav} aria-label="Боковое меню">
           <Link to={routes.feed} className={s.navItem} onClick={onClose}>
             <Trans>Лента</Trans>
           </Link>
@@ -70,7 +70,7 @@ export const Sidebar = ({ open, onClose }: SidebarProps) => {
 
         <div className={s.footer}>
           <img className={s.logoutCat} src={logoutCat} alt="" />
-          <button className={s.logoutButton} onClick={handleLogout}>
+          <button type="button" className={s.logoutButton} onClick={handleLogout}>
             <Trans>Выйти из аккаунта</Trans>
           </button>
         </div>

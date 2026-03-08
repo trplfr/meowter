@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "types": "src/index.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "build:watch": "tsc --watch --preserveWatchOutput"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

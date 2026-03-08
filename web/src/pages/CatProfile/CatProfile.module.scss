@@ -1,0 +1,157 @@
+.content {
+  padding: 0;
+}
+
+/* Profile header */
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-lg $spacing-md;
+  border-bottom: $separator-height solid $color-separator;
+  background: $color-bg;
+}
+
+.avatarWrap {
+  margin-bottom: $spacing-sm;
+
+  img,
+  div {
+    width: $avatar-xl;
+    height: $avatar-xl;
+    border-radius: $radius-round;
+    object-fit: cover;
+    display: block;
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 32px;
+      height: 32px;
+    }
+  }
+}
+
+.name {
+  font-size: $font-size-lg;
+  font-weight: 700;
+  color: $color-text;
+  text-align: center;
+  margin-bottom: $spacing-xs;
+}
+
+.bio {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  text-align: center;
+  margin-bottom: $spacing-xs;
+  line-height: 1.4;
+}
+
+.contacts {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  text-align: center;
+  margin-bottom: $spacing-md;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: $font-family;
+  transition: opacity 0.15s;
+
+  &:active {
+    opacity: 0.6;
+  }
+}
+
+/* Stats */
+
+.stats {
+  display: flex;
+  gap: $spacing-xl;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.statCount {
+  font-size: $font-size-lg;
+  font-weight: 700;
+  color: $color-text;
+}
+
+.statLabel {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+/* Follow button */
+
+.followButton,
+.unfollowButton {
+  margin-top: $spacing-md;
+  padding: $spacing-sm $spacing-xl;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  border-radius: $radius-button;
+  transition: all 0.15s;
+}
+
+.followButton {
+  color: $color-primary;
+  border: 2px solid $color-primary;
+  background: transparent;
+
+  &:hover {
+    background: $color-primary;
+    color: $color-white;
+  }
+
+  &:active {
+    background: $color-primary-active;
+    color: $color-white;
+  }
+}
+
+.unfollowButton {
+  color: $color-white;
+  background: $color-primary;
+  border: 2px solid $color-primary;
+
+  &:hover {
+    background: $color-primary-hover;
+    border-color: $color-primary-hover;
+  }
+}
+
+/* Meows list */
+
+.meows {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  background: $color-bg-secondary;
+
+  & > :last-child {
+    margin-bottom: $spacing-xs;
+  }
+}
+
+.empty {
+  padding: $spacing-xl $spacing-md;
+  text-align: center;
+  font-size: $font-size-base;
+  color: $color-text-secondary;
+}
+
+.sentinel {
+  height: 1px;
+}
