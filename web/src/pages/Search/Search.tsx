@@ -1,12 +1,17 @@
 import './models/init'
 
+import { useCallback } from 'react'
 import { useEffect, useRef } from 'react'
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
 import { useUnit } from 'effector-react'
 import { Search as SearchIcon, X } from 'lucide-react'
 
+import { type Meow, type MeowPreview } from '@shared/types'
+
 import { routes } from '@core/router'
+import { $session } from '@logic/session'
+import { meowDeleted, remeowToggled, replyInitiated } from '@logic/feed'
 
 import { Layout } from '@modules/Layout'
 import { MeowCard, MeowCardSkeleton } from '@modules/MeowCard'
@@ -42,7 +47,8 @@ export const Search = () => {
     hasMore,
     isOpen,
     pending,
-    tagsLoaded
+    tagsLoaded,
+    session
   ] = useUnit([
     $tags,
     $query,
@@ -51,7 +57,8 @@ export const Search = () => {
     $hasMore,
     $isOpen,
     searchQuery.$pending,
-    $tagsLoaded
+    $tagsLoaded,
+    $session
   ])
   const [
     onQueryChange,
@@ -59,15 +66,35 @@ export const Search = () => {
     onClear,
     onLoadMore,
     onLike,
-    onDropdownOpen
+    onDropdownOpen,
+    onDelete,
+    onRemeow,
+    onReply
   ] = useUnit([
     queryChanged,
     tagSelected,
     cleared,
     loadMore,
     meowLikeToggled,
-    dropdownOpened
+    dropdownOpened,
+    meowDeleted,
+    remeowToggled,
+    replyInitiated
   ])
+
+  const handleReply = useCallback(
+    (meow: Meow) => {
+      const preview: MeowPreview = {
+        id: meow.id,
+        content: meow.content,
+        imageUrl: meow.imageUrl,
+        author: meow.author,
+        createdAt: meow.createdAt
+      }
+      onReply(preview)
+    },
+    [onReply]
+  )
 
   const inputRef = useRef<HTMLInputElement>(null)
   const wrapRef = useRef<HTMLDivElement>(null)
@@ -176,14 +203,22 @@ export const Search = () => {
               onLoadMore={onLoadMore}
               className={s.list}
               renderItem={meow => (
-                <MeowCard key={meow.id} meow={meow} onLike={onLike} />
+                <MeowCard
+                  key={meow.id}
+                  meow={meow}
+                  onLike={onLike}
+                  onDelete={onDelete}
+                  onRemeow={onRemeow}
+                  onReply={handleReply}
+                  isOwn={session?.id === meow.author.id}
+                />
               )}
             />
           )}
 
           {meows.length === 0 && !pending && (
             <div className={s.empty}>
-              <Trans>Нет мяутов по теме ~{selectedTag}</Trans>
+              <Trans>Вы ещё не говорили на эту тему</Trans>
             </div>
           )}
         </div>

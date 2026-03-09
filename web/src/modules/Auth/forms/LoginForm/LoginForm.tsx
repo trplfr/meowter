@@ -38,6 +38,7 @@ export const LoginForm = () => {
         <Input
           id="login-email"
           name="email"
+          autoComplete="email"
           placeholder={t`Электронная почта`}
           value={form.email}
           error={errors.email ?? undefined}
@@ -46,6 +47,7 @@ export const LoginForm = () => {
         <Input
           id="login-password"
           name="password"
+          autoComplete="current-password"
           placeholder={t`Пароль`}
           isPassword
           value={form.password}

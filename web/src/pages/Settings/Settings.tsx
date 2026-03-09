@@ -56,13 +56,18 @@ export const Settings = () => {
 
   const avatarSrc = avatarPreview || session?.avatarUrl
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    onSubmit()
+  }
+
   const headerAction = (
     <button
-      type="button"
+      type="submit"
+      form="settings-form"
       aria-label="Сохранить"
       className={s.headerCheck}
       disabled={!canSubmit}
-      onClick={() => onSubmit()}
     >
       <Check size={24} />
     </button>
@@ -71,6 +76,8 @@ export const Settings = () => {
   return (
     <Layout title={<Trans>Настройки</Trans>} contentClassName={s.content} headerAction={headerAction}>
       <title>{t`Настройки / Мяутер`}</title>
+
+      <form id="settings-form" className={s.form} onSubmit={handleSubmit}>
 
       {/* Avatar */}
       <div className={s.avatarSection}>
@@ -177,6 +184,7 @@ export const Settings = () => {
           name="oldPassword"
           className={s.input}
           type="password"
+          autoComplete="current-password"
           placeholder={t`Введите старый пароль`}
           value={passwordForm.oldPassword}
           onChange={(e) => onPasswordChange({ field: 'oldPassword', value: e.target.value })}
@@ -188,6 +196,7 @@ export const Settings = () => {
             name="newPassword"
             className={s.input}
             type="password"
+            autoComplete="new-password"
             placeholder={t`Придумайте новый пароль`}
             value={passwordForm.newPassword}
             onChange={(e) => onPasswordChange({ field: 'newPassword', value: e.target.value })}
@@ -205,6 +214,7 @@ export const Settings = () => {
             name="confirmPassword"
             className={s.input}
             type="password"
+            autoComplete="new-password"
             placeholder={t`Повторите пароль`}
             value={passwordForm.confirmPassword}
             onChange={(e) => onPasswordChange({ field: 'confirmPassword', value: e.target.value })}
@@ -219,12 +229,14 @@ export const Settings = () => {
 
       {/* Обновить = только десктоп */}
       <button
+        type="submit"
         className={s.submit}
         disabled={!canSubmit}
-        onClick={() => onSubmit()}
       >
         <Trans>Обновить</Trans>
       </button>
+
+      </form>
     </Layout>
   )
 }

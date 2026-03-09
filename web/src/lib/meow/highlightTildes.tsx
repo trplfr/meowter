@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react'
 
-// разбивает текст на фрагменты, оборачивая ~слово в span
-export const highlightTildes = (text: string, className?: string): ReactNode[] => {
+// разбивает текст на фрагменты, оборачивая ~слово в mark или ссылку
+export const highlightTildes = (text: string, className?: string, linkable?: boolean): ReactNode[] => {
   const parts: ReactNode[] = []
   const regex = /(~[\w\u0400-\u04FF]+)/g
   let lastIndex = 0
@@ -12,11 +12,21 @@ export const highlightTildes = (text: string, className?: string): ReactNode[] =
       parts.push(text.slice(lastIndex, match.index))
     }
 
-    parts.push(
-      <mark key={match.index} data-tilde className={className}>
-        {match[0]}
-      </mark>
-    )
+    const tag = match[0].slice(1)
+
+    if (linkable) {
+      parts.push(
+        <a key={match.index} href={`/search?tag=${encodeURIComponent(tag)}`} className={className}>
+          {match[0]}
+        </a>
+      )
+    } else {
+      parts.push(
+        <mark key={match.index} data-tilde className={className}>
+          {match[0]}
+        </mark>
+      )
+    }
 
     lastIndex = regex.lastIndex
   }

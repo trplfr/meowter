@@ -39,6 +39,11 @@
   color: $color-primary;
   margin-top: $spacing-lg;
   cursor: pointer;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.8;
+  }
 }
 
 .avatarPlaceholder {

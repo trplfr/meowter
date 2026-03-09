@@ -6,6 +6,7 @@
   display: flex;
   flex-direction: column;
   background: $color-bg;
+  overflow-x: hidden;
 
   @media (min-width: $breakpoint-desktop) {
     max-width: $sidebar-width + $content-width + $panel-width;
@@ -73,6 +74,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
   height: 100dvh;
   max-height: 100dvh;
   padding-bottom: $bottom-nav-height;

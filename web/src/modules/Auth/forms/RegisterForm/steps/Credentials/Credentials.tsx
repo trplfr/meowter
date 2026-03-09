@@ -38,6 +38,7 @@ export const Credentials = () => {
         <Input
           id="register-username"
           name="username"
+          autoComplete="username"
           placeholder={t`Логин`}
           value={form.username}
           error={errors.username ?? undefined}
@@ -46,6 +47,7 @@ export const Credentials = () => {
         <Input
           id="register-password"
           name="password"
+          autoComplete="new-password"
           placeholder={t`Пароль`}
           isPassword
           value={form.password}
@@ -55,6 +57,7 @@ export const Credentials = () => {
         <Input
           id="register-email"
           name="email"
+          autoComplete="email"
           placeholder={t`Электронная почта`}
           type="email"
           value={form.email}

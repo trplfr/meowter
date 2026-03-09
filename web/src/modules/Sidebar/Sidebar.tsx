@@ -17,6 +17,8 @@ import { routes } from '@core/router'
 import { $session, logout } from '@logic/session'
 import { $unreadCount } from '@logic/notifications'
 
+import logo from '@assets/images/hello.png'
+
 import s from './Sidebar.module.scss'
 
 interface SidebarNavItem {
@@ -29,7 +31,11 @@ interface SidebarNavItem {
 }
 
 export const Sidebar = () => {
-  const [session, unreadCount, onLogout] = useUnit([$session, $unreadCount, logout])
+  const [session, unreadCount, onLogout] = useUnit([
+    $session,
+    $unreadCount,
+    logout
+  ])
 
   const isActive = useUnit({
     feed: routes.feed.$isOpened,
@@ -42,8 +48,18 @@ export const Sidebar = () => {
   const navItems: SidebarNavItem[] = [
     { route: routes.feed, icon: House, active: isActive.feed },
     { route: routes.search, icon: Search, active: isActive.search },
-    { route: routes.createMeow, icon: Plus, active: isActive.createMeow, create: true },
-    { route: routes.notifications, icon: Heart, active: isActive.notifications, badge: unreadCount },
+    {
+      route: routes.createMeow,
+      icon: Plus,
+      active: isActive.createMeow,
+      create: true
+    },
+    {
+      route: routes.notifications,
+      icon: Heart,
+      active: isActive.notifications,
+      badge: unreadCount
+    },
     {
       route: routes.catProfile,
       params: { username: session?.username || 'me' },
@@ -54,7 +70,11 @@ export const Sidebar = () => {
 
   return (
     <aside className={s.sidebar}>
-      <nav className={s.nav} aria-label="Боковое меню">
+      <Link to={routes.feed} params={{}} className={s.logo}>
+        <img src={logo} alt='Meowter' />
+      </Link>
+
+      <nav className={s.nav} aria-label='Боковое меню'>
         {navItems.map((item, i) => (
           <Link
             key={i}
@@ -77,7 +97,12 @@ export const Sidebar = () => {
         ))}
       </nav>
 
-      <button type="button" className={s.logoutButton} onClick={() => onLogout()} aria-label="Выйти">
+      <button
+        type='button'
+        className={s.logoutButton}
+        onClick={() => onLogout()}
+        aria-label='Выйти'
+      >
         <LogOut size={24} />
       </button>
     </aside>

@@ -53,16 +53,21 @@
   width: 100%;
   height: 100%;
   resize: none;
-  border: none;
+  border: 2px solid transparent;
   outline: none;
   overflow-y: auto;
   background: transparent;
   color: transparent;
   caret-color: $color-text;
+  transition: border-color 0.15s;
 
   &::placeholder {
     color: $color-text-secondary;
   }
+}
+
+.textareaError {
+  border-color: $color-error;
 }
 
 /* Hint */
@@ -82,20 +87,19 @@
   color: $color-primary;
 }
 
+.overLimit {
+  color: $color-error;
+}
+
 /* Image preview */
 
 .preview {
   position: relative;
-  width: $bottom-nav-height;
-  align-self: stretch;
+  width: $avatar-md;
+  height: $avatar-md;
+  flex-shrink: 0;
+  border-radius: $radius-sm;
   overflow: hidden;
-
-  @media (min-width: $breakpoint-desktop) {
-    width: $avatar-md;
-    height: $avatar-md;
-    align-self: center;
-    border-radius: $radius-sm;
-  }
 }
 
 .previewImage {
@@ -117,6 +121,12 @@
   border-radius: $radius-sm;
   background: $color-overlay-dark;
   color: $color-white;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover {
+    background: $color-overlay;
+  }
 }
 
 /* Toolbar */
@@ -124,12 +134,15 @@
 .toolbar {
   display: flex;
   align-items: center;
-  padding: 0;
+  gap: $spacing-xs;
+  padding: $spacing-xs;
   border-top: $separator-height solid $color-separator;
   background: $color-bg;
+  overflow: hidden;
 
   @media (min-width: $breakpoint-desktop) {
     border-top: none;
+    padding: $spacing-xs $spacing-sm;
   }
 }
 
@@ -139,7 +152,8 @@
   justify-content: center;
   width: $icon-button-size;
   height: $icon-button-size;
-  margin: $spacing-xs;
+  flex-shrink: 0;
+  order: 1;
   margin-left: auto;
   border-radius: $radius-md;
   color: $color-icon-muted;
@@ -156,14 +170,89 @@
   }
 
   @media (min-width: $breakpoint-desktop) {
-    margin-left: 0;
-    margin-right: auto;
     order: -1;
+    margin-left: 0;
   }
 }
 
 .fileInput {
   display: none;
+}
+
+/* Reply preview */
+
+.replyPreview {
+  flex: 1;
+  min-width: 0;
+  padding: $spacing-xs $spacing-sm;
+  border-left: $separator-height * 2 solid $color-separator;
+  border-radius: 0 $radius-sm $radius-sm 0;
+  background: $color-bg-secondary;
+  overflow: hidden;
+}
+
+.replyPreviewTop {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-xs;
+
+  & > img,
+  & > div:first-child {
+    width: $avatar-sm;
+    height: $avatar-sm;
+    border-radius: $radius-round;
+    object-fit: cover;
+    flex-shrink: 0;
+
+    svg {
+      width: $font-size-xs;
+      height: $font-size-xs;
+    }
+  }
+
+  & > div:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.replyPreviewAuthor {
+  font-size: $font-size-sm;
+  font-weight: 700;
+  color: $color-text;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.replyPreviewClose {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $icon-button-trigger;
+  height: $icon-button-trigger;
+  border-radius: $radius-sm;
+  color: $color-icon-muted;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: $color-hover-bg;
+    color: $color-text;
+  }
+}
+
+.replyPreviewContent {
+  font-size: $font-size-sm;
+  line-height: 1.4;
+  color: $color-text-secondary;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .submitButton {
@@ -172,7 +261,7 @@
   @media (min-width: $breakpoint-desktop) {
     display: block;
     margin-left: auto;
-    margin-right: $spacing-md;
+    flex-shrink: 0;
     align-self: center;
     padding: $spacing-xs $spacing-lg;
     font-size: $font-size-sm;
@@ -192,6 +281,7 @@
 
     &:disabled {
       background: $color-primary-disabled;
+      cursor: not-allowed;
     }
   }
 }

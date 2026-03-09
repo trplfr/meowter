@@ -21,7 +21,7 @@
 
 .comment {
   padding: $spacing-md;
-  padding-left: $spacing-md + $spacing-sm;
+  padding-left: $spacing-xl;
   background: $color-bg;
   border-bottom: $separator-height solid $color-separator;
 }
@@ -44,15 +44,32 @@
   flex: 1;
 }
 
+.commentAuthorRow {
+  display: flex;
+  align-items: center;
+  gap: $radius-sm;
+  min-width: 0;
+}
+
 .commentAuthor {
   font-size: $font-size-base;
   font-weight: 700;
   color: $color-text;
   text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   &:hover {
     text-decoration: underline;
   }
+}
+
+.commentVerified {
+  color: $color-primary;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
 }
 
 .commentMore {
@@ -75,6 +92,7 @@
   align-items: center;
   justify-content: space-between;
   margin-top: $spacing-sm;
+  margin-left: -$spacing-xs;
 }
 
 .replyButton {
@@ -107,13 +125,18 @@
   transition: background 0.15s, color 0.15s;
 
   &:hover {
-    background: $color-hover-bg;
-    color: $color-text;
+    color: $color-primary;
+    background: $color-tilde-bg;
   }
 }
 
 .commentLiked {
   color: $color-primary;
+
+  &:hover {
+    color: $color-primary;
+    background: $color-tilde-bg;
+  }
 }
 
 .commentLikeCount {
@@ -131,20 +154,30 @@
 
 /* Comment form */
 
+.commentFormWrap {
+  flex-shrink: 0;
+  border-top: $separator-height solid $color-separator;
+  background: $color-bg;
+}
+
+.commentError {
+  padding: $spacing-xs $spacing-md 0;
+  font-size: $font-size-xs;
+  color: $color-error;
+}
+
 .commentForm {
   display: flex;
-  align-items: flex-end;
+  align-items: stretch;
   gap: $spacing-sm;
   padding: $spacing-sm $spacing-md;
   background: $color-bg;
-  border-top: $separator-height solid $color-separator;
-  flex-shrink: 0;
 }
 
 .commentTextarea {
   flex: 1;
   resize: none;
-  border: none;
+  border: 1px solid transparent;
   border-radius: $radius-sm;
   padding: $spacing-sm;
   font-size: $font-size-base;
@@ -153,10 +186,16 @@
   color: $color-text;
   background: $color-bg-secondary;
   outline: none;
+  transition: border-color 0.15s;
 
   &::placeholder {
     color: $color-text-secondary;
   }
+}
+
+.commentTextareaError {
+  border-color: $color-error;
+  color: $color-error;
 }
 
 .commentSendButton {
@@ -165,8 +204,6 @@
   align-items: center;
   justify-content: center;
   width: $avatar-md;
-  height: 100%;
-  align-self: stretch;
   border: none;
   border-radius: $radius-sm;
   background: $color-primary;

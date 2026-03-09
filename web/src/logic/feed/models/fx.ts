@@ -1,6 +1,6 @@
 import { createQuery, createMutation } from '@farfetched/core'
 
-import { getFeed, likeMeow, unlikeMeow } from '@logic/api/meows'
+import { getFeed, likeMeow, unlikeMeow, deleteMeow, remeowMeow, undoRemeowMeow } from '@logic/api/meows'
 
 import { type FetchFeedParams, type ToggleLikeParams, type ToggleLikeResult } from '../types'
 
@@ -18,4 +18,16 @@ export const toggleLikeMutation = createMutation({
     await likeMeow(meowId)
     return { meowId, isLiked: true }
   }
+})
+
+export const deleteMeowMutation = createMutation({
+  handler: (meowId: string) => deleteMeow(meowId)
+})
+
+export const remeowMutation = createMutation({
+  handler: (meowId: string) => remeowMeow(meowId)
+})
+
+export const undoRemeowMutation = createMutation({
+  handler: (meowId: string) => undoRemeowMeow(meowId)
 })

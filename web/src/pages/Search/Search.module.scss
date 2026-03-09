@@ -51,6 +51,11 @@
   border: none;
   cursor: pointer;
   padding: $spacing-xs;
+  transition: color 0.15s;
+
+  &:hover {
+    color: $color-text;
+  }
 }
 
 /* Dropdown */
@@ -86,8 +91,12 @@
     border-bottom: none;
   }
 
-  &:active {
+  &:hover {
     background: $color-bg-secondary;
+  }
+
+  &:active {
+    background: $color-hover-bg;
   }
 }
 

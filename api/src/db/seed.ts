@@ -34,6 +34,10 @@ const pickN = <T>(arr: T[], min: number, max: number): T[] => {
   return shuffled.slice(0, count)
 }
 
+// смещение во времени: от now - offsetMinutes до now
+const timeAgo = (minutesAgo: number) =>
+  new Date(Date.now() - minutesAgo * 60 * 1000)
+
 /* Seed data */
 
 const PASSWORD = 'meow123'
@@ -240,6 +244,20 @@ const seedComments: string[] = [
   'Хочу так же, мур!'
 ]
 
+// ответы (reply) = мяут со ссылкой на оригинал + собственный ~тег
+const seedReplies: string[] = [
+  'Полностью поддерживаю! Сам давно увлекаюсь ~музыкой и все это чувствую',
+  'О да, ~кофе решает! Особенно утренний',
+  'А я вот думаю ~путешествия лучше планировать заранее, спонтанность не для меня',
+  'Про ~спорт согласен, после тренировки мир другой',
+  'Классная мысль про ~архитектуру, надо бы тоже сходить посмотреть',
+  'У меня похожий опыт с ~программированием, это затягивает',
+  'Согласна на счет ~книги, перечитаю обязательно',
+  'Про ~фотографию интересно, какую камеру используешь?',
+  'Солидарна! ~мода = способ выражения себя',
+  'Тоже смотрела, ~кино потрясающее'
+]
+
 /* Main seed function */
 
 const seed = async () => {
@@ -264,7 +282,6 @@ const seed = async () => {
   if (existingSeedCats.length > 0) {
     const ids = existingSeedCats.map((c) => c.id)
 
-    // notifications может не существовать если миграция не применена
     await db.execute(sql`
       DELETE FROM notifications
       WHERE actor_id = ANY(${ids}::uuid[]) OR user_id = ANY(${ids}::uuid[])
@@ -302,30 +319,38 @@ const seed = async () => {
 
   console.log(`Создано ${insertedCats.length} котов`)
 
-  // создаем мяуканья
-  const allInsertedMeows: { id: string; authorId: string; authorIndex: number }[] = []
+  // создаем мяуканья с разными таймстемпами
+  // мяуты разбросаны от 7 дней назад до 5 минут назад
+  const allInsertedMeows: { id: string; authorId: string; authorIndex: number; minutesAgo: number }[] = []
+  let minutesCounter = 7 * 24 * 60 // 7 дней
 
   for (let i = 0; i < insertedCats.length; i++) {
     const cat = insertedCats[i]
     const catMeows = seedMeows[i]
 
-    const inserted = await db
-      .insert(meows)
-      .values(
-        catMeows.map((content) => ({
-          authorId: cat.id,
-          content
-        }))
-      )
-      .returning({ id: meows.id })
+    for (const content of catMeows) {
+      // каждый следующий мяут ближе к сегодня (с рандомным шагом)
+      minutesCounter -= Math.floor(Math.random() * 200) + 30
 
-    // создаем теги для каждого мяуканья (stem считается через PostgreSQL)
-    for (let j = 0; j < inserted.length; j++) {
-      const tags = parseTildes(catMeows[j])
+      if (minutesCounter < 5) {
+        minutesCounter = 5
+      }
+
+      const [inserted] = await db
+        .insert(meows)
+        .values({
+          authorId: cat.id,
+          content,
+          createdAt: timeAgo(minutesCounter),
+          updatedAt: timeAgo(minutesCounter)
+        })
+        .returning({ id: meows.id })
+
+      const tags = parseTildes(content)
       if (tags.length > 0) {
         await db.insert(meowTags).values(
           tags.map((t) => ({
-            meowId: inserted[j].id,
+            meowId: inserted.id,
             tag: t.tag,
             stem: sql`stem_tag(${t.tag})`,
             position: t.position
@@ -334,14 +359,103 @@ const seed = async () => {
       }
 
       allInsertedMeows.push({
-        id: inserted[j].id,
+        id: inserted.id,
         authorId: cat.id,
-        authorIndex: i
+        authorIndex: i,
+        minutesAgo: minutesCounter
       })
     }
   }
 
   console.log(`Создано ${allInsertedMeows.length} мяуканий`)
+
+  // создаем ремяуты: каждый 2й кот ремяутит 1-2 чужих мяута
+  let remeowCount = 0
+
+  for (let i = 0; i < insertedCats.length; i += 2) {
+    const cat = insertedCats[i]
+    const otherMeows = allInsertedMeows.filter((m) => m.authorId !== cat.id)
+    const toRemeow = pickN(otherMeows, 1, 2)
+
+    for (const original of toRemeow) {
+      // ремяут произошел позже оригинала
+      const remeowMinutesAgo = Math.max(5, original.minutesAgo - Math.floor(Math.random() * 120) - 10)
+
+      const [remeow] = await db
+        .insert(meows)
+        .values({
+          authorId: cat.id,
+          content: '',
+          remeowOfId: original.id,
+          createdAt: timeAgo(remeowMinutesAgo),
+          updatedAt: timeAgo(remeowMinutesAgo)
+        })
+        .returning({ id: meows.id })
+
+      allInsertedMeows.push({
+        id: remeow.id,
+        authorId: cat.id,
+        authorIndex: i,
+        minutesAgo: remeowMinutesAgo
+      })
+
+      remeowCount++
+    }
+  }
+
+  console.log(`Создано ${remeowCount} ремяутов`)
+
+  // создаем ответы (reply): каждый 3й кот отвечает на 1-2 чужих мяута
+  let replyCount = 0
+
+  for (let i = 1; i < insertedCats.length; i += 3) {
+    const cat = insertedCats[i]
+    // только оригинальные мяуты (не ремяуты)
+    const otherOriginalMeows = allInsertedMeows.filter(
+      (m) => m.authorId !== cat.id && allInsertedMeows.find((x) => x.id === m.id)
+    )
+    const toReply = pickN(otherOriginalMeows, 1, 2)
+
+    for (const original of toReply) {
+      const replyMinutesAgo = Math.max(3, original.minutesAgo - Math.floor(Math.random() * 180) - 15)
+      const replyContent = pick(seedReplies)
+
+      const [reply] = await db
+        .insert(meows)
+        .values({
+          authorId: cat.id,
+          content: replyContent,
+          replyToId: original.id,
+          createdAt: timeAgo(replyMinutesAgo),
+          updatedAt: timeAgo(replyMinutesAgo)
+        })
+        .returning({ id: meows.id })
+
+      // теги для ответа
+      const tags = parseTildes(replyContent)
+      if (tags.length > 0) {
+        await db.insert(meowTags).values(
+          tags.map((t) => ({
+            meowId: reply.id,
+            tag: t.tag,
+            stem: sql`stem_tag(${t.tag})`,
+            position: t.position
+          }))
+        )
+      }
+
+      allInsertedMeows.push({
+        id: reply.id,
+        authorId: cat.id,
+        authorIndex: i,
+        minutesAgo: replyMinutesAgo
+      })
+
+      replyCount++
+    }
+  }
+
+  console.log(`Создано ${replyCount} ответов`)
 
   // создаем комментарии: каждый кот оставляет 1-2 комментария на чужие мяуканья
   let commentCount = 0
@@ -351,10 +465,13 @@ const seed = async () => {
     const toComment = pickN(otherMeows, 1, 2)
 
     for (const meow of toComment) {
+      const commentMinutesAgo = Math.max(1, meow.minutesAgo - Math.floor(Math.random() * 60) - 5)
+
       await db.insert(comments).values({
         meowId: meow.id,
         authorId: cat.id,
-        content: pick(seedComments)
+        content: pick(seedComments),
+        createdAt: timeAgo(commentMinutesAgo)
       })
       commentCount++
     }
@@ -412,59 +529,150 @@ const seed = async () => {
 
   console.log(`Создано ${followCount} подписок`)
 
-  // нотификации для @new (Valentine C.) = реальный юзер в базе
+  // нотификации для @trplfr
   const [realUser] = await db
     .select({ id: cats.id, username: cats.username })
     .from(cats)
-    .where(sql`${cats.username} = 'new'`)
+    .where(sql`${cats.username} = 'trplfr'`)
 
   if (realUser) {
-    // находим мяуты @new
+    // находим мяуты @trplfr
     const realUserMeows = await db
       .select({ id: meows.id })
       .from(meows)
       .where(sql`${meows.authorId} = ${realUser.id}`)
 
-    const notifActors = pickN(insertedCats, 4, 6)
+    const notifActors = pickN(insertedCats, 5, 8)
     let notifCount = 0
 
-    for (const actor of notifActors) {
+    for (let ai = 0; ai < notifActors.length; ai++) {
+      const actor = notifActors[ai]
+      // разброс по времени: каждый актор действовал в разное время
+      const baseMinutesAgo = 4000 - ai * 400 + Math.floor(Math.random() * 200)
+
       // подписка
       await db.insert(follows).values({
         followerId: actor.id,
         followingId: realUser.id
       }).onConflictDoNothing()
 
-      // нотификация о подписке
       await db.insert(notifications).values({
         userId: realUser.id,
         actorId: actor.id,
-        type: 'FOLLOW'
+        type: 'FOLLOW',
+        createdAt: timeAgo(baseMinutesAgo)
       })
       notifCount++
 
-      // лайкаем 1-2 мяута
-      const toLikeMeows = pickN(realUserMeows, 1, Math.min(2, realUserMeows.length))
+      // лайкаем 1-2 мяута trplfr
+      if (realUserMeows.length > 0) {
+        const toLikeMeows = pickN(realUserMeows, 1, Math.min(2, realUserMeows.length))
 
-      for (const meow of toLikeMeows) {
-        await db.insert(likes).values({
-          userId: actor.id,
-          meowId: meow.id
-        }).onConflictDoNothing()
+        for (const meow of toLikeMeows) {
+          await db.insert(likes).values({
+            userId: actor.id,
+            meowId: meow.id
+          }).onConflictDoNothing()
+
+          await db.insert(notifications).values({
+            userId: realUser.id,
+            actorId: actor.id,
+            type: 'MEOW_LIKE',
+            meowId: meow.id,
+            createdAt: timeAgo(baseMinutesAgo - 30 - Math.floor(Math.random() * 60))
+          })
+          notifCount++
+        }
+      }
+
+      // ремяут мяута trplfr (первые 2 актора)
+      if (ai < 2 && realUserMeows.length > 0) {
+        const toRemeow = pick(realUserMeows)
+        const remeowMinutesAgo = baseMinutesAgo - 60 - Math.floor(Math.random() * 120)
+
+        const [remeow] = await db
+          .insert(meows)
+          .values({
+            authorId: actor.id,
+            content: '',
+            remeowOfId: toRemeow.id,
+            createdAt: timeAgo(Math.max(1, remeowMinutesAgo)),
+            updatedAt: timeAgo(Math.max(1, remeowMinutesAgo))
+          })
+          .returning({ id: meows.id })
 
         await db.insert(notifications).values({
           userId: realUser.id,
           actorId: actor.id,
-          type: 'MEOW_LIKE',
-          meowId: meow.id
+          type: 'REMEOW',
+          meowId: toRemeow.id,
+          createdAt: timeAgo(Math.max(1, remeowMinutesAgo))
         })
         notifCount++
+
+        console.log(`  ${actor.username} ремяутнул мяут trplfr`)
+      }
+
+      // ответ на мяут trplfr (3й и 4й актор)
+      if ((ai === 2 || ai === 3) && realUserMeows.length > 0) {
+        const toReplyTo = pick(realUserMeows)
+        const replyMinutesAgo = baseMinutesAgo - 90 - Math.floor(Math.random() * 60)
+        const replyContent = pick(seedReplies)
+
+        const [reply] = await db
+          .insert(meows)
+          .values({
+            authorId: actor.id,
+            content: replyContent,
+            replyToId: toReplyTo.id,
+            createdAt: timeAgo(Math.max(1, replyMinutesAgo)),
+            updatedAt: timeAgo(Math.max(1, replyMinutesAgo))
+          })
+          .returning({ id: meows.id })
+
+        const tags = parseTildes(replyContent)
+        if (tags.length > 0) {
+          await db.insert(meowTags).values(
+            tags.map((t) => ({
+              meowId: reply.id,
+              tag: t.tag,
+              stem: sql`stem_tag(${t.tag})`,
+              position: t.position
+            }))
+          )
+        }
+
+        await db.insert(notifications).values({
+          userId: realUser.id,
+          actorId: actor.id,
+          type: 'REPLY',
+          meowId: reply.id,
+          createdAt: timeAgo(Math.max(1, replyMinutesAgo))
+        })
+        notifCount++
+
+        console.log(`  ${actor.username} ответил на мяут trplfr`)
+      }
+
+      // комментарий на мяут trplfr (5й+ актор)
+      if (ai >= 4 && realUserMeows.length > 0) {
+        const toCommentOn = pick(realUserMeows)
+        const commentMinutesAgo = baseMinutesAgo - 45 - Math.floor(Math.random() * 90)
+
+        await db.insert(comments).values({
+          meowId: toCommentOn.id,
+          authorId: actor.id,
+          content: pick(seedComments),
+          createdAt: timeAgo(Math.max(1, commentMinutesAgo))
+        })
+
+        console.log(`  ${actor.username} прокомментировал мяут trplfr`)
       }
     }
 
     console.log(`Создано ${notifCount} нотификаций для @${realUser.username}`)
   } else {
-    console.log('Пользователь @new не найден в базе, нотификации не созданы')
+    console.log('Пользователь @trplfr не найден в базе, нотификации не созданы')
   }
 
   console.log('Сидирование завершено!')

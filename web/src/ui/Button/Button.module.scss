@@ -37,7 +37,7 @@
 
 .outline {
   background-color: transparent;
-  border: $separator-height solid $color-primary;
+  border: 1px solid $color-primary;
   color: $color-primary;
 
   &:hover:not(:disabled) {

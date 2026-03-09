@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react'
+import { useCallback, useState, type ReactNode } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Ellipsis, type LucideIcon } from 'lucide-react'
 
@@ -9,6 +9,7 @@ interface ActionSheetItem {
   icon: LucideIcon
   onClick: () => void
   variant?: 'danger'
+  preventClose?: boolean
 }
 
 interface ActionSheetProps {
@@ -17,6 +18,14 @@ interface ActionSheetProps {
 
 export const ActionSheet = ({ items }: ActionSheetProps) => {
   const [open, setOpen] = useState(false)
+
+  const handleItemClick = useCallback((item: ActionSheetItem) => {
+    item.onClick()
+
+    if (!item.preventClose) {
+      setOpen(false)
+    }
+  }, [])
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -37,10 +46,7 @@ export const ActionSheet = ({ items }: ActionSheetProps) => {
                 key={i}
                 type="button"
                 className={item.variant === 'danger' ? s.itemDanger : s.item}
-                onClick={() => {
-                  item.onClick()
-                  setOpen(false)
-                }}
+                onClick={() => handleItemClick(item)}
               >
                 <span className={s.itemLabel}>{item.label}</span>
                 <item.icon size={20} />

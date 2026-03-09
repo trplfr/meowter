@@ -88,6 +88,8 @@ export class CatsService {
         id: meows.id,
         content: meows.content,
         imageUrl: meows.imageUrl,
+        replyToId: meows.replyToId,
+        remeowOfId: meows.remeowOfId,
         createdAt: meows.createdAt,
         updatedAt: meows.updatedAt,
         author: {
@@ -143,6 +145,66 @@ export class CatsService {
           .where(and(inArray(likes.meowId, meowIds), eq(likes.userId, currentUserId)))
       : []
 
+    // remeow counts
+    const remeowCounts = await this.db
+      .select({
+        remeowOfId: meows.remeowOfId,
+        count: sql<number>`count(*)::int`
+      })
+      .from(meows)
+      .where(inArray(meows.remeowOfId, meowIds))
+      .groupBy(meows.remeowOfId)
+
+    const userRemeows = currentUserId
+      ? await this.db
+          .select({ id: meows.id, remeowOfId: meows.remeowOfId })
+          .from(meows)
+          .where(and(inArray(meows.remeowOfId, meowIds), eq(meows.authorId, currentUserId)))
+      : []
+
+    const userReplies = currentUserId
+      ? await this.db
+          .select({ id: meows.id, replyToId: meows.replyToId })
+          .from(meows)
+          .where(and(inArray(meows.replyToId, meowIds), eq(meows.authorId, currentUserId)))
+      : []
+
+    // загрузка replyTo / remeowOf previews
+    const refIds = [...new Set([
+      ...data.filter((m) => m.replyToId).map((m) => m.replyToId!),
+      ...data.filter((m) => m.remeowOfId).map((m) => m.remeowOfId!)
+    ])]
+
+    let previewsMap = new Map<string, any>()
+    if (refIds.length > 0) {
+      const previews = await this.db
+        .select({
+          id: meows.id,
+          content: meows.content,
+          imageUrl: meows.imageUrl,
+          createdAt: meows.createdAt,
+          author: {
+            id: cats.id,
+            username: cats.username,
+            displayName: cats.displayName,
+            firstName: cats.firstName,
+            lastName: cats.lastName,
+            email: cats.email,
+            bio: cats.bio,
+            contacts: cats.contacts,
+            sex: cats.sex,
+            avatarUrl: cats.avatarUrl,
+            verified: cats.verified,
+            createdAt: cats.createdAt
+          }
+        })
+        .from(meows)
+        .innerJoin(cats, eq(meows.authorId, cats.id))
+        .where(inArray(meows.id, refIds))
+
+      previewsMap = new Map(previews.map((p) => [p.id, p]))
+    }
+
     const tagsMap = new Map<string, typeof allTags>()
     for (const tag of allTags) {
       const arr = tagsMap.get(tag.meowId) || []
@@ -153,13 +215,30 @@ export class CatsService {
     const likeMap = new Map(likeCounts.map((l) => [l.meowId, l.count]))
     const commentMap = new Map(commentCounts.map((c) => [c.meowId, c.count]))
     const likedSet = new Set(userLikes.map((l) => l.meowId))
+    const remeowMap = new Map(remeowCounts.map((r) => [r.remeowOfId, r.count]))
+    const remeowedSet = new Set(userRemeows.map((r) => r.remeowOfId))
+    const myRemeowIdMap = new Map(userRemeows.map((r) => [r.remeowOfId, r.id]))
+    const repliedSet = new Set(userReplies.map((r) => r.replyToId))
+    const myReplyIdMap = new Map(userReplies.map((r) => [r.replyToId, r.id]))
 
     const result = data.map((meow) => ({
-      ...meow,
+      id: meow.id,
+      content: meow.content,
+      imageUrl: meow.imageUrl,
+      createdAt: meow.createdAt,
+      updatedAt: meow.updatedAt,
+      author: meow.author,
       tags: (tagsMap.get(meow.id) || []).map((t) => ({ id: t.id, tag: t.tag, position: t.position })),
       likesCount: likeMap.get(meow.id) || 0,
       commentsCount: commentMap.get(meow.id) || 0,
-      isLiked: likedSet.has(meow.id)
+      remeowsCount: remeowMap.get(meow.id) || 0,
+      isLiked: likedSet.has(meow.id),
+      isRemeowed: remeowedSet.has(meow.id),
+      myRemeowId: myRemeowIdMap.get(meow.id) || null,
+      isReplied: repliedSet.has(meow.id),
+      myReplyId: myReplyIdMap.get(meow.id) || null,
+      replyTo: meow.replyToId ? previewsMap.get(meow.replyToId) || null : null,
+      remeowOf: meow.remeowOfId ? previewsMap.get(meow.remeowOfId) || null : null
     }))
 
     const nextCursor = hasMore ? data[data.length - 1].createdAt.toISOString() : null

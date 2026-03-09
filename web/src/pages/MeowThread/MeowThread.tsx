@@ -1,20 +1,25 @@
 import './models/init'
 
+import { useRef, useEffect } from 'react'
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
 import { useUnit } from 'effector-react'
 
 import { routes } from '@core/router'
+import { $session } from '@logic/session'
 
 import { Layout } from '@modules/Layout'
 import { MeowCard, MeowCardSkeleton } from '@modules/MeowCard'
+import { ScrollButton } from '@ui/index'
 
 import {
   $meow,
   $comments,
   meowLikeToggled,
+  meowDeleteClicked,
   replyClicked,
   commentLikeToggled,
+  commentDeleteClicked,
   meowQuery
 } from './models'
 import { CommentCard } from './CommentCard'
@@ -25,22 +30,40 @@ import s from './MeowThread.module.scss'
 export const route = routes.meowThread
 
 export const MeowThread = () => {
-  const [meow, commentsList, pending] = useUnit([$meow, $comments, meowQuery.$pending])
-  const [onLike, onReply, onCommentLike] = useUnit([
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const prevCountRef = useRef(0)
+  const [meow, commentsList, pending, session] = useUnit([$meow, $comments, meowQuery.$pending, $session])
+  const [onLike, onMeowDelete, onReply, onCommentLike, onCommentDelete] = useUnit([
     meowLikeToggled,
+    meowDeleteClicked,
     replyClicked,
-    commentLikeToggled
+    commentLikeToggled,
+    commentDeleteClicked
   ])
+
+  // скролл вниз при добавлении нового комментария
+  useEffect(() => {
+    if (commentsList.length > prevCountRef.current && prevCountRef.current > 0 && scrollRef.current) {
+      scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
+    }
+    prevCountRef.current = commentsList.length
+  }, [commentsList.length])
 
   return (
     <Layout title={<Trans>Обсуждение</Trans>} contentClassName={s.content}>
       <title>{t`Обсуждение / Мяутер`}</title>
 
-      <div className={s.threadScroll}>
+      <div ref={scrollRef} className={s.threadScroll}>
         {!meow && pending && <MeowCardSkeleton />}
 
         {meow && (
-          <MeowCard meow={meow} onLike={() => onLike()} />
+          <MeowCard
+            meow={meow}
+            onLike={() => onLike()}
+            onDelete={() => onMeowDelete()}
+            isOwn={session?.id === meow.author.id}
+            hideComments
+          />
         )}
 
         <div className={s.comments}>
@@ -52,6 +75,8 @@ export const MeowThread = () => {
               meowId={meow?.id || ''}
               onReply={onReply}
               onLike={onCommentLike}
+              onDelete={onCommentDelete}
+              isOwn={session?.id === comment.author.id}
             />
           ))}
 
@@ -61,6 +86,8 @@ export const MeowThread = () => {
             </div>
           )}
         </div>
+
+        <ScrollButton scrollRef={scrollRef} />
       </div>
 
       <CommentForm />

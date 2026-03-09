@@ -26,6 +26,14 @@ const NotificationText = ({ type, sex }: { type: NotificationType; sex: Sex | nu
     return f ? <Trans>оценила ваш мяут</Trans> : <Trans>оценил ваш мяут</Trans>
   }
 
+  if (type === NotificationType.REMEOW) {
+    return f ? <Trans>ремяутнула ваш мяут</Trans> : <Trans>ремяутнул ваш мяут</Trans>
+  }
+
+  if (type === NotificationType.REPLY) {
+    return f ? <Trans>ответила на ваш мяут</Trans> : <Trans>ответил на ваш мяут</Trans>
+  }
+
   return f ? <Trans>оценила ваш комментарий</Trans> : <Trans>оценил ваш комментарий</Trans>
 }
 

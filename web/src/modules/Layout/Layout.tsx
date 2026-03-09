@@ -1,17 +1,10 @@
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 import { useUnit } from 'effector-react'
 import clsx from 'clsx'
-import {
-  ArrowLeft,
-  House,
-  User,
-  Search,
-  Plus,
-  Heart
-} from 'lucide-react'
+import { ArrowLeft, House, User, Search, Plus, Heart } from 'lucide-react'
 
 import { routes } from '@core/router'
-import { Navigator } from '@ui/index'
+import { Navigator, ScrollButton } from '@ui/index'
 import { $unreadCount, startPolling, stopPolling } from '@logic/notifications'
 
 import { CreateMeowForm } from '@modules/CreateMeow'
@@ -34,6 +27,8 @@ export const Layout = ({
   headerAction,
   children
 }: LayoutProps) => {
+  const contentRef = useRef<HTMLDivElement>(null)
+
   const unreadCount = useUnit($unreadCount)
   const [onStartPolling, onStopPolling] = useUnit([startPolling, stopPolling])
 
@@ -53,8 +48,18 @@ export const Layout = ({
   const navItems = [
     { route: routes.feed, icon: House, active: isActive.feed },
     { route: routes.search, icon: Search, active: isActive.search },
-    { route: routes.createMeow, icon: Plus, active: isActive.createMeow, create: true },
-    { route: routes.notifications, icon: Heart, active: isActive.notifications, badge: unreadCount },
+    {
+      route: routes.createMeow,
+      icon: Plus,
+      active: isActive.createMeow,
+      create: true
+    },
+    {
+      route: routes.notifications,
+      icon: Heart,
+      active: isActive.notifications,
+      badge: unreadCount
+    },
     {
       route: routes.catProfile,
       params: { username: 'me' },
@@ -85,10 +90,15 @@ export const Layout = ({
           )}
         </header>
 
-        <div className={clsx(s.content, contentClassName)}>{children}</div>
+        <div ref={contentRef} className={clsx(s.content, contentClassName)}>
+          {children}
+          <ScrollButton scrollRef={contentRef} />
+        </div>
       </main>
 
-      <aside className={s.panel}>{panel ?? <CreateMeowForm />}</aside>
+      <aside className={s.panel}>
+        {panel !== null && (panel ?? <CreateMeowForm />)}
+      </aside>
 
       <Navigator items={navItems} />
     </div>

@@ -5,7 +5,9 @@ import {
   getComments,
   likeMeow,
   unlikeMeow,
+  deleteMeow,
   createComment,
+  deleteComment,
   likeComment,
   unlikeComment,
   type MeowResponse,
@@ -38,6 +40,14 @@ export const toggleLikeMutation = createMutation({
 
 export const createCommentMutation = createMutation({
   handler: ({ meowId, content }: CreateCommentParams) => createComment(meowId, { content })
+})
+
+export const deleteMeowMutation = createMutation({
+  handler: (meowId: string) => deleteMeow(meowId)
+})
+
+export const deleteCommentMutation = createMutation({
+  handler: (commentId: string) => deleteComment(commentId)
 })
 
 export const toggleCommentLikeMutation = createMutation({

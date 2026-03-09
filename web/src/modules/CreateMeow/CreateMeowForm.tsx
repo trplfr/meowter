@@ -4,20 +4,27 @@ import { useRef } from 'react'
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
 import { useUnit } from 'effector-react'
+import clsx from 'clsx'
 import { ImagePlus, X } from 'lucide-react'
+
+import { MEOW_CONTENT_MAX } from '@shared/constants'
 
 import {
   $text,
   $hasTildes,
   $imagePreview,
+  $replyToMeow,
   textChanged,
   imageSelected,
   imageRemoved,
   submitted,
+  replyToCleared,
   createMeowMutation
 } from './models'
 
 import { highlightTildes } from '@lib/meow'
+
+import { Avatar } from '@modules/MeowCard'
 
 import s from './CreateMeowForm.module.scss'
 
@@ -25,13 +32,18 @@ export const CreateMeowForm = () => {
   const fileRef = useRef<HTMLInputElement>(null)
   const backdropRef = useRef<HTMLDivElement>(null)
 
-  const [text, hasTildes, preview, pending] = useUnit([$text, $hasTildes, $imagePreview, createMeowMutation.$pending])
-  const [onTextChange, onImageSelect, onImageRemove, onSubmit] = useUnit([
+  const [text, hasTildes, preview, replyTo, pending] = useUnit([
+    $text, $hasTildes, $imagePreview, $replyToMeow, createMeowMutation.$pending
+  ])
+  const [onTextChange, onImageSelect, onImageRemove, onSubmit, onClearReply] = useUnit([
     textChanged,
     imageSelected,
     imageRemoved,
-    submitted
+    submitted,
+    replyToCleared
   ])
+
+  const remaining = MEOW_CONTENT_MAX - text.length
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -59,7 +71,7 @@ export const CreateMeowForm = () => {
           id="meow-content"
           name="content"
           aria-label={t`Расскажи, что сегодня случилось?`}
-          className={s.textarea}
+          className={clsx(s.textarea, remaining < 0 && s.textareaError)}
           value={text}
           onChange={(e) => onTextChange(e.target.value)}
           onScroll={handleScroll}
@@ -69,11 +81,17 @@ export const CreateMeowForm = () => {
       </div>
 
       <p className={s.hint}>
-        <Trans>
-          Выдели слово, используя тильду:
-          <br />
-          <span className={s.tilde}>~работа</span>, чтобы составить ленту
-        </Trans>
+        {remaining < 0 ? (
+          <span className={s.overLimit}>
+            <Trans>Превышено количество символов ({text.length}/{MEOW_CONTENT_MAX})</Trans>
+          </span>
+        ) : (
+          <Trans>
+            Выдели слово, используя тильду:
+            <br />
+            <span className={s.tilde}>~работа</span>, чтобы составить ленту
+          </Trans>
+        )}
       </p>
 
       <div className={s.toolbar}>
@@ -103,9 +121,32 @@ export const CreateMeowForm = () => {
           onChange={handleFileChange}
         />
 
+        {replyTo && (
+          <div className={s.replyPreview}>
+            <div className={s.replyPreviewTop}>
+              <Avatar src={replyTo.author.avatarUrl} alt={replyTo.author.displayName} />
+              <span className={s.replyPreviewAuthor}>{replyTo.author.displayName}</span>
+              <button
+                type="button"
+                aria-label="Убрать ответ"
+                className={s.replyPreviewClose}
+                onClick={() => onClearReply()}
+              >
+                <X size={14} />
+              </button>
+            </div>
+            <div className={s.replyPreviewContent}>
+              {replyTo.content.length > 100
+                ? replyTo.content.slice(0, 100) + '...'
+                : replyTo.content
+              }
+            </div>
+          </div>
+        )}
+
         <button
           className={s.submitButton}
-          disabled={pending || !hasTildes}
+          disabled={pending || !hasTildes || remaining < 0}
           onClick={() => onSubmit()}
         >
           <Trans>Мяутнуть</Trans>

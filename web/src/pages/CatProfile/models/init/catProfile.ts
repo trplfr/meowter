@@ -2,7 +2,7 @@ import { sample } from 'effector'
 import { concurrency } from '@farfetched/core'
 
 import { routes } from '@core/router'
-import { meowCreated, meowLikeChanged, followChanged } from '@logic/feed'
+import { meowCreated, meowLikeChanged, followChanged, meowDeletedGlobal, remeowChanged } from '@logic/feed'
 import { $session } from '@logic/session'
 
 import {
@@ -247,6 +247,29 @@ sample({
         return m
       }
       return { ...m, isLiked, likesCount }
+    }),
+  target: $meows
+})
+
+// слушаем глобальное удаление мяутов
+sample({
+  clock: meowDeletedGlobal,
+  source: $meows,
+  fn: (meows, meowId) => meows.filter((m) => m.id !== meowId),
+  target: $meows
+})
+
+// слушаем remeow из других страниц
+sample({
+  clock: remeowChanged,
+  source: $meows,
+  filter: (meows, { meowId }) => meows.some((m) => m.id === meowId),
+  fn: (meows, { meowId, isRemeowed, remeowsCount, myRemeowId }) =>
+    meows.map((m) => {
+      if (m.id !== meowId) {
+        return m
+      }
+      return { ...m, isRemeowed, remeowsCount, myRemeowId }
     }),
   target: $meows
 })

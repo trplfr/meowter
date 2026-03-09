@@ -26,3 +26,10 @@ export interface MeowLikeChanged {
   isLiked: boolean
   likesCount: number
 }
+
+export interface RemeowChanged {
+  meowId: string
+  isRemeowed: boolean
+  remeowsCount: number
+  myRemeowId: string | null
+}

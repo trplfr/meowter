@@ -33,10 +33,18 @@ export class MeowsController {
 
     let content = ''
     let imageUrl: string | null = null
+    let replyToId: string | undefined
 
     for await (const part of parts) {
       if (part.type === 'field' && part.fieldname === 'content') {
         content = part.value as string
+      }
+
+      if (part.type === 'field' && part.fieldname === 'replyToId') {
+        const val = part.value as string
+        if (val) {
+          replyToId = val
+        }
       }
 
       if (part.type === 'file' && part.fieldname === 'image') {
@@ -67,7 +75,7 @@ export class MeowsController {
     const dto = new CreateMeowDto()
     dto.content = content
 
-    return this.meows.create(user.sub, dto, imageUrl)
+    return this.meows.create(user.sub, dto, imageUrl, replyToId)
   }
 
   @Get('feed')
@@ -125,6 +133,22 @@ export class MeowsController {
     return this.meows.unlike(id, user.sub)
   }
 
+  @Post(':id/remeow')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Ремяутнуть' })
+  @ApiResponse({ status: 201, description: 'Ремяут создан' })
+  async remeow(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
+    return this.meows.remeow(id, user.sub)
+  }
+
+  @Delete(':id/remeow')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Убрать ремяут' })
+  @ApiResponse({ status: 200, description: 'Ремяут убран' })
+  async undoRemeow(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
+    return this.meows.undoRemeow(id, user.sub)
+  }
+
   @Get(':id/comments')
   @UseGuards(OptionalJwtAuthGuard)
   @ApiOperation({ summary: 'Комментарии к мяуту' })
@@ -148,6 +172,14 @@ export class MeowsController {
     @CurrentUser() user: JwtPayload
   ) {
     return this.meows.createComment(id, user.sub, dto)
+  }
+
+  @Delete('comments/:commentId')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Удалить комментарий' })
+  @ApiResponse({ status: 200, description: 'Удалено' })
+  async deleteComment(@Param('commentId') commentId: string, @CurrentUser() user: JwtPayload) {
+    return this.meows.deleteComment(commentId, user.sub)
   }
 
   @Post('comments/:commentId/like')

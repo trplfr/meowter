@@ -4,7 +4,9 @@ import { type Meow } from './meow'
 export enum NotificationType {
   FOLLOW = 'FOLLOW',
   MEOW_LIKE = 'MEOW_LIKE',
-  COMMENT_LIKE = 'COMMENT_LIKE'
+  COMMENT_LIKE = 'COMMENT_LIKE',
+  REMEOW = 'REMEOW',
+  REPLY = 'REPLY'
 }
 
 export interface Notification {

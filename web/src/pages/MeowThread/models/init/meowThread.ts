@@ -1,8 +1,11 @@
 import { sample } from 'effector'
+import { redirect } from 'atomic-router'
 import { concurrency } from '@farfetched/core'
+import { t } from '@lingui/core/macro'
 
 import { routes } from '@core/router'
-import { meowLikeChanged } from '@logic/feed'
+import { meowLikeChanged, meowDeletedGlobal } from '@logic/feed'
+import { showSuccessToastFx } from '@logic/notifications'
 
 import {
   $meow,
@@ -14,14 +17,18 @@ import {
   threadOpened,
   loadMoreComments,
   meowLikeToggled,
+  meowDeleteClicked,
   commentTextChanged,
   commentSubmitted,
   replyClicked,
   commentLikeToggled,
+  commentDeleteClicked,
   meowQuery,
   commentsQuery,
   toggleLikeMutation,
+  deleteMeowMutation,
   createCommentMutation,
+  deleteCommentMutation,
   toggleCommentLikeMutation
 } from '../models'
 
@@ -263,6 +270,69 @@ sample({
       }
     }),
   target: $comments
+})
+
+/* Delete comment */
+
+sample({
+  clock: commentDeleteClicked,
+  target: deleteCommentMutation.start
+})
+
+// оптимистичное удаление
+sample({
+  clock: commentDeleteClicked,
+  source: $comments,
+  fn: (comments, commentId) => comments.filter((c) => c.id !== commentId),
+  target: $comments
+})
+
+// обновляем счетчик комментов
+sample({
+  clock: commentDeleteClicked,
+  source: $meow,
+  filter: (meow) => meow !== null,
+  fn: (meow) => ({
+    ...meow!,
+    commentsCount: Math.max(0, meow!.commentsCount - 1)
+  }),
+  target: $meow
+})
+
+sample({
+  clock: deleteCommentMutation.finished.success,
+  fn: () => t`Удалено!`,
+  target: showSuccessToastFx
+})
+
+/* Delete meow */
+
+sample({
+  clock: meowDeleteClicked,
+  source: $meow,
+  filter: (meow) => meow !== null,
+  fn: (meow) => meow!.id,
+  target: deleteMeowMutation.start
+})
+
+// глобальный синк удаления
+sample({
+  clock: meowDeleteClicked,
+  source: $meow,
+  filter: (meow) => meow !== null,
+  fn: (meow) => meow!.id,
+  target: meowDeletedGlobal
+})
+
+sample({
+  clock: deleteMeowMutation.finished.success,
+  fn: () => t`Удалено!`,
+  target: showSuccessToastFx
+})
+
+redirect({
+  clock: deleteMeowMutation.finished.success,
+  route: routes.feed
 })
 
 concurrency(meowQuery, { strategy: 'TAKE_LATEST' })

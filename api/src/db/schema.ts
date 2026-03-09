@@ -26,6 +26,8 @@ export const meows = pgTable('meows', {
   authorId: uuid('author_id').references(() => cats.id, { onDelete: 'cascade' }).notNull(),
   content: text('content').notNull(),
   imageUrl: text('image_url'),
+  replyToId: uuid('reply_to_id'),
+  remeowOfId: uuid('remeow_of_id'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull()
 })

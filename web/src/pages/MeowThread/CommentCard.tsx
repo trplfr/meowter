@@ -1,6 +1,6 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { Link } from 'atomic-router-react'
-import { Heart, Link2, CircleAlert } from 'lucide-react'
+import { Heart, Link2, CircleAlert, Trash2, BadgeCheck } from 'lucide-react'
 import { Trans } from '@lingui/react/macro'
 import clsx from 'clsx'
 
@@ -20,9 +20,13 @@ interface CommentCardProps {
   meowId: string
   onReply: (username: string) => void
   onLike: (commentId: string) => void
+  onDelete?: (commentId: string) => void
+  isOwn?: boolean
 }
 
-export const CommentCard = ({ comment, meowAuthorUsername, meowId, onReply, onLike }: CommentCardProps) => {
+export const CommentCard = ({ comment, meowAuthorUsername, meowId, onReply, onLike, onDelete, isOwn }: CommentCardProps) => {
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
+
   const handleCopyLink = useCallback(() => {
     const url = `${window.location.origin}/cat/${meowAuthorUsername}/meow/${meowId}`
     navigator.clipboard.writeText(url)
@@ -32,19 +36,45 @@ export const CommentCard = ({ comment, meowAuthorUsername, meowId, onReply, onLi
     // TODO: реализовать отправку жалобы
   }, [])
 
-  const actionItems = [
-    {
-      label: <Trans>Копировать ссылку</Trans>,
-      icon: Link2,
-      onClick: handleCopyLink
-    },
-    {
-      label: <Trans>Пожаловаться</Trans>,
-      icon: CircleAlert,
-      onClick: handleReport,
-      variant: 'danger' as const
-    }
-  ]
+  const actionItems = confirmingDelete
+    ? [
+        {
+          label: <Trans>Да, удалить</Trans>,
+          icon: Trash2,
+          onClick: () => {
+            onDelete?.(comment.id)
+            setConfirmingDelete(false)
+          },
+          variant: 'danger' as const
+        },
+        {
+          label: <Trans>Отмена</Trans>,
+          icon: CircleAlert,
+          onClick: () => setConfirmingDelete(false)
+        }
+      ]
+    : [
+        {
+          label: <Trans>Копировать ссылку</Trans>,
+          icon: Link2,
+          onClick: handleCopyLink
+        },
+        ...(isOwn && onDelete
+          ? [{
+              label: <Trans>Удалить</Trans>,
+              icon: Trash2,
+              onClick: () => setConfirmingDelete(true),
+              variant: 'danger' as const,
+              preventClose: true
+            }]
+          : [{
+              label: <Trans>Пожаловаться</Trans>,
+              icon: CircleAlert,
+              onClick: handleReport,
+              variant: 'danger' as const
+            }]
+        )
+      ]
 
   return (
     <div className={s.comment}>
@@ -57,13 +87,20 @@ export const CommentCard = ({ comment, meowAuthorUsername, meowId, onReply, onLi
           <Avatar src={comment.author.avatarUrl} alt={comment.author.displayName} />
         </Link>
         <div className={s.commentMeta}>
-          <Link
-            to={routes.catProfile}
-            params={{ username: comment.author.username }}
-            className={s.commentAuthor}
-          >
-            {comment.author.displayName}
-          </Link>
+          <span className={s.commentAuthorRow}>
+            <Link
+              to={routes.catProfile}
+              params={{ username: comment.author.username }}
+              className={s.commentAuthor}
+            >
+              {comment.author.displayName}
+            </Link>
+            {comment.author.verified && (
+              <span className={s.commentVerified}>
+                <BadgeCheck size={14} />
+              </span>
+            )}
+          </span>
           <TimeAgo date={comment.createdAt} />
         </div>
         <div className={s.commentMore}>

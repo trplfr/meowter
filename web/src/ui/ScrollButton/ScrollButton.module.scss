@@ -1,0 +1,31 @@
+.button {
+  position: sticky;
+  bottom: $spacing-md;
+  right: $spacing-md;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $icon-button-size;
+  height: $icon-button-size;
+  margin-left: auto;
+  margin-top: -$icon-button-size;
+  border-radius: $radius-round;
+  background: $color-bg;
+  color: $color-primary;
+  box-shadow: 0 2px 8px $color-shadow;
+  border: 1px solid $color-separator;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, background 0.15s;
+
+  &:hover {
+    background: $color-hover-bg;
+  }
+}
+
+.visible {
+  opacity: 1;
+  pointer-events: auto;
+}

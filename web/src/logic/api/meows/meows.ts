@@ -17,6 +17,10 @@ export const createMeow = (params: CreateMeowRequest) => {
     formData.append('image', params.image)
   }
 
+  if (params.replyToId) {
+    formData.append('replyToId', params.replyToId)
+  }
+
   return api.post('meows', { body: formData }).json<MeowResponse>()
 }
 
@@ -44,11 +48,20 @@ export const getUserTags = () =>
 export const getMeow = (id: string) =>
   api.get(`meows/${id}`).json<MeowResponse>()
 
+export const deleteMeow = (id: string) =>
+  api.delete(`meows/${id}`).json<{ ok: boolean }>()
+
 export const likeMeow = (id: string) =>
   api.post(`meows/${id}/like`).json<{ ok: boolean }>()
 
 export const unlikeMeow = (id: string) =>
   api.delete(`meows/${id}/like`).json<{ ok: boolean }>()
+
+export const remeowMeow = (id: string) =>
+  api.post(`meows/${id}/remeow`).json<MeowResponse>()
+
+export const undoRemeowMeow = (id: string) =>
+  api.delete(`meows/${id}/remeow`).json<{ ok: boolean }>()
 
 export const getComments = (meowId: string, cursor?: string) => {
   const searchParams: Record<string, string> = {}
@@ -62,6 +75,9 @@ export const getComments = (meowId: string, cursor?: string) => {
 
 export const createComment = (meowId: string, params: CreateCommentRequest) =>
   api.post(`meows/${meowId}/comments`, { json: params }).json<CommentResponse>()
+
+export const deleteComment = (commentId: string) =>
+  api.delete(`meows/comments/${commentId}`).json<{ ok: boolean }>()
 
 export const likeComment = (commentId: string) =>
   api.post(`meows/comments/${commentId}/like`).json<{ ok: boolean }>()

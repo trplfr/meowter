@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { eq, desc, sql, and, lt, inArray } from 'drizzle-orm'
+import { eq, asc, desc, sql, and, lt, gt, inArray } from 'drizzle-orm'
 
 import { ErrorCode, NotificationType } from '@shared/types'
 
@@ -23,6 +23,22 @@ const parseTildes = (content: string) => {
   return tags
 }
 
+// общий select для автора
+const authorSelect = {
+  id: cats.id,
+  username: cats.username,
+  displayName: cats.displayName,
+  firstName: cats.firstName,
+  lastName: cats.lastName,
+  email: cats.email,
+  bio: cats.bio,
+  contacts: cats.contacts,
+  sex: cats.sex,
+  avatarUrl: cats.avatarUrl,
+  verified: cats.verified,
+  createdAt: cats.createdAt
+}
+
 @Injectable()
 export class MeowsService {
   constructor(
@@ -30,13 +46,27 @@ export class MeowsService {
     private readonly notificationsService: NotificationsService
   ) {}
 
-  async create(authorId: string, dto: CreateMeowDto, imageUrl: string | null) {
+  async create(authorId: string, dto: CreateMeowDto, imageUrl: string | null, replyToId?: string) {
+    // если это ответ, проверяем что оригинальный мяут существует
+    if (replyToId) {
+      const [original] = await this.db
+        .select({ id: meows.id })
+        .from(meows)
+        .where(eq(meows.id, replyToId))
+        .limit(1)
+
+      if (!original) {
+        throw new AppException(ErrorCode.MEOW_NOT_FOUND, 404, 'Original meow not found')
+      }
+    }
+
     const [meow] = await this.db
       .insert(meows)
       .values({
         authorId,
         content: dto.content,
-        imageUrl
+        imageUrl,
+        replyToId: replyToId || null
       })
       .returning()
 
@@ -53,7 +83,124 @@ export class MeowsService {
       )
     }
 
+    // уведомление автору оригинального мяута о reply
+    if (replyToId) {
+      const [original] = await this.db
+        .select({ authorId: meows.authorId })
+        .from(meows)
+        .where(eq(meows.id, replyToId))
+        .limit(1)
+
+      if (original) {
+        await this.notificationsService.create(original.authorId, authorId, NotificationType.REPLY, meow.id)
+      }
+    }
+
     return this.findById(meow.id, authorId)
+  }
+
+  async remeow(meowId: string, userId: string) {
+    // проверяем существование оригинала
+    const [original] = await this.db
+      .select({ id: meows.id, authorId: meows.authorId, remeowOfId: meows.remeowOfId })
+      .from(meows)
+      .where(eq(meows.id, meowId))
+      .limit(1)
+
+    if (!original) {
+      throw new AppException(ErrorCode.MEOW_NOT_FOUND, 404, 'Meow not found')
+    }
+
+    // если ремяутят ремяут, берем оригинал
+    const targetId = original.remeowOfId || original.id
+
+    // проверяем нет ли уже ремяута
+    const [existing] = await this.db
+      .select({ id: meows.id })
+      .from(meows)
+      .where(and(eq(meows.authorId, userId), eq(meows.remeowOfId, targetId)))
+      .limit(1)
+
+    if (existing) {
+      throw new AppException(ErrorCode.VALIDATION_ERROR, 400, 'Already remeowed')
+    }
+
+    const [remeow] = await this.db
+      .insert(meows)
+      .values({
+        authorId: userId,
+        content: '',
+        remeowOfId: targetId
+      })
+      .returning()
+
+    // уведомление автору оригинала
+    const [originalMeow] = await this.db
+      .select({ authorId: meows.authorId })
+      .from(meows)
+      .where(eq(meows.id, targetId))
+      .limit(1)
+
+    if (originalMeow) {
+      await this.notificationsService.create(originalMeow.authorId, userId, NotificationType.REMEOW, targetId)
+    }
+
+    return this.findById(remeow.id, userId)
+  }
+
+  async undoRemeow(meowId: string, userId: string) {
+    const [remeow] = await this.db
+      .select({ id: meows.id })
+      .from(meows)
+      .where(and(eq(meows.authorId, userId), eq(meows.remeowOfId, meowId)))
+      .limit(1)
+
+    if (!remeow) {
+      throw new AppException(ErrorCode.MEOW_NOT_FOUND, 404, 'Remeow not found')
+    }
+
+    await this.db.delete(meows).where(eq(meows.id, remeow.id))
+
+    return { ok: true }
+  }
+
+  // загружает preview мяута (для replyTo / remeowOf)
+  private async loadMeowPreview(id: string) {
+    const [row] = await this.db
+      .select({
+        id: meows.id,
+        content: meows.content,
+        imageUrl: meows.imageUrl,
+        createdAt: meows.createdAt,
+        author: authorSelect
+      })
+      .from(meows)
+      .innerJoin(cats, eq(meows.authorId, cats.id))
+      .where(eq(meows.id, id))
+      .limit(1)
+
+    return row || null
+  }
+
+  // батч-загрузка preview для множества мяутов
+  private async loadMeowPreviews(ids: string[]) {
+    if (ids.length === 0) {
+      return new Map<string, any>()
+    }
+
+    const rows = await this.db
+      .select({
+        id: meows.id,
+        content: meows.content,
+        imageUrl: meows.imageUrl,
+        createdAt: meows.createdAt,
+        author: authorSelect
+      })
+      .from(meows)
+      .innerJoin(cats, eq(meows.authorId, cats.id))
+      .where(inArray(meows.id, ids))
+
+    return new Map(rows.map((r) => [r.id, r]))
   }
 
   async findById(id: string, currentUserId?: string) {
@@ -62,22 +209,11 @@ export class MeowsService {
         id: meows.id,
         content: meows.content,
         imageUrl: meows.imageUrl,
+        replyToId: meows.replyToId,
+        remeowOfId: meows.remeowOfId,
         createdAt: meows.createdAt,
         updatedAt: meows.updatedAt,
-        author: {
-          id: cats.id,
-          username: cats.username,
-          displayName: cats.displayName,
-          firstName: cats.firstName,
-          lastName: cats.lastName,
-          email: cats.email,
-          bio: cats.bio,
-          contacts: cats.contacts,
-          sex: cats.sex,
-          avatarUrl: cats.avatarUrl,
-          verified: cats.verified,
-          createdAt: cats.createdAt
-        }
+        author: authorSelect
       })
       .from(meows)
       .innerJoin(cats, eq(meows.authorId, cats.id))
@@ -103,7 +239,16 @@ export class MeowsService {
       .from(comments)
       .where(eq(comments.meowId, id))
 
+    const [{ count: remeowsCount }] = await this.db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(meows)
+      .where(eq(meows.remeowOfId, id))
+
     let isLiked = false
+    let isRemeowed = false
+    let myRemeowId: string | null = null
+    let isReplied = false
+    let myReplyId: string | null = null
     if (currentUserId) {
       const [like] = await this.db
         .select({ userId: likes.userId })
@@ -111,25 +256,131 @@ export class MeowsService {
         .where(and(eq(likes.meowId, id), eq(likes.userId, currentUserId)))
         .limit(1)
       isLiked = !!like
+
+      const [remeow] = await this.db
+        .select({ id: meows.id })
+        .from(meows)
+        .where(and(eq(meows.authorId, currentUserId), eq(meows.remeowOfId, id)))
+        .limit(1)
+      isRemeowed = !!remeow
+      myRemeowId = remeow?.id || null
+
+      const [reply] = await this.db
+        .select({ id: meows.id })
+        .from(meows)
+        .where(and(eq(meows.authorId, currentUserId), eq(meows.replyToId, id)))
+        .limit(1)
+      isReplied = !!reply
+      myReplyId = reply?.id || null
     }
 
+    // загрузка replyTo / remeowOf
+    const replyTo = meow.replyToId ? await this.loadMeowPreview(meow.replyToId) : null
+    const remeowOf = meow.remeowOfId ? await this.loadMeowPreview(meow.remeowOfId) : null
+
     return {
-      ...meow,
+      id: meow.id,
+      content: meow.content,
+      imageUrl: meow.imageUrl,
+      createdAt: meow.createdAt,
+      updatedAt: meow.updatedAt,
+      author: meow.author,
       tags,
       likesCount,
       commentsCount,
-      isLiked
+      remeowsCount,
+      isLiked,
+      isRemeowed,
+      myRemeowId,
+      isReplied,
+      myReplyId,
+      replyTo,
+      remeowOf
     }
   }
 
   async getUserTags(userId: string): Promise<string[]> {
-    const rows = await this.db
-      .selectDistinctOn([meowTags.stem], { tag: meowTags.tag })
+    // теги из собственных мяутов
+    const ownTags = await this.db
+      .selectDistinctOn([meowTags.stem], { tag: meowTags.tag, stem: meowTags.stem })
       .from(meowTags)
       .innerJoin(meows, eq(meowTags.meowId, meows.id))
       .where(eq(meows.authorId, userId))
 
-    return rows.map((r) => r.tag)
+    // теги из ремяутов (оригинальный пост содержит теги)
+    const remeowTags = await this.db
+      .selectDistinctOn([meowTags.stem], { tag: meowTags.tag, stem: meowTags.stem })
+      .from(meows)
+      .innerJoin(meowTags, eq(meowTags.meowId, meows.remeowOfId))
+      .where(and(eq(meows.authorId, userId), sql`${meows.remeowOfId} IS NOT NULL`))
+
+    // объединяем уникальные стемы
+    const stemSet = new Set<string>()
+    const result: string[] = []
+
+    for (const row of [...ownTags, ...remeowTags]) {
+      if (!stemSet.has(row.stem)) {
+        stemSet.add(row.stem)
+        result.push(row.tag)
+      }
+    }
+
+    return result
+  }
+
+  // SQL-условие сопоставления тегов: exact stem + prefix (длинные) + levenshtein (короткие) + stem levenshtein
+  private tagMatchCondition(tag: string) {
+    return sql`(
+      ${meowTags.stem} = stem_tag(${tag})
+      OR (length(${tag}) >= 4 AND lower(${meowTags.tag}) LIKE lower(${tag}) || '%' AND length(${meowTags.tag}) >= length(${tag}) + 3)
+      OR (length(${meowTags.tag}) >= 4 AND lower(${tag}) LIKE lower(${meowTags.tag}) || '%' AND length(${tag}) >= length(${meowTags.tag}) + 3)
+      OR (least(length(${tag}), length(${meowTags.tag})) < 4 AND lower(${meowTags.tag}) LIKE lower(${tag}) || '%' AND levenshtein(lower(${tag}), lower(${meowTags.tag})) <= 2)
+      OR (least(length(${tag}), length(${meowTags.tag})) < 4 AND lower(${tag}) LIKE lower(${meowTags.tag}) || '%' AND levenshtein(lower(${tag}), lower(${meowTags.tag})) <= 2)
+      OR (least(length(${meowTags.stem}), length(stem_tag(${tag}))) >= 4
+          AND length(${meowTags.stem}) <> length(stem_tag(${tag}))
+          AND levenshtein(${meowTags.stem}, stem_tag(${tag})) <= 1)
+    )`
+  }
+
+  // находит meowIds по тегу
+  private async findMeowIdsByTag(tag: string): Promise<string[]> {
+    const rows = await this.db
+      .select({ meowId: meowTags.meowId })
+      .from(meowTags)
+      .where(this.tagMatchCondition(tag))
+
+    return rows.map((r) => r.meowId)
+  }
+
+  // проверяет, есть ли у пользователя доступ к тегу (писал сам или ремяукал)
+  private async userHasTag(userId: string, tag: string): Promise<boolean> {
+    // проверка в собственных мяутах
+    const [ownTag] = await this.db
+      .select({ meowId: meowTags.meowId })
+      .from(meowTags)
+      .innerJoin(meows, eq(meowTags.meowId, meows.id))
+      .where(and(
+        eq(meows.authorId, userId),
+        this.tagMatchCondition(tag)
+      ))
+      .limit(1)
+
+    if (ownTag) {
+      return true
+    }
+
+    // проверка в ремяутах
+    const [remeowTag] = await this.db
+      .select({ meowId: meowTags.meowId })
+      .from(meows)
+      .innerJoin(meowTags, eq(meowTags.meowId, meows.remeowOfId))
+      .where(and(
+        eq(meows.authorId, userId),
+        this.tagMatchCondition(tag)
+      ))
+      .limit(1)
+
+    return !!remeowTag
   }
 
   // находит последний тег из последнего meow пользователя
@@ -153,15 +404,18 @@ export class MeowsService {
     // определяем тег для фильтрации
     const feedTag = tag || (await this.getLastTag(currentUserId))
 
-    // если есть тег, находим meowIds с этим тегом (матчим по стему)
+    // если тег передан явно, проверяем доступ (писал сам или ремяукал)
+    if (tag && feedTag) {
+      const hasAccess = await this.userHasTag(currentUserId, feedTag)
+      if (!hasAccess) {
+        return { data: [], cursor: null, hasMore: false, tag: feedTag }
+      }
+    }
+
+    // если есть тег, находим meowIds с этим тегом
     let taggedMeowIds: string[] | null = null
     if (feedTag) {
-      const tagged = await this.db
-        .select({ meowId: meowTags.meowId })
-        .from(meowTags)
-        .where(sql`${meowTags.stem} = stem_tag(${feedTag})`)
-
-      taggedMeowIds = tagged.map((t) => t.meowId)
+      taggedMeowIds = await this.findMeowIdsByTag(feedTag)
 
       if (taggedMeowIds.length === 0) {
         return { data: [], cursor: null, hasMore: false, tag: feedTag }
@@ -191,22 +445,11 @@ export class MeowsService {
         id: meows.id,
         content: meows.content,
         imageUrl: meows.imageUrl,
+        replyToId: meows.replyToId,
+        remeowOfId: meows.remeowOfId,
         createdAt: meows.createdAt,
         updatedAt: meows.updatedAt,
-        author: {
-          id: cats.id,
-          username: cats.username,
-          displayName: cats.displayName,
-          firstName: cats.firstName,
-          lastName: cats.lastName,
-          email: cats.email,
-          bio: cats.bio,
-          contacts: cats.contacts,
-          sex: cats.sex,
-          avatarUrl: cats.avatarUrl,
-          verified: cats.verified,
-          createdAt: cats.createdAt
-        }
+        author: authorSelect
       })
       .from(meows)
       .innerJoin(cats, eq(meows.authorId, cats.id))
@@ -256,6 +499,41 @@ export class MeowsService {
         eq(likes.userId, currentUserId)
       ))
 
+    // remeow counts
+    const remeowCounts = await this.db
+      .select({
+        remeowOfId: meows.remeowOfId,
+        count: sql<number>`count(*)::int`
+      })
+      .from(meows)
+      .where(inArray(meows.remeowOfId, meowIds))
+      .groupBy(meows.remeowOfId)
+
+    // проверка isRemeowed для текущего пользователя
+    const userRemeows = await this.db
+      .select({ id: meows.id, remeowOfId: meows.remeowOfId })
+      .from(meows)
+      .where(and(
+        inArray(meows.remeowOfId, meowIds),
+        eq(meows.authorId, currentUserId)
+      ))
+
+    // проверка isReplied для текущего пользователя
+    const userReplies = await this.db
+      .select({ id: meows.id, replyToId: meows.replyToId })
+      .from(meows)
+      .where(and(
+        inArray(meows.replyToId, meowIds),
+        eq(meows.authorId, currentUserId)
+      ))
+
+    // загружаем replyTo / remeowOf previews
+    const refIds = [...new Set([
+      ...data.filter((m) => m.replyToId).map((m) => m.replyToId!),
+      ...data.filter((m) => m.remeowOfId).map((m) => m.remeowOfId!)
+    ])]
+    const previewsMap = await this.loadMeowPreviews(refIds)
+
     const tagsMap = new Map<string, typeof allTags>()
     for (const tag of allTags) {
       const arr = tagsMap.get(tag.meowId) || []
@@ -266,9 +544,19 @@ export class MeowsService {
     const likeMap = new Map(likeCounts.map((l) => [l.meowId, l.count]))
     const commentMap = new Map(commentCounts.map((c) => [c.meowId, c.count]))
     const likedSet = new Set(userLikes.map((l) => l.meowId))
+    const remeowMap = new Map(remeowCounts.map((r) => [r.remeowOfId, r.count]))
+    const remeowedSet = new Set(userRemeows.map((r) => r.remeowOfId))
+    const myRemeowIdMap = new Map(userRemeows.map((r) => [r.remeowOfId, r.id]))
+    const repliedSet = new Set(userReplies.map((r) => r.replyToId))
+    const myReplyIdMap = new Map(userReplies.map((r) => [r.replyToId, r.id]))
 
     const result = data.map((meow) => ({
-      ...meow,
+      id: meow.id,
+      content: meow.content,
+      imageUrl: meow.imageUrl,
+      createdAt: meow.createdAt,
+      updatedAt: meow.updatedAt,
+      author: meow.author,
       tags: (tagsMap.get(meow.id) || []).map((t) => ({
         id: t.id,
         tag: t.tag,
@@ -276,7 +564,14 @@ export class MeowsService {
       })),
       likesCount: likeMap.get(meow.id) || 0,
       commentsCount: commentMap.get(meow.id) || 0,
-      isLiked: likedSet.has(meow.id)
+      remeowsCount: remeowMap.get(meow.id) || 0,
+      isLiked: likedSet.has(meow.id),
+      isRemeowed: remeowedSet.has(meow.id),
+      myRemeowId: myRemeowIdMap.get(meow.id) || null,
+      isReplied: repliedSet.has(meow.id),
+      myReplyId: myReplyIdMap.get(meow.id) || null,
+      replyTo: meow.replyToId ? previewsMap.get(meow.replyToId) || null : null,
+      remeowOf: meow.remeowOfId ? previewsMap.get(meow.remeowOfId) || null : null
     }))
 
     // для popular = offset-курсор, для date = createdAt-курсор
@@ -321,7 +616,7 @@ export class MeowsService {
 
   async getComments(meowId: string, currentUserId?: string, cursor?: string, limit = 20) {
     const conditions = cursor
-      ? and(eq(comments.meowId, meowId), lt(comments.createdAt, new Date(cursor)))
+      ? and(eq(comments.meowId, meowId), gt(comments.createdAt, new Date(cursor)))
       : eq(comments.meowId, meowId)
 
     const rows = await this.db
@@ -331,25 +626,12 @@ export class MeowsService {
         content: comments.content,
         parentId: comments.parentId,
         createdAt: comments.createdAt,
-        author: {
-          id: cats.id,
-          username: cats.username,
-          displayName: cats.displayName,
-          firstName: cats.firstName,
-          lastName: cats.lastName,
-          email: cats.email,
-          bio: cats.bio,
-          contacts: cats.contacts,
-          sex: cats.sex,
-          avatarUrl: cats.avatarUrl,
-          verified: cats.verified,
-          createdAt: cats.createdAt
-        }
+        author: authorSelect
       })
       .from(comments)
       .innerJoin(cats, eq(comments.authorId, cats.id))
       .where(conditions)
-      .orderBy(desc(comments.createdAt))
+      .orderBy(asc(comments.createdAt))
       .limit(limit + 1)
 
     const hasMore = rows.length > limit
@@ -437,6 +719,26 @@ export class MeowsService {
       .limit(1)
 
     return { ...comment, author, isLiked: false, likesCount: 0 }
+  }
+
+  async deleteComment(commentId: string, userId: string) {
+    const [comment] = await this.db
+      .select({ id: comments.id, authorId: comments.authorId })
+      .from(comments)
+      .where(eq(comments.id, commentId))
+      .limit(1)
+
+    if (!comment) {
+      throw new AppException(ErrorCode.MEOW_NOT_FOUND, 404, 'Comment not found')
+    }
+
+    if (comment.authorId !== userId) {
+      throw new AppException(ErrorCode.UNAUTHORIZED, 403, 'Not your comment')
+    }
+
+    await this.db.delete(comments).where(eq(comments.id, commentId))
+
+    return { ok: true }
   }
 
   async likeComment(commentId: string, userId: string) {

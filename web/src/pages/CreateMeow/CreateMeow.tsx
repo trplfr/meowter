@@ -31,6 +31,7 @@ export const CreateMeow = () => {
       title={<Trans>Мяутнуть</Trans>}
       contentClassName={s.content}
       headerAction={headerAction}
+      panel={null}
     >
       <title>{t`Мяутнуть / Мяутер`}</title>
       <CreateMeowForm />

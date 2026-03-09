@@ -1,10 +1,20 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { Link } from 'atomic-router-react'
 import { Trans } from '@lingui/react/macro'
-import { MessageCircle, Heart, Link2, CircleAlert, BadgeCheck } from 'lucide-react'
+import {
+  MessageCircle,
+  Heart,
+  Link2,
+  CircleAlert,
+  BadgeCheck,
+  Repeat2,
+  SendHorizontal,
+  Trash2,
+  ArrowRight
+} from 'lucide-react'
 import clsx from 'clsx'
 
-import { type Meow } from '@shared/types'
+import { type Meow, Sex } from '@shared/types'
 
 import { routes } from '@core/router'
 
@@ -20,9 +30,16 @@ import s from './MeowCard.module.scss'
 interface MeowCardProps {
   meow: Meow
   onLike: (id: string) => void
+  onRemeow?: (id: string) => void
+  onReply?: (meow: Meow) => void
+  onDelete?: (id: string) => void
+  isOwn?: boolean
+  hideComments?: boolean
 }
 
-export const MeowCard = ({ meow, onLike }: MeowCardProps) => {
+export const MeowCard = ({ meow, onLike, onRemeow, onReply, onDelete, isOwn, hideComments }: MeowCardProps) => {
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
+
   const handleCopyLink = useCallback(() => {
     const url = `${window.location.origin}/cat/${meow.author.username}/meow/${meow.id}`
     navigator.clipboard.writeText(url)
@@ -32,19 +49,49 @@ export const MeowCard = ({ meow, onLike }: MeowCardProps) => {
     // TODO: реализовать отправку жалобы
   }, [])
 
-  const actionItems = [
-    {
-      label: <Trans>Копировать ссылку</Trans>,
-      icon: Link2,
-      onClick: handleCopyLink
-    },
-    {
-      label: <Trans>Пожаловаться</Trans>,
-      icon: CircleAlert,
-      onClick: handleReport,
-      variant: 'danger' as const
-    }
-  ]
+  const actionItems = confirmingDelete
+    ? [
+        {
+          label: <Trans>Да, удалить</Trans>,
+          icon: Trash2,
+          onClick: () => {
+            onDelete?.(meow.id)
+            setConfirmingDelete(false)
+          },
+          variant: 'danger' as const
+        },
+        {
+          label: <Trans>Отмена</Trans>,
+          icon: CircleAlert,
+          onClick: () => setConfirmingDelete(false)
+        }
+      ]
+    : [
+        {
+          label: <Trans>Копировать ссылку</Trans>,
+          icon: Link2,
+          onClick: handleCopyLink
+        },
+        ...(isOwn && onDelete
+          ? [{
+              label: <Trans>Удалить</Trans>,
+              icon: Trash2,
+              onClick: () => setConfirmingDelete(true),
+              variant: 'danger' as const,
+              preventClose: true
+            }]
+          : [{
+              label: <Trans>Пожаловаться</Trans>,
+              icon: CircleAlert,
+              onClick: handleReport,
+              variant: 'danger' as const
+            }]
+        )
+      ]
+
+  // определяем контент для отображения (ремяут показывает оригинал)
+  const isRemeow = !!meow.remeowOf
+  const isReply = !!meow.replyTo
 
   return (
     <article className={s.card}>
@@ -71,6 +118,27 @@ export const MeowCard = ({ meow, onLike }: MeowCardProps) => {
                 <BadgeCheck size={16} />
               </span>
             )}
+            {isReply && meow.replyTo && (
+              <span className={s.replyArrow}>
+                <ArrowRight size={14} />
+                <Link
+                  to={routes.catProfile}
+                  params={{ username: meow.replyTo.author.username }}
+                  className={s.replyTarget}
+                >
+                  {meow.replyTo.author.displayName}
+                </Link>
+              </span>
+            )}
+            {isRemeow && (
+              <span className={s.remeowLabel}>
+                <Repeat2 size={14} />
+                {meow.author.sex === Sex.FEMALE
+                  ? <Trans>ремяутнула</Trans>
+                  : <Trans>ремяутнул</Trans>
+                }
+              </span>
+            )}
             <TimeAgo date={meow.createdAt} />
           </div>
 
@@ -79,9 +147,33 @@ export const MeowCard = ({ meow, onLike }: MeowCardProps) => {
           </div>
         </div>
 
-        <div className={s.content}>
-          {highlightTildes(meow.content, s.tilde)}
-        </div>
+        {/* контент мяута */}
+        {meow.content && (
+          <div className={s.content}>
+            {highlightTildes(meow.content, s.tilde, true)}
+          </div>
+        )}
+
+        {/* цитата оригинала (remeow или reply) */}
+        {(isRemeow || isReply) && (meow.remeowOf || meow.replyTo) && (
+          <Link
+            to={routes.meowThread}
+            params={{ meowId: (meow.remeowOf || meow.replyTo)!.id }}
+            className={s.quoteBlock}
+          >
+            <div className={s.quoteTop}>
+              <Avatar src={(meow.remeowOf || meow.replyTo)!.author.avatarUrl} alt="" />
+              <div className={s.quoteMeta}>
+                <span className={s.quoteAuthor}>
+                  {(meow.remeowOf || meow.replyTo)!.author.displayName}
+                </span>
+              </div>
+            </div>
+            <div className={s.quoteContent}>
+              {highlightTildes((meow.remeowOf || meow.replyTo)!.content, s.tilde)}
+            </div>
+          </Link>
+        )}
 
         {meow.imageUrl && (
           <div className={s.imageWrap}>
@@ -95,17 +187,71 @@ export const MeowCard = ({ meow, onLike }: MeowCardProps) => {
         )}
 
         <div className={s.actions}>
-          <Link
-            to={routes.meowThread}
-            params={{ meowId: meow.id }}
-            className={s.action}
-            aria-label="Комментарии"
-          >
-            <MessageCircle size={18} />
-            {meow.commentsCount > 0 && (
-              <span className={s.count}>{meow.commentsCount}</span>
-            )}
-          </Link>
+          {onRemeow && !isOwn && !isRemeow && (
+            meow.isRemeowed && meow.myRemeowId ? (
+              <Link
+                to={routes.meowThread}
+                params={{ meowId: meow.myRemeowId }}
+                className={clsx(s.action, s.remeowed)}
+                aria-label="Ремяут"
+              >
+                <Repeat2 size={18} />
+                {meow.remeowsCount > 0 && (
+                  <span className={s.count}>{meow.remeowsCount}</span>
+                )}
+              </Link>
+            ) : (
+              <button
+                type="button"
+                className={s.action}
+                aria-label="Ремяут"
+                onClick={() => onRemeow(meow.id)}
+              >
+                <Repeat2 size={18} />
+                {meow.remeowsCount > 0 && (
+                  <span className={s.count}>{meow.remeowsCount}</span>
+                )}
+              </button>
+            )
+          )}
+
+          {onReply && !isOwn && (
+            meow.isReplied && meow.myReplyId ? (
+              <Link
+                to={routes.meowThread}
+                params={{ meowId: meow.myReplyId }}
+                className={clsx(s.action, s.replied)}
+                aria-label="Ответить"
+              >
+                <SendHorizontal size={18} />
+              </Link>
+            ) : (
+              <button
+                type="button"
+                className={s.action}
+                aria-label="Ответить"
+                onClick={() => onReply(meow)}
+              >
+                <SendHorizontal size={18} />
+              </button>
+            )
+          )}
+
+          <div className={s.actionsSpacer} />
+
+          {!hideComments && (
+            <Link
+              to={routes.meowThread}
+              params={{ meowId: meow.id }}
+              className={s.action}
+              aria-label="Комментарии"
+            >
+              <MessageCircle size={18} />
+              {meow.commentsCount > 0 && (
+                <span className={s.count}>{meow.commentsCount}</span>
+              )}
+            </Link>
+          )}
 
           <button
             type="button"

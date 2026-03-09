@@ -12,5 +12,5 @@ export const BIO_MAX = 300
 export const CONTACTS_MAX = 255
 export const DISPLAY_NAME_MAX = 50
 
-export const MEOW_CONTENT_MAX = 500
-export const COMMENT_CONTENT_MAX = 300
+export const MEOW_CONTENT_MAX = 444
+export const COMMENT_CONTENT_MAX = 333

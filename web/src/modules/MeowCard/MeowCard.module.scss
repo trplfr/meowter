@@ -51,7 +51,7 @@
 
 .meta {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: $spacing-xs;
   min-width: 0;
   flex: 1;
@@ -76,6 +76,37 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
+}
+
+.replyArrow {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: $color-text-secondary;
+  flex-shrink: 0;
+}
+
+.replyTarget {
+  font-size: $font-size-sm;
+  font-weight: 600;
+  color: $color-text;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.remeowLabel {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: $color-text-secondary;
+  font-size: $font-size-xs;
+  flex-shrink: 0;
 }
 
 .time {
@@ -107,6 +138,83 @@
   background: $color-tilde-bg;
   border-radius: $radius-sm;
   padding: 1px $radius-sm;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* Quote block (remeow / reply) */
+
+.quoteBlock {
+  display: block;
+  margin-top: $spacing-sm;
+  margin-bottom: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  border-left: $separator-height * 2 solid $color-separator;
+  border-radius: 0 $radius-sm $radius-sm 0;
+  background: $color-bg-secondary;
+  text-decoration: none;
+}
+
+.quoteTop {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-xs;
+
+  & > img,
+  & > div:first-child {
+    width: $avatar-sm;
+    height: $avatar-sm;
+    border-radius: $radius-round;
+    object-fit: cover;
+    flex-shrink: 0;
+
+    svg {
+      width: $font-size-xs;
+      height: $font-size-xs;
+    }
+  }
+
+  & > div:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.quoteMeta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.quoteAuthor {
+  font-size: $font-size-sm;
+  font-weight: 700;
+  color: $color-text;
+}
+
+.quoteContent {
+  font-size: $font-size-sm;
+  line-height: 1.4;
+  color: $color-text;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+
+  .tilde {
+    pointer-events: none;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  -webkit-box-orient: vertical;
 }
 
 /* Image */
@@ -128,8 +236,12 @@
 .actions {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: $spacing-sm;
+  margin-left: -$spacing-xs;
+}
+
+.actionsSpacer {
+  flex: 1;
 }
 
 .action {
@@ -143,20 +255,48 @@
   text-decoration: none;
   transition: background 0.15s, color 0.15s;
 
-  &:hover {
+  &:not(:disabled):hover {
     background: $color-hover-bg;
     color: $color-text;
+  }
+
+  &:disabled {
+    cursor: default;
   }
 }
 
 .likeAction {
-  &:hover {
+  &:not(:disabled):hover {
     color: $color-primary;
+    background: $color-tilde-bg;
   }
 }
 
-.liked {
+.liked.action {
   color: $color-primary;
+
+  &:hover {
+    color: $color-primary;
+    background: $color-tilde-bg;
+  }
+}
+
+.replied.action {
+  color: $color-primary;
+
+  &:hover {
+    color: $color-primary;
+    background: $color-tilde-bg;
+  }
+}
+
+.remeowed.action {
+  color: $color-primary;
+
+  &:hover {
+    color: $color-primary;
+    background: $color-tilde-bg;
+  }
 }
 
 .count {

@@ -34,6 +34,7 @@
 }
 
 .avatarWrap {
+  position: relative;
   margin-bottom: $spacing-sm;
 
   img,
@@ -54,6 +55,26 @@
       width: $avatar-sm;
       height: $avatar-sm;
     }
+  }
+}
+
+.avatarEdit {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: $avatar-md;
+  height: $avatar-md;
+  border-radius: $radius-round;
+  background: $color-primary;
+  color: $color-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: $radius-sm solid $color-bg;
+  transition: background 0.15s;
+
+  &:hover {
+    background: $color-primary-hover;
   }
 }
 
@@ -83,6 +104,10 @@
   cursor: pointer;
   font-family: $font-family;
   transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.8;
+  }
 
   &:active {
     opacity: 0.6;

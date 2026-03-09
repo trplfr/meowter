@@ -1,20 +1,22 @@
 import './models/init'
 
 import { useCallback } from 'react'
-import { t } from '@lingui/core/macro'
+import { t, plural } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
 import { useUnit } from 'effector-react'
-import { LogOut } from 'lucide-react'
+import { Link } from 'atomic-router-react'
+import { LogOut, Pencil } from 'lucide-react'
+
+import { type Meow, type MeowPreview } from '@shared/types'
 
 import { routes } from '@core/router'
 import { logout } from '@logic/session'
+import { meowDeleted, remeowToggled, replyInitiated } from '@logic/feed'
 
 import { Layout } from '@modules/Layout'
 import { MeowCard, MeowCardSkeleton, Avatar } from '@modules/MeowCard'
 import { Skeleton } from '@ui/Skeleton'
 import { VirtualList } from '@ui/VirtualList'
-
-import { type Meow } from '@shared/types'
 
 import {
   $profile,
@@ -34,8 +36,8 @@ export const CatProfile = () => {
   const [profile, meows, hasMore, pending] = useUnit([
     $profile, $meows, $hasMore, catMeowsQuery.$pending
   ])
-  const [onLoadMore, onFollow, onLike, onLogout] = useUnit([
-    loadMoreMeows, followToggled, meowLikeToggled, logout
+  const [onLoadMore, onFollow, onLike, onLogout, onDelete, onRemeow, onReply] = useUnit([
+    loadMoreMeows, followToggled, meowLikeToggled, logout, meowDeleted, remeowToggled, replyInitiated
   ])
 
   const handleCopyContacts = useCallback(() => {
@@ -44,9 +46,27 @@ export const CatProfile = () => {
     }
   }, [profile?.contacts])
 
+  const handleReply = useCallback((meow: Meow) => {
+    const preview: MeowPreview = {
+      id: meow.id,
+      content: meow.content,
+      imageUrl: meow.imageUrl,
+      author: meow.author,
+      createdAt: meow.createdAt
+    }
+    onReply(preview)
+  }, [onReply])
+
   const renderMeow = useCallback((meow: Meow) => (
-    <MeowCard meow={meow} onLike={onLike} />
-  ), [onLike])
+    <MeowCard
+      meow={meow}
+      onLike={onLike}
+      onDelete={onDelete}
+      onRemeow={onRemeow}
+      onReply={handleReply}
+      isOwn={profile?.isOwn || false}
+    />
+  ), [onLike, onDelete, onRemeow, handleReply, profile?.isOwn])
 
   const title = profile ? `@${profile.username}` : ''
   const fullName = profile?.firstName && profile?.lastName
@@ -87,6 +107,11 @@ export const CatProfile = () => {
           <div className={s.header}>
             <div className={s.avatarWrap}>
               <Avatar src={profile.avatarUrl} alt={profile.displayName} />
+              {profile.isOwn && (
+                <Link to={routes.settings} className={s.avatarEdit} aria-label="Настройки">
+                  <Pencil size={18} />
+                </Link>
+              )}
             </div>
 
             <h2 className={s.name}>{fullName}</h2>
@@ -108,7 +133,12 @@ export const CatProfile = () => {
               </div>
               <div className={s.stat}>
                 <span className={s.statCount}>{profile.followersCount}</span>
-                <span className={s.statLabel}><Trans>читателя</Trans></span>
+                <span className={s.statLabel}>{plural(profile.followersCount, {
+                  one: 'читатель',
+                  few: 'читателя',
+                  many: 'читателей',
+                  other: 'читателей'
+                })}</span>
               </div>
             </div>
 

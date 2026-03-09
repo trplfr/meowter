@@ -3,6 +3,7 @@ import { type Meow, type Comment, type PaginatedResponse } from '@shared/types'
 export interface CreateMeowRequest {
   content: string
   image: File | null
+  replyToId?: string
 }
 
 export type MeowResponse = Meow

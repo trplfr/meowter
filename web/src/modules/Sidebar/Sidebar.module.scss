@@ -8,9 +8,21 @@
     top: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
     height: 100dvh;
+    margin: 0 $spacing-xl 0 0;
+  }
+}
+
+.logo {
+  position: absolute;
+  top: $spacing-lg;
+
+  img {
+    width: $avatar-lg;
+    height: $avatar-lg;
+    object-fit: contain;
   }
 }
 
