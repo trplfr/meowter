@@ -21,7 +21,7 @@ interface NavigatorProps {
 
 export const Navigator = ({ items }: NavigatorProps) => {
   return (
-    <nav className={s.nav} aria-label="Навигация">
+    <nav className={s.nav} aria-label='Навигация'>
       {items.map((item, i) => (
         <Link
           key={i}

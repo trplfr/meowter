@@ -10,7 +10,9 @@
   height: $icon-button-sm;
   border-radius: $radius-md;
   color: $color-primary;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 
   &:hover {
     background: $color-hover-bg;

@@ -9,15 +9,28 @@ import { COMMENT_CONTENT_MAX } from '@shared/constants'
 
 import { highlightMentionsOverlay } from '@lib/meow'
 
-import { $commentText, $replyTrigger, commentTextChanged, commentSubmitted, createCommentMutation } from './models'
+import {
+  $commentText,
+  $replyTrigger,
+  commentTextChanged,
+  commentSubmitted,
+  createCommentMutation
+} from './models'
 
 import s from './MeowThread.module.scss'
 
 export const CommentForm = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const backdropRef = useRef<HTMLDivElement>(null)
-  const [text, replyTrigger, pending] = useUnit([$commentText, $replyTrigger, createCommentMutation.$pending])
-  const [onTextChange, onSubmit] = useUnit([commentTextChanged, commentSubmitted])
+  const [text, replyTrigger, pending] = useUnit([
+    $commentText,
+    $replyTrigger,
+    createCommentMutation.$pending
+  ])
+  const [onTextChange, onSubmit] = useUnit([
+    commentTextChanged,
+    commentSubmitted
+  ])
 
   const isOverLimit = text.length > COMMENT_CONTENT_MAX
 
@@ -47,7 +60,9 @@ export const CommentForm = () => {
     <div className={s.commentFormWrap}>
       {isOverLimit && (
         <div className={s.commentError}>
-          <Trans>Превышено количество символов ({text.length}/{COMMENT_CONTENT_MAX})</Trans>
+          <Trans>
+            Превышено количество символов ({text.length}/{COMMENT_CONTENT_MAX})
+          </Trans>
         </div>
       )}
       <div className={s.commentForm}>
@@ -57,12 +72,15 @@ export const CommentForm = () => {
           </div>
           <textarea
             ref={textareaRef}
-            id="comment"
-            name="comment"
+            id='comment'
+            name='comment'
             aria-label={t`Написать комментарий...`}
-            className={clsx(s.commentTextarea, isOverLimit && s.commentTextareaError)}
+            className={clsx(
+              s.commentTextarea,
+              isOverLimit && s.commentTextareaError
+            )}
             value={text}
-            onChange={(e) => onTextChange(e.target.value)}
+            onChange={e => onTextChange(e.target.value)}
             onKeyDown={handleKeyDown}
             onScroll={handleScroll}
             placeholder={t`Написать комментарий...`}
@@ -70,8 +88,8 @@ export const CommentForm = () => {
           />
         </div>
         <button
-          type="button"
-          aria-label="Отправить"
+          type='button'
+          aria-label='Отправить'
           className={s.commentSendButton}
           disabled={pending || text.trim().length === 0 || isOverLimit}
           onClick={() => onSubmit()}

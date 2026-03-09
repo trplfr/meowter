@@ -62,7 +62,7 @@ export const ScrollButton = ({ scrollRef }: ScrollButtonProps) => {
 
   return (
     <button
-      type="button"
+      type='button'
       aria-label={direction === 'up' ? 'Наверх' : 'Вниз'}
       className={clsx(s.button, visible && s.visible)}
       onClick={handleClick}

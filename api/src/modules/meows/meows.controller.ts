@@ -1,5 +1,20 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common'
-import { ApiTags, ApiOperation, ApiResponse, ApiConsumes } from '@nestjs/swagger'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+  Req,
+  UseGuards
+} from '@nestjs/common'
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiConsumes
+} from '@nestjs/swagger'
 import type { FastifyRequest } from 'fastify'
 import { join, extname } from 'path'
 import { mkdir, writeFile } from 'fs/promises'
@@ -49,13 +64,21 @@ export class MeowsController {
 
       if (part.type === 'file' && part.fieldname === 'image') {
         if (!ALLOWED_MIMES.includes(part.mimetype)) {
-          throw new AppException(ErrorCode.FILE_INVALID_TYPE, 400, 'Only PNG, JPEG, WebP and GIF allowed')
+          throw new AppException(
+            ErrorCode.FILE_INVALID_TYPE,
+            400,
+            'Only PNG, JPEG, WebP and GIF allowed'
+          )
         }
 
         const buffer = await part.toBuffer()
 
         if (buffer.length > MAX_SIZE) {
-          throw new AppException(ErrorCode.FILE_TOO_LARGE, 400, 'File too large (max 10MB)')
+          throw new AppException(
+            ErrorCode.FILE_TOO_LARGE,
+            400,
+            'File too large (max 10MB)'
+          )
         }
 
         const ext = extname(part.filename) || '.jpg'
@@ -69,7 +92,11 @@ export class MeowsController {
     }
 
     if (!content.trim()) {
-      throw new AppException(ErrorCode.VALIDATION_ERROR, 400, 'Content is required')
+      throw new AppException(
+        ErrorCode.VALIDATION_ERROR,
+        400,
+        'Content is required'
+      )
     }
 
     const dto = new CreateMeowDto()
@@ -89,7 +116,13 @@ export class MeowsController {
     @Query('tag') tag?: string,
     @Query('sort') sort?: string
   ) {
-    return this.meows.getFeed(user.sub, cursor, limit ? parseInt(limit, 10) : 20, tag, sort === 'popular' ? 'popular' : 'date')
+    return this.meows.getFeed(
+      user.sub,
+      cursor,
+      limit ? parseInt(limit, 10) : 20,
+      tag,
+      sort === 'popular' ? 'popular' : 'date'
+    )
   }
 
   @Get('tags')
@@ -105,7 +138,10 @@ export class MeowsController {
   @ApiOperation({ summary: 'Получить мяут' })
   @ApiResponse({ status: 200, description: 'Мяут' })
   @ApiResponse({ status: 404, description: 'Мяут не найден' })
-  async findOne(@Param('id') id: string, @CurrentUser() user: JwtPayload | null) {
+  async findOne(
+    @Param('id') id: string,
+    @CurrentUser() user: JwtPayload | null
+  ) {
     return this.meows.findById(id, user?.sub)
   }
 
@@ -159,7 +195,12 @@ export class MeowsController {
     @Query('cursor') cursor?: string,
     @Query('limit') limit?: string
   ) {
-    return this.meows.getComments(id, user?.sub, cursor, limit ? parseInt(limit, 10) : 20)
+    return this.meows.getComments(
+      id,
+      user?.sub,
+      cursor,
+      limit ? parseInt(limit, 10) : 20
+    )
   }
 
   @Post(':id/comments')
@@ -178,7 +219,10 @@ export class MeowsController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Удалить комментарий' })
   @ApiResponse({ status: 200, description: 'Удалено' })
-  async deleteComment(@Param('commentId') commentId: string, @CurrentUser() user: JwtPayload) {
+  async deleteComment(
+    @Param('commentId') commentId: string,
+    @CurrentUser() user: JwtPayload
+  ) {
     return this.meows.deleteComment(commentId, user.sub)
   }
 
@@ -186,7 +230,10 @@ export class MeowsController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Лайкнуть комментарий' })
   @ApiResponse({ status: 200, description: 'Лайк поставлен' })
-  async likeComment(@Param('commentId') commentId: string, @CurrentUser() user: JwtPayload) {
+  async likeComment(
+    @Param('commentId') commentId: string,
+    @CurrentUser() user: JwtPayload
+  ) {
     return this.meows.likeComment(commentId, user.sub)
   }
 
@@ -194,7 +241,10 @@ export class MeowsController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Убрать лайк с комментария' })
   @ApiResponse({ status: 200, description: 'Лайк убран' })
-  async unlikeComment(@Param('commentId') commentId: string, @CurrentUser() user: JwtPayload) {
+  async unlikeComment(
+    @Param('commentId') commentId: string,
+    @CurrentUser() user: JwtPayload
+  ) {
     return this.meows.unlikeComment(commentId, user.sub)
   }
 }

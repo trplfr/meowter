@@ -15,11 +15,21 @@ interface NotificationCardProps {
   notification: Notification
 }
 
-const NotificationText = ({ type, sex }: { type: NotificationType; sex: Sex | null }) => {
+const NotificationText = ({
+  type,
+  sex
+}: {
+  type: NotificationType
+  sex: Sex | null
+}) => {
   const f = sex === 'FEMALE'
 
   if (type === NotificationType.FOLLOW) {
-    return f ? <Trans>подписалась на вас</Trans> : <Trans>подписался на вас</Trans>
+    return f ? (
+      <Trans>подписалась на вас</Trans>
+    ) : (
+      <Trans>подписался на вас</Trans>
+    )
   }
 
   if (type === NotificationType.MEOW_LIKE) {
@@ -27,18 +37,30 @@ const NotificationText = ({ type, sex }: { type: NotificationType; sex: Sex | nu
   }
 
   if (type === NotificationType.REMEOW) {
-    return f ? <Trans>ремяутнула ваш мяут</Trans> : <Trans>ремяутнул ваш мяут</Trans>
+    return f ? (
+      <Trans>ремяутнула ваш мяут</Trans>
+    ) : (
+      <Trans>ремяутнул ваш мяут</Trans>
+    )
   }
 
   if (type === NotificationType.REPLY) {
-    return f ? <Trans>ответила на ваш мяут</Trans> : <Trans>ответил на ваш мяут</Trans>
+    return f ? (
+      <Trans>ответила на ваш мяут</Trans>
+    ) : (
+      <Trans>ответил на ваш мяут</Trans>
+    )
   }
 
   if (type === NotificationType.MENTION) {
     return f ? <Trans>упомянула вас</Trans> : <Trans>упомянул вас</Trans>
   }
 
-  return f ? <Trans>оценила ваш комментарий</Trans> : <Trans>оценил ваш комментарий</Trans>
+  return f ? (
+    <Trans>оценила ваш комментарий</Trans>
+  ) : (
+    <Trans>оценил ваш комментарий</Trans>
+  )
 }
 
 export const NotificationCard = ({ notification }: NotificationCardProps) => {
@@ -83,8 +105,7 @@ export const NotificationCard = ({ notification }: NotificationCardProps) => {
           <div className={s.commentPreviewContent}>
             {comment.content.length > 150
               ? comment.content.slice(0, 150) + '...'
-              : comment.content
-            }
+              : comment.content}
           </div>
         </a>
       )}
@@ -98,7 +119,9 @@ export const NotificationCard = ({ notification }: NotificationCardProps) => {
           <div className={s.meowPreviewTop}>
             <Avatar src={meow.author.avatarUrl} alt={meow.author.displayName} />
             <div className={s.meowPreviewMeta}>
-              <span className={s.meowPreviewAuthor}>{meow.author.displayName}</span>
+              <span className={s.meowPreviewAuthor}>
+                {meow.author.displayName}
+              </span>
               <TimeAgo date={meow.createdAt} />
             </div>
           </div>

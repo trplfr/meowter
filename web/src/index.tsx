@@ -6,6 +6,7 @@ import { Provider } from 'effector-react'
 import { createBrowserHistory } from 'history'
 
 import { router } from '@core/router'
+import { activateLocale } from '@core/i18n'
 import { appStarted } from '@logic/session'
 import { errorOccurred } from '@logic/notifications'
 import { setApiErrorHandler } from '@lib/api'
@@ -20,7 +21,11 @@ if (!root) {
   throw new Error('Root element not found')
 }
 
-setApiErrorHandler((error) => errorOccurred(error))
+setApiErrorHandler(error => errorOccurred(error))
+
+// локаль из SSR (атрибут lang на <html>) или по домену
+const locale = document.documentElement.lang || (location.hostname.includes('meowter.ru') ? 'ru' : 'en')
+activateLocale(locale)
 
 const serverState = (globalThis as any).__SSR_STATE__
 const scope = fork(serverState ? { values: serverState } : undefined)

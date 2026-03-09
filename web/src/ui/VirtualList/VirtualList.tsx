@@ -42,22 +42,24 @@ export const VirtualList = <T,>({
       return
     }
 
-    if (lastItem.index >= items.length - 1 && hasMore && !pending && onLoadMore) {
+    if (
+      lastItem.index >= items.length - 1 &&
+      hasMore &&
+      !pending &&
+      onLoadMore
+    ) {
       onLoadMore()
     }
   }, [lastItem?.index, items.length, hasMore, pending])
 
   return (
     <div ref={parentRef} className={className || s.container}>
-      <div
-        className={s.content}
-        style={{ height: virtualizer.getTotalSize() }}
-      >
+      <div className={s.content} style={{ height: virtualizer.getTotalSize() }}>
         <div
           className={s.items}
           style={{ transform: `translateY(${virtualItems[0]?.start ?? 0}px)` }}
         >
-          {virtualItems.map((virtualRow) => (
+          {virtualItems.map(virtualRow => (
             <div
               key={virtualRow.key}
               data-index={virtualRow.index}

@@ -23,7 +23,7 @@ export const NotFound = () => {
       </header>
 
       <div className={s.content}>
-        <img className={s.cat} src={notfoundCat} alt="" />
+        <img className={s.cat} src={notfoundCat} alt='' />
         <h1 className={s.title}>
           <Trans>Ой!</Trans>
         </h1>

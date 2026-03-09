@@ -6,18 +6,27 @@ import { Check } from 'lucide-react'
 import { routes } from '@core/router'
 
 import { Layout } from '@modules/Layout'
-import { CreateMeowForm, submitted, createMeowMutation, $hasTildes } from '@modules/CreateMeow'
+import {
+  CreateMeowForm,
+  submitted,
+  createMeowMutation,
+  $hasTildes
+} from '@modules/CreateMeow'
 
 import s from './CreateMeow.module.scss'
 
 export const route = routes.createMeow
 
 export const CreateMeow = () => {
-  const [onSubmit, pending, hasTildes] = useUnit([submitted, createMeowMutation.$pending, $hasTildes])
+  const [onSubmit, pending, hasTildes] = useUnit([
+    submitted,
+    createMeowMutation.$pending,
+    $hasTildes
+  ])
 
   const headerAction = (
     <button
-      type="button"
+      type='button'
       className={s.submit}
       disabled={pending || !hasTildes}
       onClick={() => onSubmit()}

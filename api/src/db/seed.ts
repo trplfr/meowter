@@ -5,7 +5,8 @@ import bcrypt from 'bcrypt'
 
 import * as schema from './schema'
 
-const { cats, meows, meowTags, likes, follows, comments, notifications } = schema
+const { cats, meows, meowTags, likes, follows, comments, notifications } =
+  schema
 
 /* Tilde tag parser */
 
@@ -273,19 +274,23 @@ const seed = async () => {
   console.log('Начинаю сидирование...')
 
   // удаляем старые сидовые данные
-  const seedUsernames = seedCats.map((c) => c.username)
+  const seedUsernames = seedCats.map(c => c.username)
   const existingSeedCats = await db
     .select({ id: cats.id })
     .from(cats)
     .where(inArray(cats.username, seedUsernames))
 
   if (existingSeedCats.length > 0) {
-    const ids = existingSeedCats.map((c) => c.id)
+    const ids = existingSeedCats.map(c => c.id)
 
-    await db.execute(sql`
+    await db
+      .execute(
+        sql`
       DELETE FROM notifications
       WHERE actor_id = ANY(${ids}::uuid[]) OR user_id = ANY(${ids}::uuid[])
-    `).catch(() => {})
+    `
+      )
+      .catch(() => {})
 
     await db.delete(comments).where(inArray(comments.authorId, ids))
     await db.delete(likes).where(inArray(likes.userId, ids))
@@ -303,7 +308,7 @@ const seed = async () => {
   const insertedCats = await db
     .insert(cats)
     .values(
-      seedCats.map((cat) => ({
+      seedCats.map(cat => ({
         username: cat.username,
         email: cat.email,
         passwordHash,
@@ -321,7 +326,12 @@ const seed = async () => {
 
   // создаем мяуканья с разными таймстемпами
   // мяуты разбросаны от 7 дней назад до 5 минут назад
-  const allInsertedMeows: { id: string; authorId: string; authorIndex: number; minutesAgo: number }[] = []
+  const allInsertedMeows: {
+    id: string
+    authorId: string
+    authorIndex: number
+    minutesAgo: number
+  }[] = []
   let minutesCounter = 7 * 24 * 60 // 7 дней
 
   for (let i = 0; i < insertedCats.length; i++) {
@@ -349,7 +359,7 @@ const seed = async () => {
       const tags = parseTildes(content)
       if (tags.length > 0) {
         await db.insert(meowTags).values(
-          tags.map((t) => ({
+          tags.map(t => ({
             meowId: inserted.id,
             tag: t.tag,
             stem: sql`stem_tag(${t.tag})`,
@@ -374,12 +384,15 @@ const seed = async () => {
 
   for (let i = 0; i < insertedCats.length; i += 2) {
     const cat = insertedCats[i]
-    const otherMeows = allInsertedMeows.filter((m) => m.authorId !== cat.id)
+    const otherMeows = allInsertedMeows.filter(m => m.authorId !== cat.id)
     const toRemeow = pickN(otherMeows, 1, 2)
 
     for (const original of toRemeow) {
       // ремяут произошел позже оригинала
-      const remeowMinutesAgo = Math.max(5, original.minutesAgo - Math.floor(Math.random() * 120) - 10)
+      const remeowMinutesAgo = Math.max(
+        5,
+        original.minutesAgo - Math.floor(Math.random() * 120) - 10
+      )
 
       const [remeow] = await db
         .insert(meows)
@@ -412,12 +425,15 @@ const seed = async () => {
     const cat = insertedCats[i]
     // только оригинальные мяуты (не ремяуты)
     const otherOriginalMeows = allInsertedMeows.filter(
-      (m) => m.authorId !== cat.id && allInsertedMeows.find((x) => x.id === m.id)
+      m => m.authorId !== cat.id && allInsertedMeows.find(x => x.id === m.id)
     )
     const toReply = pickN(otherOriginalMeows, 1, 2)
 
     for (const original of toReply) {
-      const replyMinutesAgo = Math.max(3, original.minutesAgo - Math.floor(Math.random() * 180) - 15)
+      const replyMinutesAgo = Math.max(
+        3,
+        original.minutesAgo - Math.floor(Math.random() * 180) - 15
+      )
       const replyContent = pick(seedReplies)
 
       const [reply] = await db
@@ -435,7 +451,7 @@ const seed = async () => {
       const tags = parseTildes(replyContent)
       if (tags.length > 0) {
         await db.insert(meowTags).values(
-          tags.map((t) => ({
+          tags.map(t => ({
             meowId: reply.id,
             tag: t.tag,
             stem: sql`stem_tag(${t.tag})`,
@@ -461,11 +477,14 @@ const seed = async () => {
   let commentCount = 0
 
   for (const cat of insertedCats) {
-    const otherMeows = allInsertedMeows.filter((m) => m.authorId !== cat.id)
+    const otherMeows = allInsertedMeows.filter(m => m.authorId !== cat.id)
     const toComment = pickN(otherMeows, 1, 2)
 
     for (const meow of toComment) {
-      const commentMinutesAgo = Math.max(1, meow.minutesAgo - Math.floor(Math.random() * 60) - 5)
+      const commentMinutesAgo = Math.max(
+        1,
+        meow.minutesAgo - Math.floor(Math.random() * 60) - 5
+      )
 
       await db.insert(comments).values({
         meowId: meow.id,
@@ -484,7 +503,7 @@ const seed = async () => {
   const likeSet = new Set<string>()
 
   for (const cat of insertedCats) {
-    const otherMeows = allInsertedMeows.filter((m) => m.authorId !== cat.id)
+    const otherMeows = allInsertedMeows.filter(m => m.authorId !== cat.id)
     const toLike = pickN(otherMeows, 2, 4)
 
     for (const meow of toLike) {
@@ -509,7 +528,7 @@ const seed = async () => {
   const followSet = new Set<string>()
 
   for (const cat of insertedCats) {
-    const others = insertedCats.filter((c) => c.id !== cat.id)
+    const others = insertedCats.filter(c => c.id !== cat.id)
     const toFollow = pickN(others, 2, 4)
 
     for (const target of toFollow) {
@@ -551,10 +570,13 @@ const seed = async () => {
       const baseMinutesAgo = 4000 - ai * 400 + Math.floor(Math.random() * 200)
 
       // подписка
-      await db.insert(follows).values({
-        followerId: actor.id,
-        followingId: realUser.id
-      }).onConflictDoNothing()
+      await db
+        .insert(follows)
+        .values({
+          followerId: actor.id,
+          followingId: realUser.id
+        })
+        .onConflictDoNothing()
 
       await db.insert(notifications).values({
         userId: realUser.id,
@@ -566,20 +588,29 @@ const seed = async () => {
 
       // лайкаем 1-2 мяута trplfr
       if (realUserMeows.length > 0) {
-        const toLikeMeows = pickN(realUserMeows, 1, Math.min(2, realUserMeows.length))
+        const toLikeMeows = pickN(
+          realUserMeows,
+          1,
+          Math.min(2, realUserMeows.length)
+        )
 
         for (const meow of toLikeMeows) {
-          await db.insert(likes).values({
-            userId: actor.id,
-            meowId: meow.id
-          }).onConflictDoNothing()
+          await db
+            .insert(likes)
+            .values({
+              userId: actor.id,
+              meowId: meow.id
+            })
+            .onConflictDoNothing()
 
           await db.insert(notifications).values({
             userId: realUser.id,
             actorId: actor.id,
             type: 'MEOW_LIKE',
             meowId: meow.id,
-            createdAt: timeAgo(baseMinutesAgo - 30 - Math.floor(Math.random() * 60))
+            createdAt: timeAgo(
+              baseMinutesAgo - 30 - Math.floor(Math.random() * 60)
+            )
           })
           notifCount++
         }
@@ -588,7 +619,8 @@ const seed = async () => {
       // ремяут мяута trplfr (первые 2 актора)
       if (ai < 2 && realUserMeows.length > 0) {
         const toRemeow = pick(realUserMeows)
-        const remeowMinutesAgo = baseMinutesAgo - 60 - Math.floor(Math.random() * 120)
+        const remeowMinutesAgo =
+          baseMinutesAgo - 60 - Math.floor(Math.random() * 120)
 
         const [remeow] = await db
           .insert(meows)
@@ -616,7 +648,8 @@ const seed = async () => {
       // ответ на мяут trplfr (3й и 4й актор)
       if ((ai === 2 || ai === 3) && realUserMeows.length > 0) {
         const toReplyTo = pick(realUserMeows)
-        const replyMinutesAgo = baseMinutesAgo - 90 - Math.floor(Math.random() * 60)
+        const replyMinutesAgo =
+          baseMinutesAgo - 90 - Math.floor(Math.random() * 60)
         const replyContent = pick(seedReplies)
 
         const [reply] = await db
@@ -633,7 +666,7 @@ const seed = async () => {
         const tags = parseTildes(replyContent)
         if (tags.length > 0) {
           await db.insert(meowTags).values(
-            tags.map((t) => ({
+            tags.map(t => ({
               meowId: reply.id,
               tag: t.tag,
               stem: sql`stem_tag(${t.tag})`,
@@ -657,7 +690,8 @@ const seed = async () => {
       // комментарий на мяут trplfr (5й+ актор)
       if (ai >= 4 && realUserMeows.length > 0) {
         const toCommentOn = pick(realUserMeows)
-        const commentMinutesAgo = baseMinutesAgo - 45 - Math.floor(Math.random() * 90)
+        const commentMinutesAgo =
+          baseMinutesAgo - 45 - Math.floor(Math.random() * 90)
 
         await db.insert(comments).values({
           meowId: toCommentOn.id,
@@ -680,7 +714,7 @@ const seed = async () => {
   await pool.end()
 }
 
-seed().catch((err) => {
+seed().catch(err => {
   console.error('Ошибка сидирования:', err)
   process.exit(1)
 })

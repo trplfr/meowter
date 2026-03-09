@@ -24,7 +24,11 @@ import s from './Notifications.module.scss'
 export const route = routes.notifications
 
 export const Notifications = () => {
-  const [notificationsList, hasMore, pending] = useUnit([$notifications, $hasMore, notificationsQuery.$pending])
+  const [notificationsList, hasMore, pending] = useUnit([
+    $notifications,
+    $hasMore,
+    notificationsQuery.$pending
+  ])
   const onLoadMore = useUnit(loadMore)
 
   return (
@@ -47,8 +51,11 @@ export const Notifications = () => {
           pending={pending}
           onLoadMore={onLoadMore}
           className={s.list}
-          renderItem={(notification) => (
-            <NotificationCard key={notification.id} notification={notification} />
+          renderItem={notification => (
+            <NotificationCard
+              key={notification.id}
+              notification={notification}
+            />
           )}
         />
       )}

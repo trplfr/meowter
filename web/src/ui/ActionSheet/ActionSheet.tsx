@@ -30,7 +30,7 @@ export const ActionSheet = ({ items }: ActionSheetProps) => {
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <button type="button" className={s.trigger} aria-label="Действия">
+        <button type='button' className={s.trigger} aria-label='Действия'>
           <Ellipsis size={18} />
         </button>
       </Dialog.Trigger>
@@ -44,7 +44,7 @@ export const ActionSheet = ({ items }: ActionSheetProps) => {
             {items.map((item, i) => (
               <button
                 key={i}
-                type="button"
+                type='button'
                 className={item.variant === 'danger' ? s.itemDanger : s.item}
                 onClick={() => handleItemClick(item)}
               >

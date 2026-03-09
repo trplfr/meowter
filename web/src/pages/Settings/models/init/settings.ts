@@ -26,7 +26,7 @@ import {
 sample({
   clock: routes.settings.opened,
   source: $session,
-  filter: (session) => session !== null,
+  filter: session => session !== null,
   fn: (session): SettingsForm => ({
     displayName: session!.displayName || '',
     firstName: session!.firstName || '',
@@ -103,7 +103,11 @@ sample({
   source: $passwordForm,
   fn: (form, { field, value }) => {
     const updated = { ...form, [field]: value }
-    return updated.oldPassword.length > 0 || updated.newPassword.length > 0 || updated.confirmPassword.length > 0
+    return (
+      updated.oldPassword.length > 0 ||
+      updated.newPassword.length > 0 ||
+      updated.confirmPassword.length > 0
+    )
   },
   target: $isPasswordDirty
 })
@@ -116,7 +120,7 @@ sample({
 
 sample({
   clock: avatarSelected,
-  fn: (file) => URL.createObjectURL(file),
+  fn: file => URL.createObjectURL(file),
   target: $avatarPreview
 })
 
@@ -130,8 +134,8 @@ sample({
 sample({
   clock: submitted,
   source: $avatarFile,
-  filter: (file) => file !== null,
-  fn: (file) => file!,
+  filter: file => file !== null,
+  fn: file => file!,
   target: uploadAvatarFx
 })
 
@@ -189,7 +193,7 @@ sample({
 sample({
   clock: uploadAvatarFx.doneData,
   source: $session,
-  filter: (session) => session !== null,
+  filter: session => session !== null,
   fn: (session, { avatarUrl }) => ({
     ...session!,
     avatarUrl

@@ -84,8 +84,8 @@ sample({
 sample({
   clock: loadMore,
   source: $cursor,
-  filter: (cursor) => cursor !== null,
-  fn: (cursor) => ({ cursor: cursor! }),
+  filter: cursor => cursor !== null,
+  fn: cursor => ({ cursor: cursor! }),
   target: notificationsQuery.start
 })
 

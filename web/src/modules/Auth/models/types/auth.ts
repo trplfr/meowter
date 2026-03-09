@@ -1,4 +1,8 @@
-import { type LoginRequest, type RegisterRequest, type RecoveryRequest } from '@logic/api/auth'
+import {
+  type LoginRequest,
+  type RegisterRequest,
+  type RecoveryRequest
+} from '@logic/api/auth'
 
 export enum AuthStep {
   CREDENTIALS = 'CREDENTIALS',

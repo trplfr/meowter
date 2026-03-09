@@ -78,7 +78,7 @@ sample({
 
 sample({
   clock: threadOpened,
-  fn: (meowId) => ({ meowId }),
+  fn: meowId => ({ meowId }),
   target: commentsQuery.start
 })
 
@@ -155,7 +155,7 @@ sample({
 sample({
   clock: replyClicked,
   source: $replyTrigger,
-  fn: (n) => n + 1,
+  fn: n => n + 1,
   target: $replyTrigger
 })
 
@@ -193,8 +193,8 @@ sample({
 sample({
   clock: createCommentMutation.finished.success,
   source: $meow,
-  filter: (meow) => meow !== null,
-  fn: (meow) => ({
+  filter: meow => meow !== null,
+  fn: meow => ({
     ...meow!,
     commentsCount: meow!.commentsCount + 1
   }),
@@ -205,8 +205,8 @@ sample({
 sample({
   clock: meowLikeToggled,
   source: $meow,
-  filter: (meow) => meow !== null,
-  fn: (meow) => ({
+  filter: meow => meow !== null,
+  fn: meow => ({
     meowId: meow!.id,
     isLiked: meow!.isLiked
   }),
@@ -217,8 +217,8 @@ sample({
 sample({
   clock: meowLikeToggled,
   source: $meow,
-  filter: (meow) => meow !== null,
-  fn: (meow) => ({
+  filter: meow => meow !== null,
+  fn: meow => ({
     meowId: meow!.id,
     isLiked: !meow!.isLiked,
     likesCount: meow!.isLiked ? meow!.likesCount - 1 : meow!.likesCount + 1
@@ -245,7 +245,7 @@ sample({
   clock: commentLikeToggled,
   source: $comments,
   fn: (comments, commentId) => {
-    const comment = comments.find((c) => c.id === commentId)
+    const comment = comments.find(c => c.id === commentId)
     if (!comment) {
       return { commentId, isLiked: false }
     }
@@ -259,7 +259,7 @@ sample({
   clock: commentLikeToggled,
   source: $comments,
   fn: (comments, commentId) =>
-    comments.map((c) => {
+    comments.map(c => {
       if (c.id !== commentId) {
         return c
       }
@@ -283,7 +283,7 @@ sample({
 sample({
   clock: commentDeleteClicked,
   source: $comments,
-  fn: (comments, commentId) => comments.filter((c) => c.id !== commentId),
+  fn: (comments, commentId) => comments.filter(c => c.id !== commentId),
   target: $comments
 })
 
@@ -291,8 +291,8 @@ sample({
 sample({
   clock: commentDeleteClicked,
   source: $meow,
-  filter: (meow) => meow !== null,
-  fn: (meow) => ({
+  filter: meow => meow !== null,
+  fn: meow => ({
     ...meow!,
     commentsCount: Math.max(0, meow!.commentsCount - 1)
   }),
@@ -310,8 +310,8 @@ sample({
 sample({
   clock: meowDeleteClicked,
   source: $meow,
-  filter: (meow) => meow !== null,
-  fn: (meow) => meow!.id,
+  filter: meow => meow !== null,
+  fn: meow => meow!.id,
   target: deleteMeowMutation.start
 })
 
@@ -319,8 +319,8 @@ sample({
 sample({
   clock: meowDeleteClicked,
   source: $meow,
-  filter: (meow) => meow !== null,
-  fn: (meow) => meow!.id,
+  filter: meow => meow !== null,
+  fn: meow => meow!.id,
   target: meowDeletedGlobal
 })
 

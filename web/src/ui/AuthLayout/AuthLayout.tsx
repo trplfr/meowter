@@ -10,9 +10,5 @@ interface LayoutProps {
 
 /* Mobile-first container centered on desktop */
 export const AuthLayout = ({ children, className }: LayoutProps) => {
-  return (
-    <div className={clsx(s.layout, className)}>
-      {children}
-    </div>
-  )
+  return <div className={clsx(s.layout, className)}>{children}</div>
 }

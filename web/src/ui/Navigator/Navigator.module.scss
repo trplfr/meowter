@@ -25,7 +25,9 @@
   height: $icon-button-size;
   border-radius: $radius-md;
   color: $color-icon-muted;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 
   &:hover {
     background: $color-hover-bg;

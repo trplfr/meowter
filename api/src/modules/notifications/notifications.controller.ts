@@ -20,7 +20,11 @@ export class NotificationsController {
     @Query('cursor') cursor?: string,
     @Query('limit') limit?: string
   ) {
-    return this.notifications.getList(user.sub, cursor, limit ? parseInt(limit, 10) : 20)
+    return this.notifications.getList(
+      user.sub,
+      cursor,
+      limit ? parseInt(limit, 10) : 20
+    )
   }
 
   @Get('unread')

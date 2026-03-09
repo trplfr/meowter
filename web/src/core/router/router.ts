@@ -1,6 +1,14 @@
-import { createHistoryRouter, createRoute, createRouterControls } from 'atomic-router'
+import {
+  createHistoryRouter,
+  createRoute,
+  createRouterControls
+} from 'atomic-router'
 
-import { type CatProfileParams, type MeowThreadParams, type RouteConfig } from './types'
+import {
+  type CatProfileParams,
+  type MeowThreadParams,
+  type RouteConfig
+} from './types'
 
 /* Routes */
 
@@ -40,6 +48,7 @@ export const routesMap: RouteConfig[] = [
 
 /* Router */
 
-export const controls: ReturnType<typeof createRouterControls> = createRouterControls()
+export const controls: ReturnType<typeof createRouterControls> =
+  createRouterControls()
 
 export const router = createHistoryRouter({ routes: routesMap, controls })

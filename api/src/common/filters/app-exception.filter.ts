@@ -1,4 +1,9 @@
-import { Catch, type ExceptionFilter, type ArgumentsHost, HttpException } from '@nestjs/common'
+import {
+  Catch,
+  type ExceptionFilter,
+  type ArgumentsHost,
+  HttpException
+} from '@nestjs/common'
 import type { FastifyReply } from 'fastify'
 
 import { ErrorCode } from '@shared/types'
@@ -23,19 +28,22 @@ export class AppExceptionFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       const status = exception.getStatus()
       const response = exception.getResponse()
-      const message = typeof response === 'string'
-        ? response
-        : (response as any).message
+      const message =
+        typeof response === 'string' ? response : (response as any).message
 
       res.status(status).send({
         statusCode: status,
-        code: status === 401 ? ErrorCode.UNAUTHORIZED : ErrorCode.VALIDATION_ERROR,
+        code:
+          status === 401 ? ErrorCode.UNAUTHORIZED : ErrorCode.VALIDATION_ERROR,
         message: Array.isArray(message) ? message[0] : message
       })
       return
     }
 
-    console.error('Unhandled exception:', exception)
+    const errMessage = exception instanceof Error
+      ? exception.stack || exception.message
+      : String(exception)
+    console.error('Unhandled exception:', errMessage)
 
     res.status(500).send({
       statusCode: 500,

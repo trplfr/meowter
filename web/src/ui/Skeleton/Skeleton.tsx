@@ -9,7 +9,12 @@ interface SkeletonProps {
   className?: string
 }
 
-export const Skeleton = ({ width, height, borderRadius, className }: SkeletonProps) => (
+export const Skeleton = ({
+  width,
+  height,
+  borderRadius,
+  className
+}: SkeletonProps) => (
   <div
     className={clsx(s.skeleton, className)}
     style={{ width, height, borderRadius }}

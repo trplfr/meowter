@@ -33,19 +33,32 @@ export const MeowThread = () => {
   const scrollRef = useRef<HTMLDivElement>(null)
   const prevCountRef = useRef(0)
   const scrolledToHashRef = useRef(false)
-  const [meow, commentsList, pending, session] = useUnit([$meow, $comments, meowQuery.$pending, $session])
-  const [onLike, onMeowDelete, onReply, onCommentLike, onCommentDelete] = useUnit([
-    meowLikeToggled,
-    meowDeleteClicked,
-    replyClicked,
-    commentLikeToggled,
-    commentDeleteClicked
+  const [meow, commentsList, pending, session] = useUnit([
+    $meow,
+    $comments,
+    meowQuery.$pending,
+    $session
   ])
+  const [onLike, onMeowDelete, onReply, onCommentLike, onCommentDelete] =
+    useUnit([
+      meowLikeToggled,
+      meowDeleteClicked,
+      replyClicked,
+      commentLikeToggled,
+      commentDeleteClicked
+    ])
 
   // скролл вниз при добавлении нового комментария
   useEffect(() => {
-    if (commentsList.length > prevCountRef.current && prevCountRef.current > 0 && scrollRef.current) {
-      scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
+    if (
+      commentsList.length > prevCountRef.current &&
+      prevCountRef.current > 0 &&
+      scrollRef.current
+    ) {
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: 'smooth'
+      })
     }
     prevCountRef.current = commentsList.length
   }, [commentsList.length])
@@ -91,7 +104,7 @@ export const MeowThread = () => {
         )}
 
         <div className={s.comments}>
-          {commentsList.map((comment) => (
+          {commentsList.map(comment => (
             <CommentCard
               key={comment.id}
               comment={comment}

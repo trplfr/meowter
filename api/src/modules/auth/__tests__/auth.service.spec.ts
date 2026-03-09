@@ -61,13 +61,15 @@ describe('AuthService', () => {
       mockDb.limit.mockResolvedValueOnce([])
       // username check
       mockDb.limit.mockResolvedValueOnce([])
-      mockDb.returning.mockResolvedValueOnce([{
-        id: '1',
-        username: 'whiskers',
-        email: 'whiskers@meowter.app',
-        displayName: 'whiskers',
-        avatarUrl: null
-      }])
+      mockDb.returning.mockResolvedValueOnce([
+        {
+          id: '1',
+          username: 'whiskers',
+          email: 'whiskers@meowter.app',
+          displayName: 'whiskers',
+          avatarUrl: null
+        }
+      ])
 
       const result = await service.register({
         username: 'whiskers',
@@ -109,14 +111,16 @@ describe('AuthService', () => {
 
   describe('login', () => {
     it('возвращает токены при верных данных', async () => {
-      mockDb.limit.mockResolvedValueOnce([{
-        id: '1',
-        username: 'whiskers',
-        email: 'whiskers@meowter.app',
-        displayName: 'whiskers',
-        avatarUrl: null,
-        passwordHash: 'hashed-password'
-      }])
+      mockDb.limit.mockResolvedValueOnce([
+        {
+          id: '1',
+          username: 'whiskers',
+          email: 'whiskers@meowter.app',
+          displayName: 'whiskers',
+          avatarUrl: null,
+          passwordHash: 'hashed-password'
+        }
+      ])
       vi.mocked(bcrypt.compare).mockResolvedValueOnce(true as never)
 
       const result = await service.login({
@@ -137,12 +141,14 @@ describe('AuthService', () => {
     })
 
     it('бросает AppException при неверном пароле', async () => {
-      mockDb.limit.mockResolvedValueOnce([{
-        id: '1',
-        username: 'whiskers',
-        email: 'whiskers@meowter.app',
-        passwordHash: 'hashed-password'
-      }])
+      mockDb.limit.mockResolvedValueOnce([
+        {
+          id: '1',
+          username: 'whiskers',
+          email: 'whiskers@meowter.app',
+          passwordHash: 'hashed-password'
+        }
+      ])
       vi.mocked(bcrypt.compare).mockResolvedValueOnce(false as never)
 
       await expect(
@@ -154,13 +160,15 @@ describe('AuthService', () => {
   describe('refresh', () => {
     it('выдает новые токены по валидному refresh token', async () => {
       mockRedis.get.mockResolvedValueOnce('user-id-1')
-      mockDb.limit.mockResolvedValueOnce([{
-        id: 'user-id-1',
-        username: 'whiskers',
-        email: 'whiskers@meowter.app',
-        displayName: 'whiskers',
-        avatarUrl: null
-      }])
+      mockDb.limit.mockResolvedValueOnce([
+        {
+          id: 'user-id-1',
+          username: 'whiskers',
+          email: 'whiskers@meowter.app',
+          displayName: 'whiskers',
+          avatarUrl: null
+        }
+      ])
 
       const result = await service.refresh('valid-refresh-token')
 
@@ -171,7 +179,9 @@ describe('AuthService', () => {
     it('бросает AppException при невалидном refresh token', async () => {
       mockRedis.get.mockResolvedValueOnce(null)
 
-      await expect(service.refresh('invalid-token')).rejects.toThrow(AppException)
+      await expect(service.refresh('invalid-token')).rejects.toThrow(
+        AppException
+      )
     })
   })
 
@@ -185,15 +195,17 @@ describe('AuthService', () => {
 
   describe('me', () => {
     it('возвращает профиль пользователя', async () => {
-      mockDb.limit.mockResolvedValueOnce([{
-        id: '1',
-        username: 'whiskers',
-        email: 'whiskers@meowter.app',
-        displayName: 'whiskers',
-        bio: null,
-        avatarUrl: null,
-        createdAt: new Date()
-      }])
+      mockDb.limit.mockResolvedValueOnce([
+        {
+          id: '1',
+          username: 'whiskers',
+          email: 'whiskers@meowter.app',
+          displayName: 'whiskers',
+          bio: null,
+          avatarUrl: null,
+          createdAt: new Date()
+        }
+      ])
 
       const result = await service.me({ sub: '1', username: 'whiskers' })
 

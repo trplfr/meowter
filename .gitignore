@@ -7,8 +7,8 @@ node_modules/
 
 dist
 
-legacy
-reports
+legacy/
+reports/
 
 yarn.lock
 .yarn

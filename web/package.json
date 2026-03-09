@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "yarn workspace shared build && rsbuild dev",
-    "build": "rsbuild build",
+    "build": "lingui compile --typescript && rsbuild build",
+    "start": "node server.prod.js",
     "preview": "rsbuild preview",
     "test": "rstest run",
     "lint": "eslint src/",

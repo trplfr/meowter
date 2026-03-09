@@ -37,8 +37,8 @@ querySync({
 sample({
   clock: routes.createMeow.opened,
   source: $replyToMeow,
-  filter: (meow) => meow !== null,
-  fn: (meow) => meow!.id,
+  filter: meow => meow !== null,
+  fn: meow => meow!.id,
   target: $replyId
 })
 
@@ -76,7 +76,7 @@ sample({
 
 sample({
   clock: imageSelected,
-  fn: (file) => URL.createObjectURL(file),
+  fn: file => URL.createObjectURL(file),
   target: $imagePreview
 })
 

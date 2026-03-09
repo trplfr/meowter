@@ -1,7 +1,10 @@
 import { type ReactNode } from 'react'
 
 // разбивает текст на фрагменты, оборачивая @username в ссылку на профиль
-export const highlightMentions = (text: string, mentionClass?: string): ReactNode[] => {
+export const highlightMentions = (
+  text: string,
+  mentionClass?: string
+): ReactNode[] => {
   const parts: ReactNode[] = []
   const regex = /(@[\w\u0400-\u04FF]+)/g
   let lastIndex = 0
@@ -15,7 +18,11 @@ export const highlightMentions = (text: string, mentionClass?: string): ReactNod
     const username = match[0].slice(1)
 
     parts.push(
-      <a key={match.index} href={`/cat/${encodeURIComponent(username)}`} className={mentionClass}>
+      <a
+        key={match.index}
+        href={`/cat/${encodeURIComponent(username)}`}
+        className={mentionClass}
+      >
         {match[0]}
       </a>
     )

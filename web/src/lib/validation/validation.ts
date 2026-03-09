@@ -1,4 +1,10 @@
-import { sample, createEvent, createStore, type Store, type EventCallable } from 'effector'
+import {
+  sample,
+  createEvent,
+  createStore,
+  type Store,
+  type EventCallable
+} from 'effector'
 import { createFactory } from '@withease/factories'
 
 export interface ValidationRule {
@@ -45,15 +51,15 @@ export const createFormValidation = createFactory(
     sample({
       clock,
       source,
-      filter: (form) => !hasErrors(collectErrors(form)),
+      filter: form => !hasErrors(collectErrors(form)),
       target: validated
     })
 
     sample({
       clock,
       source,
-      filter: (form) => hasErrors(collectErrors(form)),
-      fn: (form) => collectErrors(form),
+      filter: form => hasErrors(collectErrors(form)),
+      fn: form => collectErrors(form),
       target: [validationFailed, $errors]
     })
 

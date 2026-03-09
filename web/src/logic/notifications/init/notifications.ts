@@ -3,7 +3,12 @@ import { interval } from 'patronum'
 
 import { getUnreadCount } from '@logic/api/notifications'
 
-import { $unreadCount, startPolling, stopPolling, fetchUnreadCountFx } from '../models'
+import {
+  $unreadCount,
+  startPolling,
+  stopPolling,
+  fetchUnreadCountFx
+} from '../models'
 
 const POLL_INTERVAL = 30_000
 

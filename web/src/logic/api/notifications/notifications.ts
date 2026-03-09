@@ -9,7 +9,9 @@ export const getNotifications = (cursor?: string) => {
     searchParams.cursor = cursor
   }
 
-  return api.get('notifications', { searchParams }).json<NotificationsResponse>()
+  return api
+    .get('notifications', { searchParams })
+    .json<NotificationsResponse>()
 }
 
 export const getUnreadCount = () =>

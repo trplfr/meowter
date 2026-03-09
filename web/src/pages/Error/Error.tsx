@@ -15,7 +15,7 @@ export const Error = () => {
       <div className={s.header} />
 
       <div className={s.content}>
-        <img className={s.cat} src={errorCat} alt="" />
+        <img className={s.cat} src={errorCat} alt='' />
         <h1 className={s.title}>
           <Trans>Упс...</Trans>
         </h1>

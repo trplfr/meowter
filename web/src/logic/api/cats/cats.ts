@@ -12,7 +12,9 @@ export const getCatMeows = (username: string, cursor?: string) => {
     searchParams.cursor = cursor
   }
 
-  return api.get(`cats/${username}/meows`, { searchParams }).json<CatMeowsResponse>()
+  return api
+    .get(`cats/${username}/meows`, { searchParams })
+    .json<CatMeowsResponse>()
 }
 
 export const followCat = (username: string) =>

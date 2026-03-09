@@ -2,7 +2,13 @@ import { sample } from 'effector'
 import { concurrency } from '@farfetched/core'
 
 import { routes } from '@core/router'
-import { meowCreated, meowLikeChanged, followChanged, meowDeletedGlobal, remeowChanged } from '@logic/feed'
+import {
+  meowCreated,
+  meowLikeChanged,
+  followChanged,
+  meowDeletedGlobal,
+  remeowChanged
+} from '@logic/feed'
 import { $session } from '@logic/session'
 
 import {
@@ -25,9 +31,10 @@ sample({
   clock: [routes.catProfile.opened, routes.catProfile.updated],
   source: $session,
   filter: (session, { params }) => {
-    const username = params.username && params.username !== 'me'
-      ? params.username
-      : session?.username
+    const username =
+      params.username && params.username !== 'me'
+        ? params.username
+        : session?.username
     return Boolean(username)
   },
   fn: (session, { params }) => {
@@ -62,8 +69,9 @@ sample({
 sample({
   clock: profilePageOpened,
   source: $session,
-  filter: (session, username) => session !== null && session.username === username,
-  fn: (session) => session!,
+  filter: (session, username) =>
+    session !== null && session.username === username,
+  fn: session => session!,
   target: $profile
 })
 
@@ -78,7 +86,7 @@ sample({
 // мяуты всегда запрашиваем
 sample({
   clock: profilePageOpened,
-  fn: (username) => ({ username }),
+  fn: username => ({ username }),
   target: catMeowsQuery.start
 })
 
@@ -148,8 +156,8 @@ sample({
 sample({
   clock: followToggled,
   source: $profile,
-  filter: (profile) => profile !== null,
-  fn: (profile) => ({
+  filter: profile => profile !== null,
+  fn: profile => ({
     username: profile!.username,
     isFollowing: profile!.isFollowing
   }),
@@ -160,8 +168,8 @@ sample({
 sample({
   clock: followToggled,
   source: $profile,
-  filter: (profile) => profile !== null,
-  fn: (profile) => ({
+  filter: profile => profile !== null,
+  fn: profile => ({
     ...profile!,
     isFollowing: !profile!.isFollowing,
     followersCount: profile!.isFollowing
@@ -176,8 +184,8 @@ sample({
 sample({
   clock: followToggled,
   source: $profile,
-  filter: (profile) => profile !== null,
-  fn: (profile) => ({
+  filter: profile => profile !== null,
+  fn: profile => ({
     delta: profile!.isFollowing ? 1 : -1
   }),
   target: followChanged
@@ -188,7 +196,7 @@ sample({
   clock: meowLikeToggled,
   source: $meows,
   fn: (meows, meowId) => {
-    const meow = meows.find((m) => m.id === meowId)
+    const meow = meows.find(m => m.id === meowId)
     if (!meow) {
       return { meowId, isLiked: false }
     }
@@ -202,7 +210,7 @@ sample({
   clock: meowLikeToggled,
   source: $meows,
   fn: (meows, meowId) => {
-    const meow = meows.find((m) => m.id === meowId)
+    const meow = meows.find(m => m.id === meowId)
     if (!meow) {
       return { meowId, isLiked: false, likesCount: 0 }
     }
@@ -220,7 +228,7 @@ sample({
   clock: meowLikeToggled,
   source: $meows,
   fn: (meows, meowId) =>
-    meows.map((m) => {
+    meows.map(m => {
       if (m.id !== meowId) {
         return m
       }
@@ -238,11 +246,11 @@ sample({
   clock: meowLikeChanged,
   source: $meows,
   filter: (meows, { meowId, isLiked }) => {
-    const meow = meows.find((m) => m.id === meowId)
+    const meow = meows.find(m => m.id === meowId)
     return meow !== undefined && meow.isLiked !== isLiked
   },
   fn: (meows, { meowId, isLiked, likesCount }) =>
-    meows.map((m) => {
+    meows.map(m => {
       if (m.id !== meowId) {
         return m
       }
@@ -255,7 +263,7 @@ sample({
 sample({
   clock: meowDeletedGlobal,
   source: $meows,
-  fn: (meows, meowId) => meows.filter((m) => m.id !== meowId),
+  fn: (meows, meowId) => meows.filter(m => m.id !== meowId),
   target: $meows
 })
 
@@ -263,9 +271,9 @@ sample({
 sample({
   clock: remeowChanged,
   source: $meows,
-  filter: (meows, { meowId }) => meows.some((m) => m.id === meowId),
+  filter: (meows, { meowId }) => meows.some(m => m.id === meowId),
   fn: (meows, { meowId, isRemeowed, remeowsCount, myRemeowId }) =>
-    meows.map((m) => {
+    meows.map(m => {
       if (m.id !== meowId) {
         return m
       }

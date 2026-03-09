@@ -114,7 +114,9 @@
   font-family: $font-family;
   color: $color-text-secondary;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 
   &:hover {
     background: $color-hover-bg;
@@ -132,7 +134,9 @@
   border-radius: $radius-sm;
   color: $color-icon-muted;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 
   &:hover {
     color: $color-primary;

@@ -7,7 +7,7 @@ import { errorOccurred, showErrorToastFx } from '../models'
 
 sample({
   clock: errorOccurred,
-  fn: (error) => {
+  fn: error => {
     if (error instanceof AppError) {
       return getErrorMessage(error.code)
     }

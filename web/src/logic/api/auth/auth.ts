@@ -26,11 +26,9 @@ export const uploadAvatar = (file: File) => {
   return api.post('auth/avatar', { body: formData }).json<AvatarResponse>()
 }
 
-export const fetchMe = () =>
-  api.get('auth/me').json<AuthResponse>()
+export const fetchMe = () => api.get('auth/me').json<AuthResponse>()
 
-export const refresh = () =>
-  api.post('auth/refresh').json<AuthResponse>()
+export const refresh = () => api.post('auth/refresh').json<AuthResponse>()
 
 export const updateProfile = (params: UpdateProfileRequest) =>
   api.patch('auth/profile', { json: params }).json<AuthResponse>()
@@ -38,5 +36,4 @@ export const updateProfile = (params: UpdateProfileRequest) =>
 export const changePassword = (params: ChangePasswordRequest) =>
   api.patch('auth/password', { json: params }).json<ChangePasswordResponse>()
 
-export const logout = () =>
-  api.post('auth/logout').json<void>()
+export const logout = () => api.post('auth/logout').json<void>()

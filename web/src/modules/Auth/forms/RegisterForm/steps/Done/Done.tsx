@@ -9,7 +9,10 @@ import { $avatarPreview, registerCompleted } from '../../../../models'
 import s from '../steps.module.scss'
 
 export const Done = () => {
-  const [avatarPreview, onComplete] = useUnit([$avatarPreview, registerCompleted])
+  const [avatarPreview, onComplete] = useUnit([
+    $avatarPreview,
+    registerCompleted
+  ])
 
   if (!avatarPreview) {
     return (
@@ -25,7 +28,7 @@ export const Done = () => {
           <Trans>Скорее ставь аватарку, чтобы друзья смогли тебя найти</Trans>
         </p>
 
-        <Button variant="primary" fullWidth onClick={onComplete}>
+        <Button variant='primary' fullWidth onClick={onComplete}>
           <Trans>Далее</Trans>
         </Button>
       </div>
@@ -35,17 +38,19 @@ export const Done = () => {
   return (
     <div className={s.form}>
       <div className={s.avatarPlaceholder}>
-        <img src={avatarPreview} alt="" />
+        <img src={avatarPreview} alt='' />
       </div>
 
       <h1 className={s.title}>
         <Trans>Круто!</Trans>
       </h1>
       <p className={s.description}>
-        <Trans>Теперь ваши друзья найдут вас быстрее, ведь вы выбрали, как выглядеть</Trans>
+        <Trans>
+          Теперь ваши друзья найдут вас быстрее, ведь вы выбрали, как выглядеть
+        </Trans>
       </p>
 
-      <Button variant="primary" fullWidth onClick={onComplete}>
+      <Button variant='primary' fullWidth onClick={onComplete}>
         <Trans>Далее</Trans>
       </Button>
     </div>

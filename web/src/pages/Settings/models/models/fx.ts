@@ -9,6 +9,12 @@ import {
 
 import { type AvatarResponse } from '@logic/api/auth'
 
-export const updateProfileFx = createEffect<UpdateProfileParams, UpdateProfileResult>()
-export const changePasswordFx = createEffect<ChangePasswordParams, ChangePasswordResult>()
+export const updateProfileFx = createEffect<
+  UpdateProfileParams,
+  UpdateProfileResult
+>()
+export const changePasswordFx = createEffect<
+  ChangePasswordParams,
+  ChangePasswordResult
+>()
 export const uploadAvatarFx = createEffect<File, AvatarResponse>()

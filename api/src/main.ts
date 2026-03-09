@@ -1,5 +1,8 @@
 import { NestFactory } from '@nestjs/core'
-import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify'
+import {
+  FastifyAdapter,
+  type NestFastifyApplication
+} from '@nestjs/platform-fastify'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { ValidationPipe } from '@nestjs/common'
 import fastifyCookie from '@fastify/cookie'
@@ -10,18 +13,39 @@ import { AppModule } from './app.module'
 import { AppExceptionFilter } from './common/filters'
 
 const bootstrap = async () => {
+  const isProd = process.env.NODE_ENV === 'production'
+
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter({ logger: true })
+    new FastifyAdapter({
+      logger: isProd
+        ? { level: 'warn' }
+        : true,
+      trustProxy: isProd,
+      bodyLimit: 15 * 1024 * 1024
+    })
   )
 
-  await app.register(fastifyCookie)
-  await app.register(fastifyMultipart)
+  app.enableShutdownHooks()
 
-  app.useStaticAssets({ root: join(process.cwd(), 'uploads'), prefix: '/uploads/' })
+  await app.register(fastifyCookie)
+  await app.register(fastifyMultipart, {
+    limits: {
+      fileSize: 10 * 1024 * 1024,
+      files: 1
+    }
+  })
+
+  app.useStaticAssets({
+    root: join(process.cwd(), 'uploads'),
+    prefix: '/uploads/',
+    maxAge: isProd ? 86400000 : 0
+  })
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'https://meowter.app', 'https://meowter.ru'],
+    origin: isProd
+      ? ['https://meowter.app', 'https://meowter.ru']
+      : ['http://localhost:3000'],
     credentials: true
   })
 
@@ -32,17 +56,26 @@ const bootstrap = async () => {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
-      whitelist: true
+      whitelist: true,
+      forbidNonWhitelisted: true
     })
   )
 
-  const config = new DocumentBuilder()
-    .setTitle('Meowter API')
-    .setVersion('1.0')
-    .build()
-  SwaggerModule.setup('api/docs', app, SwaggerModule.createDocument(app, config))
+  if (!isProd) {
+    const config = new DocumentBuilder()
+      .setTitle('Meowter API')
+      .setVersion('1.0')
+      .build()
+    SwaggerModule.setup(
+      'api/docs',
+      app,
+      SwaggerModule.createDocument(app, config)
+    )
+  }
 
-  await app.listen(4000, '0.0.0.0')
+  const port = parseInt(process.env.PORT || '4000', 10)
+  await app.listen(port, '0.0.0.0')
+  console.log(`Meowter API running on :${port}`)
 }
 
 bootstrap()

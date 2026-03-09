@@ -85,7 +85,7 @@ sample({
 sample({
   clock: tagsQuery.finished.success,
   source: $urlTag,
-  filter: (tag) => tag.length > 0,
+  filter: tag => tag.length > 0,
   target: searchTriggered
 })
 
@@ -115,7 +115,8 @@ const debouncedQuery = debounce({ source: queryChanged, timeout: 300 })
 sample({
   clock: debouncedQuery,
   source: $tags,
-  filter: (tags, query) => query.length > 0 && tags.some((t) => t.toLowerCase() === query.toLowerCase()),
+  filter: (tags, query) =>
+    query.length > 0 && tags.some(t => t.toLowerCase() === query.toLowerCase()),
   fn: (_, query) => query,
   target: searchTriggered
 })
@@ -164,7 +165,7 @@ sample({
 
 sample({
   clock: searchTriggered,
-  fn: (tag) => ({ tag }),
+  fn: tag => ({ tag }),
   target: searchQuery.start
 })
 
@@ -254,7 +255,7 @@ sample({
   clock: meowLikeToggled,
   source: $meows,
   fn: (meows, meowId) => {
-    const meow = meows.find((m) => m.id === meowId)
+    const meow = meows.find(m => m.id === meowId)
     if (!meow) {
       return { meowId, isLiked: false }
     }
@@ -268,7 +269,7 @@ sample({
   clock: meowLikeToggled,
   source: $meows,
   fn: (meows, meowId) => {
-    const meow = meows.find((m) => m.id === meowId)
+    const meow = meows.find(m => m.id === meowId)
     if (!meow) {
       return { meowId, isLiked: false, likesCount: 0 }
     }
@@ -286,7 +287,7 @@ sample({
   clock: meowLikeToggled,
   source: $meows,
   fn: (meows, meowId) =>
-    meows.map((m) => {
+    meows.map(m => {
       if (m.id !== meowId) {
         return m
       }
@@ -304,11 +305,11 @@ sample({
   clock: meowLikeChanged,
   source: $meows,
   filter: (meows, { meowId, isLiked }) => {
-    const meow = meows.find((m) => m.id === meowId)
+    const meow = meows.find(m => m.id === meowId)
     return meow !== undefined && meow.isLiked !== isLiked
   },
   fn: (meows, { meowId, isLiked, likesCount }) =>
-    meows.map((m) => {
+    meows.map(m => {
       if (m.id !== meowId) {
         return m
       }
@@ -328,7 +329,9 @@ sample({
     if (!selectedTag) {
       return false
     }
-    return meow.tags.some((t) => t.tag.toLowerCase() === selectedTag.toLowerCase())
+    return meow.tags.some(
+      t => t.tag.toLowerCase() === selectedTag.toLowerCase()
+    )
   },
   fn: ({ meows }, meow) => [meow, ...meows],
   target: $meows

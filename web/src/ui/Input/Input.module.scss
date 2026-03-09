@@ -17,7 +17,9 @@
   font-size: $font-size-sm;
   color: $color-text;
   background: $color-bg;
-  transition: border-color 0.2s, color 0.2s;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
 
   &::placeholder {
     color: $color-text-secondary;

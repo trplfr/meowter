@@ -33,15 +33,20 @@ export const CreateMeowForm = () => {
   const backdropRef = useRef<HTMLDivElement>(null)
 
   const [text, hasTildes, preview, replyTo, pending] = useUnit([
-    $text, $hasTildes, $imagePreview, $replyToMeow, createMeowMutation.$pending
+    $text,
+    $hasTildes,
+    $imagePreview,
+    $replyToMeow,
+    createMeowMutation.$pending
   ])
-  const [onTextChange, onImageSelect, onImageRemove, onSubmit, onClearReply] = useUnit([
-    textChanged,
-    imageSelected,
-    imageRemoved,
-    submitted,
-    replyToCleared
-  ])
+  const [onTextChange, onImageSelect, onImageRemove, onSubmit, onClearReply] =
+    useUnit([
+      textChanged,
+      imageSelected,
+      imageRemoved,
+      submitted,
+      replyToCleared
+    ])
 
   const remaining = MEOW_CONTENT_MAX - text.length
 
@@ -68,12 +73,12 @@ export const CreateMeowForm = () => {
           {highlightTildes(text)}
         </div>
         <textarea
-          id="meow-content"
-          name="content"
+          id='meow-content'
+          name='content'
           aria-label={t`Расскажи, что сегодня случилось?`}
           className={clsx(s.textarea, remaining < 0 && s.textareaError)}
           value={text}
-          onChange={(e) => onTextChange(e.target.value)}
+          onChange={e => onTextChange(e.target.value)}
           onScroll={handleScroll}
           placeholder={t`Расскажи, что сегодня случилось?`}
           rows={6}
@@ -83,7 +88,9 @@ export const CreateMeowForm = () => {
       <p className={s.hint}>
         {remaining < 0 ? (
           <span className={s.overLimit}>
-            <Trans>Превышено количество символов ({text.length}/{MEOW_CONTENT_MAX})</Trans>
+            <Trans>
+              Превышено количество символов ({text.length}/{MEOW_CONTENT_MAX})
+            </Trans>
           </span>
         ) : (
           <Trans>
@@ -97,15 +104,20 @@ export const CreateMeowForm = () => {
       <div className={s.toolbar}>
         {preview ? (
           <div className={s.preview}>
-            <img className={s.previewImage} src={preview} alt="" />
-            <button type="button" aria-label="Удалить изображение" className={s.previewRemove} onClick={() => onImageRemove()}>
+            <img className={s.previewImage} src={preview} alt='' />
+            <button
+              type='button'
+              aria-label='Удалить изображение'
+              className={s.previewRemove}
+              onClick={() => onImageRemove()}
+            >
               <X size={14} />
             </button>
           </div>
         ) : (
           <button
-            type="button"
-            aria-label="Прикрепить изображение"
+            type='button'
+            aria-label='Прикрепить изображение'
             className={s.imageButton}
             onClick={() => fileRef.current?.click()}
           >
@@ -115,8 +127,8 @@ export const CreateMeowForm = () => {
 
         <input
           ref={fileRef}
-          type="file"
-          accept="image/*"
+          type='file'
+          accept='image/*'
           className={s.fileInput}
           onChange={handleFileChange}
         />
@@ -124,11 +136,16 @@ export const CreateMeowForm = () => {
         {replyTo && (
           <div className={s.replyPreview}>
             <div className={s.replyPreviewTop}>
-              <Avatar src={replyTo.author.avatarUrl} alt={replyTo.author.displayName} />
-              <span className={s.replyPreviewAuthor}>{replyTo.author.displayName}</span>
+              <Avatar
+                src={replyTo.author.avatarUrl}
+                alt={replyTo.author.displayName}
+              />
+              <span className={s.replyPreviewAuthor}>
+                {replyTo.author.displayName}
+              </span>
               <button
-                type="button"
-                aria-label="Убрать ответ"
+                type='button'
+                aria-label='Убрать ответ'
                 className={s.replyPreviewClose}
                 onClick={() => onClearReply()}
               >
@@ -138,8 +155,7 @@ export const CreateMeowForm = () => {
             <div className={s.replyPreviewContent}>
               {replyTo.content.length > 100
                 ? replyTo.content.slice(0, 100) + '...'
-                : replyTo.content
-              }
+                : replyTo.content}
             </div>
           </div>
         )}

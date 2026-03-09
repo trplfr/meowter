@@ -253,7 +253,9 @@
   color: $color-icon-muted;
   font-size: $font-size-sm;
   text-decoration: none;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 
   &:not(:disabled):hover {
     background: $color-hover-bg;

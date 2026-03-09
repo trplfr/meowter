@@ -23,22 +23,16 @@ export const Input = ({
 }: InputProps) => {
   const [visible, setVisible] = useState(false)
 
-  const inputType = isPassword
-    ? (visible ? 'text' : 'password')
-    : type
+  const inputType = isPassword ? (visible ? 'text' : 'password') : type
 
   return (
     <div className={clsx(s.wrapper, error && s.hasError, className)}>
       {error && <span className={s.error}>{error}</span>}
       <div className={s.field}>
-        <input
-          className={s.input}
-          type={inputType}
-          {...props}
-        />
+        <input className={s.input} type={inputType} {...props} />
         {isPassword && (
           <button
-            type="button"
+            type='button'
             className={clsx(s.toggle, visible && s.active)}
             onClick={() => setVisible(!visible)}
             tabIndex={-1}

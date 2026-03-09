@@ -10,11 +10,15 @@ export const tagsQuery = createQuery({
 })
 
 export const searchQuery = createQuery({
-  handler: (params: FetchSearchParams) => getFeed(params.cursor, params.tag, 'popular')
+  handler: (params: FetchSearchParams) =>
+    getFeed(params.cursor, params.tag, 'popular')
 })
 
 export const toggleLikeMutation = createMutation({
-  handler: async ({ meowId, isLiked }: ToggleLikeParams): Promise<ToggleLikeResult> => {
+  handler: async ({
+    meowId,
+    isLiked
+  }: ToggleLikeParams): Promise<ToggleLikeResult> => {
     if (isLiked) {
       await unlikeMeow(meowId)
       return { meowId, isLiked: false }

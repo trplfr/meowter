@@ -12,7 +12,7 @@
     "dev:api": "yarn workspace api dev",
     "dev:web": "yarn workspace web dev",
     "build": "yarn workspaces foreach -A run build",
-    "lint": "yarn workspaces foreach -A run lintобъ",
+    "lint": "yarn workspaces foreach -A run lint",
     "test": "yarn workspaces foreach -A run test",
     "test:api": "yarn workspace api test",
     "test:web": "yarn workspace web test",

@@ -18,8 +18,15 @@ import s from '../form.module.scss'
 
 const RecoveryRequest = () => {
   const { t } = useLingui()
-  const [form, errors, isSubmitting] = useUnit([$recoveryForm, recoveryValidation.$errors, $isSubmitting])
-  const [onChange, onSubmit] = useUnit([recoveryFieldChanged, recoverySubmitted])
+  const [form, errors, isSubmitting] = useUnit([
+    $recoveryForm,
+    recoveryValidation.$errors,
+    $isSubmitting
+  ])
+  const [onChange, onSubmit] = useUnit([
+    recoveryFieldChanged,
+    recoverySubmitted
+  ])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -32,20 +39,27 @@ const RecoveryRequest = () => {
         <Trans>Восстановление пароля</Trans>
       </h1>
       <p className={s.description}>
-        <Trans>Мы пришлем новый пароль на почтовый адрес, указанный при регистрации</Trans>
+        <Trans>
+          Мы пришлем новый пароль на почтовый адрес, указанный при регистрации
+        </Trans>
       </p>
 
       <div className={s.fields}>
         <Input
           placeholder={t`Электронная почта`}
-          type="email"
+          type='email'
           value={form.email}
           error={errors.email ?? undefined}
-          onChange={(e) => onChange({ field: 'email', value: e.target.value })}
+          onChange={e => onChange({ field: 'email', value: e.target.value })}
         />
       </div>
 
-      <Button type="submit" variant="primary" fullWidth isLoading={isSubmitting}>
+      <Button
+        type='submit'
+        variant='primary'
+        fullWidth
+        isLoading={isSubmitting}
+      >
         <Trans>Я жду новый пароль!</Trans>
       </Button>
 
@@ -63,7 +77,9 @@ const RecoverySent = () => {
         <Trans>Почти готово!</Trans>
       </h1>
       <p className={s.description}>
-        <Trans>В течение двух минут на вашу почту придет новый пароль для входа</Trans>
+        <Trans>
+          В течение двух минут на вашу почту придет новый пароль для входа
+        </Trans>
       </p>
     </div>
   )

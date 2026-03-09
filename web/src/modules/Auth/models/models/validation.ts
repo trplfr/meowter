@@ -13,34 +13,41 @@ import {
 
 import { createFormValidation, type ValidationRule } from '@lib/validation'
 
-import { $loginForm, loginSubmitted, $registerForm, registerSubmitted, $recoveryForm, recoverySubmitted } from './auth'
+import {
+  $loginForm,
+  loginSubmitted,
+  $registerForm,
+  registerSubmitted,
+  $recoveryForm,
+  recoverySubmitted
+} from './auth'
 
 /* Login rules */
 
 const loginRules: ValidationRule[] = [
   {
     field: 'email',
-    check: (v) => v.length > 0,
+    check: v => v.length > 0,
     message: () => t`Введите почту`
   },
   {
     field: 'email',
-    check: (v) => EMAIL_PATTERN.test(v),
+    check: v => EMAIL_PATTERN.test(v),
     message: () => t`Некорректный формат почты`
   },
   {
     field: 'email',
-    check: (v) => v.length <= EMAIL_MAX,
+    check: v => v.length <= EMAIL_MAX,
     message: () => t`Почта слишком длинная`
   },
   {
     field: 'password',
-    check: (v) => v.length > 0,
+    check: v => v.length > 0,
     message: () => t`Введите пароль`
   },
   {
     field: 'password',
-    check: (v) => v.length >= PASSWORD_MIN,
+    check: v => v.length >= PASSWORD_MIN,
     message: () => t`Пароль минимум ${PASSWORD_MIN} символов`
   }
 ]
@@ -50,52 +57,52 @@ const loginRules: ValidationRule[] = [
 const registerRules: ValidationRule[] = [
   {
     field: 'username',
-    check: (v) => v.length > 0,
+    check: v => v.length > 0,
     message: () => t`Введите имя пользователя`
   },
   {
     field: 'username',
-    check: (v) => v.length >= USERNAME_MIN,
+    check: v => v.length >= USERNAME_MIN,
     message: () => t`Имя минимум ${USERNAME_MIN} символа`
   },
   {
     field: 'username',
-    check: (v) => v.length <= USERNAME_MAX,
+    check: v => v.length <= USERNAME_MAX,
     message: () => t`Имя максимум ${USERNAME_MAX} символов`
   },
   {
     field: 'username',
-    check: (v) => USERNAME_PATTERN.test(v),
+    check: v => USERNAME_PATTERN.test(v),
     message: () => t`Только латиница, цифры и _`
   },
   {
     field: 'email',
-    check: (v) => v.length > 0,
+    check: v => v.length > 0,
     message: () => t`Введите почту`
   },
   {
     field: 'email',
-    check: (v) => EMAIL_PATTERN.test(v),
+    check: v => EMAIL_PATTERN.test(v),
     message: () => t`Некорректный формат почты`
   },
   {
     field: 'email',
-    check: (v) => v.length <= EMAIL_MAX,
+    check: v => v.length <= EMAIL_MAX,
     message: () => t`Почта слишком длинная`
   },
   {
     field: 'password',
-    check: (v) => v.length > 0,
+    check: v => v.length > 0,
     message: () => t`Введите пароль`
   },
   {
     field: 'password',
-    check: (v) => v.length >= PASSWORD_MIN,
+    check: v => v.length >= PASSWORD_MIN,
     message: () => t`Пароль минимум ${PASSWORD_MIN} символов`
   },
   {
     field: 'password',
-    check: (v) => v.length <= PASSWORD_MAX,
+    check: v => v.length <= PASSWORD_MAX,
     message: () => t`Пароль максимум ${PASSWORD_MAX} символов`
   }
 ]
@@ -105,12 +112,12 @@ const registerRules: ValidationRule[] = [
 const recoveryRules: ValidationRule[] = [
   {
     field: 'email',
-    check: (v) => v.length > 0,
+    check: v => v.length > 0,
     message: () => t`Введите почту`
   },
   {
     field: 'email',
-    check: (v) => EMAIL_PATTERN.test(v),
+    check: v => EMAIL_PATTERN.test(v),
     message: () => t`Некорректный формат почты`
   }
 ]

@@ -26,9 +26,18 @@ import s from './Feed.module.scss'
 export const route = routes.feed
 
 export const Feed = () => {
-  const [meows, hasMore, pending, session] = useUnit([$meows, $hasMore, feedQuery.$pending, $session])
+  const [meows, hasMore, pending, session] = useUnit([
+    $meows,
+    $hasMore,
+    feedQuery.$pending,
+    $session
+  ])
   const [onLoadMore, onLike, onDelete, onRemeow, onReply] = useUnit([
-    feedLoadMore, meowLikeToggled, meowDeleted, remeowToggled, replyInitiated
+    feedLoadMore,
+    meowLikeToggled,
+    meowDeleted,
+    remeowToggled,
+    replyInitiated
   ])
 
   const handleReply = (meow: Meow) => {
@@ -57,7 +66,9 @@ export const Feed = () => {
 
       {!pending && meows.length === 0 && (
         <div className={s.empty}>
-          <Trans>Напишите свой первый мяут с ~темой, чтобы открыть ленту!</Trans>
+          <Trans>
+            Напишите свой первый мяут с ~темой, чтобы открыть ленту!
+          </Trans>
         </div>
       )}
 
@@ -69,7 +80,7 @@ export const Feed = () => {
           pending={pending}
           onLoadMore={onLoadMore}
           className={s.list}
-          renderItem={(meow) => (
+          renderItem={meow => (
             <MeowCard
               key={meow.id}
               meow={meow}

@@ -4,13 +4,26 @@ import { eq, desc, sql, and, lt, inArray } from 'drizzle-orm'
 import { NotificationType } from '@shared/types'
 
 import { DB, type Db } from '../../db/db.module'
-import { notifications, cats, meows, meowTags, likes, comments } from '../../db/schema'
+import {
+  notifications,
+  cats,
+  meows,
+  meowTags,
+  likes,
+  comments
+} from '../../db/schema'
 
 @Injectable()
 export class NotificationsService {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  async create(userId: string, actorId: string, type: NotificationType, meowId?: string, commentId?: string) {
+  async create(
+    userId: string,
+    actorId: string,
+    type: NotificationType,
+    meowId?: string,
+    commentId?: string
+  ) {
     // не уведомляем самого себя
     if (userId === actorId) {
       return
@@ -27,7 +40,10 @@ export class NotificationsService {
 
   async getList(userId: string, cursor?: string, limit = 20) {
     const conditions = cursor
-      ? and(eq(notifications.userId, userId), lt(notifications.createdAt, new Date(cursor)))
+      ? and(
+          eq(notifications.userId, userId),
+          lt(notifications.createdAt, new Date(cursor))
+        )
       : eq(notifications.userId, userId)
 
     const rows = await this.db
@@ -63,11 +79,10 @@ export class NotificationsService {
     const data = rows.slice(0, limit)
 
     // загружаем мяуты для MEOW_LIKE и COMMENT_LIKE
-    const meowIds = [...new Set(data.filter((n) => n.meowId).map((n) => n.meowId!))]
+    const meowIds = [...new Set(data.filter(n => n.meowId).map(n => n.meowId!))]
 
     let meowsMap = new Map<string, any>()
     if (meowIds.length > 0) {
-
       const meowRows = await this.db
         .select({
           id: meows.id,
@@ -119,10 +134,7 @@ export class NotificationsService {
       const userLikes = await this.db
         .select({ meowId: likes.meowId })
         .from(likes)
-        .where(and(
-          inArray(likes.meowId, meowIds),
-          eq(likes.userId, userId)
-        ))
+        .where(and(inArray(likes.meowId, meowIds), eq(likes.userId, userId)))
 
       const tagsMap = new Map<string, typeof allTags>()
       for (const tag of allTags) {
@@ -131,14 +143,18 @@ export class NotificationsService {
         tagsMap.set(tag.meowId, arr)
       }
 
-      const likeMap = new Map(likeCounts.map((l) => [l.meowId, l.count]))
-      const commentMap = new Map(commentCounts.map((c) => [c.meowId, c.count]))
-      const likedSet = new Set(userLikes.map((l) => l.meowId))
+      const likeMap = new Map(likeCounts.map(l => [l.meowId, l.count]))
+      const commentMap = new Map(commentCounts.map(c => [c.meowId, c.count]))
+      const likedSet = new Set(userLikes.map(l => l.meowId))
 
       for (const meow of meowRows) {
         meowsMap.set(meow.id, {
           ...meow,
-          tags: (tagsMap.get(meow.id) || []).map((t) => ({ id: t.id, tag: t.tag, position: t.position })),
+          tags: (tagsMap.get(meow.id) || []).map(t => ({
+            id: t.id,
+            tag: t.tag,
+            position: t.position
+          })),
           likesCount: likeMap.get(meow.id) || 0,
           commentsCount: commentMap.get(meow.id) || 0,
           isLiked: likedSet.has(meow.id)
@@ -147,7 +163,9 @@ export class NotificationsService {
     }
 
     // загружаем комменты для MENTION
-    const commentIds = [...new Set(data.filter((n) => n.commentId).map((n) => n.commentId!))]
+    const commentIds = [
+      ...new Set(data.filter(n => n.commentId).map(n => n.commentId!))
+    ]
 
     let commentsMap = new Map<string, { id: string; content: string }>()
     if (commentIds.length > 0) {
@@ -156,10 +174,12 @@ export class NotificationsService {
         .from(comments)
         .where(inArray(comments.id, commentIds))
 
-      commentsMap = new Map(commentRows.map((c) => [c.id, { id: c.id, content: c.content }]))
+      commentsMap = new Map(
+        commentRows.map(c => [c.id, { id: c.id, content: c.content }])
+      )
     }
 
-    const result = data.map((n) => ({
+    const result = data.map(n => ({
       id: n.id,
       type: n.type,
       actor: n.actor,
@@ -180,7 +200,9 @@ export class NotificationsService {
     const [{ count }] = await this.db
       .select({ count: sql<number>`count(*)::int` })
       .from(notifications)
-      .where(and(eq(notifications.userId, userId), eq(notifications.read, false)))
+      .where(
+        and(eq(notifications.userId, userId), eq(notifications.read, false))
+      )
 
     return { count }
   }
@@ -189,7 +211,9 @@ export class NotificationsService {
     await this.db
       .update(notifications)
       .set({ read: true })
-      .where(and(eq(notifications.userId, userId), eq(notifications.read, false)))
+      .where(
+        and(eq(notifications.userId, userId), eq(notifications.read, false))
+      )
 
     return { ok: true }
   }

@@ -8,6 +8,7 @@ import { createMemoryHistory } from 'history'
 import ky from 'ky'
 
 import { routes, router } from '@core/router'
+import { activateLocale } from '@core/i18n'
 import { $session, appStarted, fetchSessionFx } from '@logic/session'
 import { setSsrCookieProvider } from '@lib/api'
 
@@ -37,11 +38,14 @@ export const render = async (url: string, host = 'localhost', cookie = '') => {
   let session: any = null
 
   try {
-    session = await ky.get('auth/me', {
-      prefixUrl: 'http://localhost:4000/api',
-      headers: { cookie },
-      retry: 0
-    }).json()
+    const ssrApiUrl = process.env.SSR_API_URL || 'http://localhost:4000/api'
+    session = await ky
+      .get('auth/me', {
+        prefixUrl: ssrApiUrl,
+        headers: { cookie },
+        retry: 0
+      })
+      .json()
   } catch {}
 
   // редиректы до рендера
@@ -53,21 +57,25 @@ export const render = async (url: string, host = 'localhost', cookie = '') => {
     return { redirect: '/unauthorized', locale }
   }
 
+  // активируем локаль до рендера
+  activateLocale(locale)
+
   // оборачиваем рендер в контекст с куками, чтобы API-клиент их подхватил
   return ssrContext.run({ cookie }, async () => {
     // fork с кешированной сессией (без повторного запроса)
     const scope = fork({
-      values: session
-        ? [[$session, session]]
-        : [],
+      values: session ? [[$session, session]] : [],
       handlers: [
-        [fetchSessionFx, async () => {
-          if (!session) {
-            throw new Error('Not authenticated')
-          }
+        [
+          fetchSessionFx,
+          async () => {
+            if (!session) {
+              throw new Error('Not authenticated')
+            }
 
-          return session
-        }]
+            return session
+          }
+        ]
       ]
     })
 

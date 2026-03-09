@@ -42,8 +42,7 @@ export const getFeed = (cursor?: string, tag?: string, sort?: string) => {
   return api.get('meows/feed', { searchParams }).json<FeedResponse>()
 }
 
-export const getUserTags = () =>
-  api.get('meows/tags').json<string[]>()
+export const getUserTags = () => api.get('meows/tags').json<string[]>()
 
 export const getMeow = (id: string) =>
   api.get(`meows/${id}`).json<MeowResponse>()
@@ -70,7 +69,9 @@ export const getComments = (meowId: string, cursor?: string) => {
     searchParams.cursor = cursor
   }
 
-  return api.get(`meows/${meowId}/comments`, { searchParams }).json<CommentsResponse>()
+  return api
+    .get(`meows/${meowId}/comments`, { searchParams })
+    .json<CommentsResponse>()
 }
 
 export const createComment = (meowId: string, params: CreateCommentRequest) =>

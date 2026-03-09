@@ -1,0 +1,584 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-03-10 01:19+0300\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ru\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#. placeholder {0}: profile.followersCount
+#: src/pages/CatProfile/CatProfile.tsx:164
+msgid "{0, plural, one {читатель} few {читателя} many {читателей} other {читателей}}"
+msgstr "{0, plural, one {читатель} few {читателя} many {читателей} other {читателей}}"
+
+#. placeholder {0}: profile.displayName
+#: src/pages/CatProfile/CatProfile.tsx:111
+msgid "{0} / Мяутер"
+msgstr "{0} / Мяутер"
+
+#: src/pages/NotFound/NotFound.tsx:17
+msgid "404 / Мяутер"
+msgstr "404 / Мяутер"
+
+#: src/pages/Settings/Settings.tsx:203
+msgid "Email, ссылка или телефон"
+msgstr "Email, ссылка или телефон"
+
+#: src/pages/Unauthorized/Unauthorized.tsx:24
+msgid "Ай!"
+msgstr "Ай!"
+
+#: src/pages/Settings/Settings.tsx:214
+msgid "Безопасность"
+msgstr "Безопасность"
+
+#: src/modules/Auth/forms/RegisterForm/steps/Done/Done.tsx:25
+msgid "Блин!"
+msgstr "Блин!"
+
+#: src/modules/Auth/forms/RecoveryForm/RecoveryForm.tsx:80
+msgid "В течение двух минут на вашу почту придет новый пароль для входа"
+msgstr "В течение двух минут на вашу почту придет новый пароль для входа"
+
+#: src/modules/Auth/forms/RegisterForm/steps/Avatar/Avatar.tsx:55
+msgid "Ваши друзья найдут вас быстрее, если вы загрузите свое фото"
+msgstr "Ваши друзья найдут вас быстрее, если вы загрузите свое фото"
+
+#: src/modules/Auth/models/models/validation.ts:61
+msgid "Введите имя пользователя"
+msgstr "Введите имя пользователя"
+
+#: src/modules/Auth/models/models/validation.ts:46
+#: src/modules/Auth/models/models/validation.ts:96
+msgid "Введите пароль"
+msgstr "Введите пароль"
+
+#: src/modules/Auth/models/models/validation.ts:31
+#: src/modules/Auth/models/models/validation.ts:81
+#: src/modules/Auth/models/models/validation.ts:116
+msgid "Введите почту"
+msgstr "Введите почту"
+
+#: src/pages/Settings/Settings.tsx:223
+msgid "Введите старый пароль"
+msgstr "Введите старый пароль"
+
+#: src/modules/Auth/forms/LoginForm/LoginForm.tsx:38
+msgid "Войдите в аккаунт, чтобы продолжить обсуждать любимые темы"
+msgstr "Войдите в аккаунт, чтобы продолжить обсуждать любимые темы"
+
+#: src/modules/Auth/forms/RecoveryForm/RecoveryForm.tsx:67
+#: src/modules/Auth/forms/RegisterForm/steps/Credentials/Credentials.tsx:86
+#: src/pages/Unauthorized/Unauthorized.tsx:33
+#: src/pages/Welcome/Welcome.tsx:39
+msgid "Войти в аккаунт"
+msgstr "Войти в аккаунт"
+
+#: src/modules/Auth/forms/LoginForm/LoginForm.tsx:75
+msgid "Восстановить пароль"
+msgstr "Восстановить пароль"
+
+#: src/pages/Recovery/Recovery.tsx:15
+msgid "Восстановление / Мяутер"
+msgstr "Восстановление / Мяутер"
+
+#: src/modules/Auth/forms/RecoveryForm/RecoveryForm.tsx:39
+msgid "Восстановление пароля"
+msgstr "Восстановление пароля"
+
+#: src/modules/Auth/forms/LoginForm/LoginForm.tsx:35
+msgid "Вход"
+msgstr "Вход"
+
+#: src/pages/Login/Login.tsx:15
+msgid "Вход / Мяутер"
+msgstr "Вход / Мяутер"
+
+#: src/pages/Search/Search.tsx:183
+#: src/pages/Search/Search.tsx:221
+msgid "Вы ещё не говорили на эту тему"
+msgstr "Вы ещё не говорили на эту тему"
+
+#: src/pages/Search/Search.tsx:170
+msgid "Вы ещё не использовали ~темы в своих мяутах. Напишите мяут с ~темой, чтобы открыть поиск!"
+msgstr "Вы ещё не использовали ~темы в своих мяутах. Напишите мяут с ~темой, чтобы открыть поиск!"
+
+#: src/modules/Auth/forms/RegisterForm/steps/Avatar/Avatar.tsx:52
+msgid "Выберите аватар"
+msgstr "Выберите аватар"
+
+#: src/modules/CreateMeow/CreateMeowForm.tsx:96
+msgid "Выдели слово, используя тильду:<0/><1>~работа</1>, чтобы составить ленту"
+msgstr "Выдели слово, используя тильду:<0/><1>~работа</1>, чтобы составить ленту"
+
+#: src/modules/MeowCard/MeowCard.tsx:63
+#: src/pages/MeowThread/CommentCard.tsx:51
+msgid "Да, удалить"
+msgstr "Да, удалить"
+
+#: src/modules/Auth/forms/RegisterForm/steps/Credentials/Credentials.tsx:38
+msgid "Давайте знакомиться"
+msgstr "Давайте знакомиться"
+
+#: src/modules/Auth/forms/LoginForm/LoginForm.tsx:71
+#: src/modules/Auth/forms/RegisterForm/steps/Credentials/Credentials.tsx:82
+#: src/modules/Auth/forms/RegisterForm/steps/Done/Done.tsx:32
+#: src/modules/Auth/forms/RegisterForm/steps/Done/Done.tsx:54
+msgid "Далее"
+msgstr "Далее"
+
+#: src/pages/Welcome/Welcome.tsx:24
+msgid "Добро пожаловать<0/> в Мяутер"
+msgstr "Добро пожаловать<0/> в Мяутер"
+
+#: src/lib/api/errors.ts:12
+msgid "Допустимы только PNG, JPEG и WebP"
+msgstr "Допустимы только PNG, JPEG и WebP"
+
+#: src/pages/Unauthorized/Unauthorized.tsx:17
+msgid "Доступ запрещен / Мяутер"
+msgstr "Доступ запрещен / Мяутер"
+
+#: src/pages/Welcome/Welcome.tsx:30
+msgid "Если вам хочется принять участие в обсуждении последних новостей, вместо того, чтобы работать"
+msgstr "Если вам хочется принять участие в обсуждении последних новостей, вместо того, чтобы работать"
+
+#: src/pages/Settings/Settings.tsx:176
+msgid "Женский"
+msgstr "Женский"
+
+#: src/modules/Auth/forms/RegisterForm/steps/Credentials/Credentials.tsx:41
+msgid "Заведите аккаунт, чтобы начать общаться"
+msgstr "Заведите аккаунт, чтобы начать общаться"
+
+#: src/pages/Unauthorized/Unauthorized.tsx:37
+#: src/pages/Welcome/Welcome.tsx:43
+msgid "Зарегистрироваться"
+msgstr "Зарегистрироваться"
+
+#: src/pages/Settings/Settings.tsx:145
+msgid "Имя"
+msgstr "Имя"
+
+#: src/modules/Auth/models/models/validation.ts:71
+msgid "Имя максимум {USERNAME_MAX} символов"
+msgstr "Имя максимум {USERNAME_MAX} символов"
+
+#: src/modules/Auth/models/models/validation.ts:66
+msgid "Имя минимум {USERNAME_MIN} символа"
+msgstr "Имя минимум {USERNAME_MIN} символа"
+
+#: src/pages/Unauthorized/Unauthorized.tsx:27
+msgid "Кажется, вам сюда нельзя..."
+msgstr "Кажется, вам сюда нельзя..."
+
+#: src/pages/Error/Error.tsx:23
+msgid "Кажется, у нас что-то произошло..."
+msgstr "Кажется, у нас что-то произошло..."
+
+#: src/pages/Settings/Settings.tsx:196
+msgid "Контакты"
+msgstr "Контакты"
+
+#: src/modules/MeowCard/MeowCard.tsx:79
+#: src/pages/MeowThread/CommentCard.tsx:67
+msgid "Копировать ссылку"
+msgstr "Копировать ссылку"
+
+#: src/modules/Auth/forms/RegisterForm/steps/Done/Done.tsx:45
+msgid "Круто!"
+msgstr "Круто!"
+
+#: src/pages/Feed/Feed.tsx:55
+msgid "Лента"
+msgstr "Лента"
+
+#: src/pages/Feed/Feed.tsx:56
+msgid "Лента / Мяутер"
+msgstr "Лента / Мяутер"
+
+#: src/modules/Auth/forms/RegisterForm/steps/Credentials/Credentials.tsx:49
+msgid "Логин"
+msgstr "Логин"
+
+#: src/pages/Settings/Settings.tsx:248
+msgid "Минимум {PASSWORD_MIN} символов"
+msgstr "Минимум {PASSWORD_MIN} символов"
+
+#: src/pages/Settings/Settings.tsx:175
+msgid "Мужской"
+msgstr "Мужской"
+
+#: src/modules/Auth/forms/RecoveryForm/RecoveryForm.tsx:42
+msgid "Мы пришлем новый пароль на почтовый адрес, указанный при регистрации"
+msgstr "Мы пришлем новый пароль на почтовый адрес, указанный при регистрации"
+
+#: src/lib/api/errors.ts:17
+msgid "Мяут не найден"
+msgstr "Мяут не найден"
+
+#: src/modules/CreateMeow/models/init/createMeow.ts:157
+msgid "Мяут создан!"
+msgstr "Мяут создан!"
+
+#: src/pages/Welcome/Welcome.tsx:17
+msgid "Мяутер"
+msgstr "Мяутер"
+
+#: src/modules/CreateMeow/CreateMeowForm.tsx:168
+#: src/pages/CreateMeow/CreateMeow.tsx:40
+msgid "Мяутнуть"
+msgstr "Мяутнуть"
+
+#: src/pages/CreateMeow/CreateMeow.tsx:45
+msgid "Мяутнуть / Мяутер"
+msgstr "Мяутнуть / Мяутер"
+
+#: src/pages/NotFound/NotFound.tsx:36
+msgid "Назад"
+msgstr "Назад"
+
+#: src/pages/MeowThread/CommentForm.tsx:77
+#: src/pages/MeowThread/CommentForm.tsx:86
+msgid "Написать комментарий..."
+msgstr "Написать комментарий..."
+
+#: src/pages/Feed/Feed.tsx:69
+msgid "Напишите свой первый мяут с ~темой, чтобы открыть ленту!"
+msgstr "Напишите свой первый мяут с ~темой, чтобы открыть ленту!"
+
+#: src/pages/Settings/Settings.tsx:91
+msgid "Настройки"
+msgstr "Настройки"
+
+#: src/pages/Settings/Settings.tsx:95
+msgid "Настройки / Мяутер"
+msgstr "Настройки / Мяутер"
+
+#: src/lib/api/errors.ts:8
+msgid "Неверная почта или пароль"
+msgstr "Неверная почта или пароль"
+
+#: src/lib/api/errors.ts:16
+msgid "Неверный пароль"
+msgstr "Неверный пароль"
+
+#: src/modules/Auth/models/models/validation.ts:36
+#: src/modules/Auth/models/models/validation.ts:86
+#: src/modules/Auth/models/models/validation.ts:121
+msgid "Некорректный формат почты"
+msgstr "Некорректный формат почты"
+
+#: src/lib/api/errors.ts:14
+msgid "Необходимо авторизоваться"
+msgstr "Необходимо авторизоваться"
+
+#: src/pages/Settings/Settings.tsx:185
+msgid "О себе"
+msgstr "О себе"
+
+#: src/pages/Settings/Settings.tsx:279
+msgid "Обновить"
+msgstr "Обновить"
+
+#: src/pages/Error/Error.tsx:28
+msgid "Обновить страницу"
+msgstr "Обновить страницу"
+
+#: src/pages/MeowThread/MeowThread.tsx:90
+msgid "Обсуждение"
+msgstr "Обсуждение"
+
+#: src/pages/MeowThread/MeowThread.tsx:91
+msgid "Обсуждение / Мяутер"
+msgstr "Обсуждение / Мяутер"
+
+#: src/pages/Settings/Settings.tsx:127
+msgid "Общая информация"
+msgstr "Общая информация"
+
+#: src/pages/NotFound/NotFound.tsx:28
+msgid "Ой!"
+msgstr "Ой!"
+
+#: src/pages/Notifications/NotificationCard.tsx:51
+msgid "ответил на ваш мяут"
+msgstr "ответил на ваш мяут"
+
+#: src/pages/Notifications/NotificationCard.tsx:49
+msgid "ответила на ваш мяут"
+msgstr "ответила на ваш мяут"
+
+#: src/pages/MeowThread/CommentCard.tsx:136
+msgid "Ответить"
+msgstr "Ответить"
+
+#: src/modules/MeowCard/MeowCard.tsx:72
+#: src/pages/MeowThread/CommentCard.tsx:60
+msgid "Отмена"
+msgstr "Отмена"
+
+#: src/pages/Settings/Settings.tsx:134
+msgid "Отображаемое имя"
+msgstr "Отображаемое имя"
+
+#: src/pages/CatProfile/CatProfile.tsx:182
+msgid "Отписаться"
+msgstr "Отписаться"
+
+#: src/pages/Notifications/NotificationCard.tsx:62
+msgid "оценил ваш комментарий"
+msgstr "оценил ваш комментарий"
+
+#: src/pages/Notifications/NotificationCard.tsx:36
+msgid "оценил ваш мяут"
+msgstr "оценил ваш мяут"
+
+#: src/pages/Notifications/NotificationCard.tsx:60
+msgid "оценила ваш комментарий"
+msgstr "оценила ваш комментарий"
+
+#: src/pages/Notifications/NotificationCard.tsx:36
+msgid "оценила ваш мяут"
+msgstr "оценила ваш мяут"
+
+#: src/pages/Error/Error.tsx:13
+msgid "Ошибка / Мяутер"
+msgstr "Ошибка / Мяутер"
+
+#: src/pages/Settings/Settings.tsx:271
+msgid "Пароли не совпадают"
+msgstr "Пароли не совпадают"
+
+#: src/modules/Auth/forms/LoginForm/LoginForm.tsx:57
+#: src/modules/Auth/forms/RegisterForm/steps/Credentials/Credentials.tsx:58
+msgid "Пароль"
+msgstr "Пароль"
+
+#: src/modules/Auth/models/models/validation.ts:106
+msgid "Пароль максимум {PASSWORD_MAX} символов"
+msgstr "Пароль максимум {PASSWORD_MAX} символов"
+
+#: src/modules/Auth/models/models/validation.ts:51
+#: src/modules/Auth/models/models/validation.ts:101
+msgid "Пароль минимум {PASSWORD_MIN} символов"
+msgstr "Пароль минимум {PASSWORD_MIN} символов"
+
+#: src/pages/Settings/Settings.tsx:260
+msgid "Повторите пароль"
+msgstr "Повторите пароль"
+
+#: src/pages/Notifications/NotificationCard.tsx:29
+msgid "подписалась на вас"
+msgstr "подписалась на вас"
+
+#: src/pages/Notifications/NotificationCard.tsx:31
+msgid "подписался на вас"
+msgstr "подписался на вас"
+
+#: src/pages/CatProfile/CatProfile.tsx:184
+msgid "Подписаться"
+msgstr "Подписаться"
+
+#: src/modules/MeowCard/MeowCard.tsx:95
+#: src/pages/MeowThread/CommentCard.tsx:83
+msgid "Пожаловаться"
+msgstr "Пожаловаться"
+
+#: src/pages/Search/Search.tsx:122
+msgid "Поиск"
+msgstr "Поиск"
+
+#: src/pages/Search/Search.tsx:123
+msgid "Поиск / Мяутер"
+msgstr "Поиск / Мяутер"
+
+#: src/pages/Search/Search.tsx:132
+#: src/pages/Search/Search.tsx:134
+msgid "Поиск по темам..."
+msgstr "Поиск по темам..."
+
+#: src/pages/MeowThread/MeowThread.tsx:122
+msgid "Пока нет комментариев"
+msgstr "Пока нет комментариев"
+
+#: src/pages/CatProfile/CatProfile.tsx:192
+msgid "Пока нет мяутов"
+msgstr "Пока нет мяутов"
+
+#: src/pages/Notifications/Notifications.tsx:65
+msgid "Пока нет уведомлений"
+msgstr "Пока нет уведомлений"
+
+#: src/pages/Settings/Settings.tsx:167
+#: src/pages/Settings/Settings.tsx:174
+msgid "Пол не выбран"
+msgstr "Пол не выбран"
+
+#: src/lib/api/errors.ts:10
+msgid "Пользователь не найден"
+msgstr "Пользователь не найден"
+
+#: src/modules/Auth/models/models/validation.ts:41
+#: src/modules/Auth/models/models/validation.ts:91
+msgid "Почта слишком длинная"
+msgstr "Почта слишком длинная"
+
+#: src/modules/Auth/forms/RecoveryForm/RecoveryForm.tsx:77
+msgid "Почти готово!"
+msgstr "Почти готово!"
+
+#. placeholder {0}: text.length
+#: src/pages/MeowThread/CommentForm.tsx:63
+msgid "Превышено количество символов ({0}/{COMMENT_CONTENT_MAX})"
+msgstr "Превышено количество символов ({0}/{COMMENT_CONTENT_MAX})"
+
+#. placeholder {0}: text.length
+#: src/modules/CreateMeow/CreateMeowForm.tsx:91
+msgid "Превышено количество символов ({0}/{MEOW_CONTENT_MAX})"
+msgstr "Превышено количество символов ({0}/{MEOW_CONTENT_MAX})"
+
+#: src/pages/Settings/Settings.tsx:237
+msgid "Придумайте новый пароль"
+msgstr "Придумайте новый пароль"
+
+#: src/lib/api/errors.ts:15
+msgid "Проверьте введенные данные"
+msgstr "Проверьте введенные данные"
+
+#: src/modules/Auth/forms/RegisterForm/steps/Avatar/Avatar.tsx:75
+msgid "Пропустить"
+msgstr "Пропустить"
+
+#: src/pages/CatProfile/CatProfile.tsx:111
+msgid "Профиль / Мяутер"
+msgstr "Профиль / Мяутер"
+
+#: src/modules/CreateMeow/CreateMeowForm.tsx:78
+#: src/modules/CreateMeow/CreateMeowForm.tsx:83
+msgid "Расскажи, что сегодня случилось?"
+msgstr "Расскажи, что сегодня случилось?"
+
+#: src/pages/Register/Register.tsx:15
+msgid "Регистрация / Мяутер"
+msgstr "Регистрация / Мяутер"
+
+#: src/logic/feed/init/feed.ts:250
+msgid "Ремяут!"
+msgstr "Ремяут!"
+
+#: src/modules/MeowCard/MeowCard.tsx:150
+msgid "ремяутнул"
+msgstr "ремяутнул"
+
+#: src/pages/Notifications/NotificationCard.tsx:43
+msgid "ремяутнул ваш мяут"
+msgstr "ремяутнул ваш мяут"
+
+#: src/modules/MeowCard/MeowCard.tsx:148
+msgid "ремяутнула"
+msgstr "ремяутнула"
+
+#: src/pages/Notifications/NotificationCard.tsx:41
+msgid "ремяутнула ваш мяут"
+msgstr "ремяутнула ваш мяут"
+
+#: src/lib/api/errors.ts:9
+msgid "Сессия истекла, войдите снова"
+msgstr "Сессия истекла, войдите снова"
+
+#: src/modules/Auth/forms/RegisterForm/steps/Done/Done.tsx:28
+msgid "Скорее ставь аватарку, чтобы друзья смогли тебя найти"
+msgstr "Скорее ставь аватарку, чтобы друзья смогли тебя найти"
+
+#: src/pages/NotFound/NotFound.tsx:31
+msgid "Такой страницы нет..."
+msgstr "Такой страницы нет..."
+
+#: src/modules/Auth/forms/RegisterForm/steps/Done/Done.tsx:48
+msgid "Теперь ваши друзья найдут вас быстрее, ведь вы выбрали, как выглядеть"
+msgstr "Теперь ваши друзья найдут вас быстрее, ведь вы выбрали, как выглядеть"
+
+#: src/modules/Auth/models/models/validation.ts:76
+msgid "Только латиница, цифры и _"
+msgstr "Только латиница, цифры и _"
+
+#: src/modules/Auth/forms/LoginForm/LoginForm.tsx:79
+msgid "У меня нет аккаунта"
+msgstr "У меня нет аккаунта"
+
+#: src/pages/Notifications/Notifications.tsx:35
+msgid "Уведомления"
+msgstr "Уведомления"
+
+#: src/pages/Notifications/Notifications.tsx:36
+msgid "Уведомления / Мяутер"
+msgstr "Уведомления / Мяутер"
+
+#: src/logic/feed/init/feed.ts:178
+#: src/pages/MeowThread/models/init/meowThread.ts:304
+#: src/pages/MeowThread/models/init/meowThread.ts:329
+msgid "Удалено!"
+msgstr "Удалено!"
+
+#: src/modules/MeowCard/MeowCard.tsx:86
+#: src/pages/MeowThread/CommentCard.tsx:74
+msgid "Удалить"
+msgstr "Удалить"
+
+#: src/pages/Notifications/NotificationCard.tsx:56
+msgid "упомянул вас"
+msgstr "упомянул вас"
+
+#: src/pages/Notifications/NotificationCard.tsx:56
+msgid "упомянула вас"
+msgstr "упомянула вас"
+
+#: src/pages/Error/Error.tsx:20
+msgid "Упс..."
+msgstr "Упс..."
+
+#: src/lib/api/errors.ts:11
+msgid "Файл не выбран"
+msgstr "Файл не выбран"
+
+#: src/lib/api/errors.ts:13
+msgid "Файл слишком большой (макс. 5 МБ)"
+msgstr "Файл слишком большой (макс. 5 МБ)"
+
+#: src/pages/Settings/Settings.tsx:156
+msgid "Фамилия"
+msgstr "Фамилия"
+
+#: src/pages/CatProfile/CatProfile.tsx:158
+msgid "читает"
+msgstr "читает"
+
+#: src/lib/api/errors.ts:18
+msgid "Что-то пошло не так"
+msgstr "Что-то пошло не так"
+
+#: src/modules/Auth/forms/LoginForm/LoginForm.tsx:48
+#: src/modules/Auth/forms/RecoveryForm/RecoveryForm.tsx:49
+#: src/modules/Auth/forms/RegisterForm/steps/Credentials/Credentials.tsx:68
+msgid "Электронная почта"
+msgstr "Электронная почта"
+
+#: src/lib/api/errors.ts:6
+msgid "Эта почта уже занята"
+msgstr "Эта почта уже занята"
+
+#: src/lib/api/errors.ts:7
+msgid "Это имя уже занято"
+msgstr "Это имя уже занято"
+
+#: src/modules/Auth/forms/RecoveryForm/RecoveryForm.tsx:63
+msgid "Я жду новый пароль!"
+msgstr "Я жду новый пароль!"

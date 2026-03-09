@@ -1,4 +1,8 @@
-import { type CatProfile, type Meow, type PaginatedResponse } from '@shared/types'
+import {
+  type CatProfile,
+  type Meow,
+  type PaginatedResponse
+} from '@shared/types'
 
 export type CatProfileResponse = CatProfile
 

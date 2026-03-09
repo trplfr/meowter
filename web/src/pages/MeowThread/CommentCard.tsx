@@ -25,7 +25,15 @@ interface CommentCardProps {
   isOwn?: boolean
 }
 
-export const CommentCard = ({ comment, meowAuthorUsername, meowId, onReply, onLike, onDelete, isOwn }: CommentCardProps) => {
+export const CommentCard = ({
+  comment,
+  meowAuthorUsername,
+  meowId,
+  onReply,
+  onLike,
+  onDelete,
+  isOwn
+}: CommentCardProps) => {
   const [confirmingDelete, setConfirmingDelete] = useState(false)
 
   const handleCopyLink = useCallback(() => {
@@ -61,20 +69,23 @@ export const CommentCard = ({ comment, meowAuthorUsername, meowId, onReply, onLi
           onClick: handleCopyLink
         },
         ...(isOwn && onDelete
-          ? [{
-              label: <Trans>Удалить</Trans>,
-              icon: Trash2,
-              onClick: () => setConfirmingDelete(true),
-              variant: 'danger' as const,
-              preventClose: true
-            }]
-          : [{
-              label: <Trans>Пожаловаться</Trans>,
-              icon: CircleAlert,
-              onClick: handleReport,
-              variant: 'danger' as const
-            }]
-        )
+          ? [
+              {
+                label: <Trans>Удалить</Trans>,
+                icon: Trash2,
+                onClick: () => setConfirmingDelete(true),
+                variant: 'danger' as const,
+                preventClose: true
+              }
+            ]
+          : [
+              {
+                label: <Trans>Пожаловаться</Trans>,
+                icon: CircleAlert,
+                onClick: handleReport,
+                variant: 'danger' as const
+              }
+            ])
       ]
 
   return (
@@ -85,7 +96,10 @@ export const CommentCard = ({ comment, meowAuthorUsername, meowId, onReply, onLi
           params={{ username: comment.author.username }}
           className={s.commentAvatarLink}
         >
-          <Avatar src={comment.author.avatarUrl} alt={comment.author.displayName} />
+          <Avatar
+            src={comment.author.avatarUrl}
+            alt={comment.author.displayName}
+          />
         </Link>
         <div className={s.commentMeta}>
           <span className={s.commentAuthorRow}>
@@ -109,11 +123,13 @@ export const CommentCard = ({ comment, meowAuthorUsername, meowId, onReply, onLi
         </div>
       </div>
 
-      <p className={s.commentContent}>{highlightMentions(comment.content, s.mention)}</p>
+      <p className={s.commentContent}>
+        {highlightMentions(comment.content, s.mention)}
+      </p>
 
       <div className={s.commentActions}>
         <button
-          type="button"
+          type='button'
           className={s.replyButton}
           onClick={() => onReply(comment.author.username)}
         >
@@ -121,8 +137,11 @@ export const CommentCard = ({ comment, meowAuthorUsername, meowId, onReply, onLi
         </button>
 
         <button
-          type="button"
-          className={clsx(s.commentLikeButton, comment.isLiked && s.commentLiked)}
+          type='button'
+          className={clsx(
+            s.commentLikeButton,
+            comment.isLiked && s.commentLiked
+          )}
           aria-label={comment.isLiked ? 'Убрать лайк' : 'Лайк'}
           onClick={() => onLike(comment.id)}
         >

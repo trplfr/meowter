@@ -145,7 +145,12 @@ sample({
 /* API errors -> toast */
 
 sample({
-  clock: [loginFx.failData, registerFx.failData, recoveryFx.failData, uploadAvatarFx.failData],
+  clock: [
+    loginFx.failData,
+    registerFx.failData,
+    recoveryFx.failData,
+    uploadAvatarFx.failData
+  ],
   target: errorOccurred
 })
 

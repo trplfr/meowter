@@ -5,18 +5,26 @@ import { ImagePlus, Upload } from 'lucide-react'
 
 import { Button, Loader } from '@ui/index'
 
-import { avatarSkipped, avatarFileSelected, $isUploading } from '../../../../models'
+import {
+  avatarSkipped,
+  avatarFileSelected,
+  $isUploading
+} from '../../../../models'
 
 import s from '../steps.module.scss'
 
 export const Avatar = () => {
-  const [onSkip, onFileSelected, isUploading] = useUnit([avatarSkipped, avatarFileSelected, $isUploading])
+  const [onSkip, onFileSelected, isUploading] = useUnit([
+    avatarSkipped,
+    avatarFileSelected,
+    $isUploading
+  ])
 
   const { getRootProps, getInputProps, open } = useDropzone({
     accept: { 'image/*': ['.png', '.jpg', '.jpeg', '.webp'] },
     multiple: false,
     noClick: true,
-    onDrop: (files) => {
+    onDrop: files => {
       if (files[0]) {
         onFileSelected(files[0])
       }
@@ -27,22 +35,30 @@ export const Avatar = () => {
     <div className={s.form} {...getRootProps()}>
       <input {...getInputProps()} />
 
-      <button type="button" className={s.avatarZone} onClick={open} disabled={isUploading}>
-        {isUploading
-          ? <Loader size={38} />
-          : <ImagePlus size={24} className={s.iconMuted} />
-        }
+      <button
+        type='button'
+        className={s.avatarZone}
+        onClick={open}
+        disabled={isUploading}
+      >
+        {isUploading ? (
+          <Loader size={38} />
+        ) : (
+          <ImagePlus size={24} className={s.iconMuted} />
+        )}
       </button>
 
       <h1 className={s.title}>
         <Trans>Выберите аватар</Trans>
       </h1>
       <p className={s.description}>
-        <Trans>Ваши друзья найдут вас быстрее, если вы загрузите свое фото</Trans>
+        <Trans>
+          Ваши друзья найдут вас быстрее, если вы загрузите свое фото
+        </Trans>
       </p>
 
       <Button
-        variant="primary"
+        variant='primary'
         fullWidth
         isLoading={isUploading}
         onClick={open}
@@ -50,7 +66,12 @@ export const Avatar = () => {
         <Upload size={20} />
       </Button>
 
-      <button type="button" className={s.link} onClick={onSkip} disabled={isUploading}>
+      <button
+        type='button'
+        className={s.link}
+        onClick={onSkip}
+        disabled={isUploading}
+      >
         <Trans>Пропустить</Trans>
       </button>
     </div>

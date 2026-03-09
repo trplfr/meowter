@@ -34,11 +34,21 @@ export const route = routes.catProfile
 
 export const CatProfile = () => {
   const [profile, meows, hasMore, pending] = useUnit([
-    $profile, $meows, $hasMore, catMeowsQuery.$pending
+    $profile,
+    $meows,
+    $hasMore,
+    catMeowsQuery.$pending
   ])
-  const [onLoadMore, onFollow, onLike, onLogout, onDelete, onRemeow, onReply] = useUnit([
-    loadMoreMeows, followToggled, meowLikeToggled, logout, meowDeleted, remeowToggled, replyInitiated
-  ])
+  const [onLoadMore, onFollow, onLike, onLogout, onDelete, onRemeow, onReply] =
+    useUnit([
+      loadMoreMeows,
+      followToggled,
+      meowLikeToggled,
+      logout,
+      meowDeleted,
+      remeowToggled,
+      replyInitiated
+    ])
 
   const handleCopyContacts = useCallback(() => {
     if (profile?.contacts) {
@@ -46,38 +56,45 @@ export const CatProfile = () => {
     }
   }, [profile?.contacts])
 
-  const handleReply = useCallback((meow: Meow) => {
-    const preview: MeowPreview = {
-      id: meow.id,
-      content: meow.content,
-      imageUrl: meow.imageUrl,
-      author: meow.author,
-      createdAt: meow.createdAt
-    }
-    onReply(preview)
-  }, [onReply])
+  const handleReply = useCallback(
+    (meow: Meow) => {
+      const preview: MeowPreview = {
+        id: meow.id,
+        content: meow.content,
+        imageUrl: meow.imageUrl,
+        author: meow.author,
+        createdAt: meow.createdAt
+      }
+      onReply(preview)
+    },
+    [onReply]
+  )
 
-  const renderMeow = useCallback((meow: Meow) => (
-    <MeowCard
-      meow={meow}
-      onLike={onLike}
-      onDelete={onDelete}
-      onRemeow={onRemeow}
-      onReply={handleReply}
-      isOwn={profile?.isOwn || false}
-    />
-  ), [onLike, onDelete, onRemeow, handleReply, profile?.isOwn])
+  const renderMeow = useCallback(
+    (meow: Meow) => (
+      <MeowCard
+        meow={meow}
+        onLike={onLike}
+        onDelete={onDelete}
+        onRemeow={onRemeow}
+        onReply={handleReply}
+        isOwn={profile?.isOwn || false}
+      />
+    ),
+    [onLike, onDelete, onRemeow, handleReply, profile?.isOwn]
+  )
 
   const title = profile ? `@${profile.username}` : ''
-  const fullName = profile?.firstName && profile?.lastName
-    ? `${profile.firstName} ${profile.lastName}`
-    : profile?.displayName || ''
+  const fullName =
+    profile?.firstName && profile?.lastName
+      ? `${profile.firstName} ${profile.lastName}`
+      : profile?.displayName || ''
 
   const headerAction = profile?.isOwn ? (
     <button
-      type="button"
+      type='button'
       className={s.logoutButton}
-      aria-label="Выйти"
+      aria-label='Выйти'
       onClick={() => onLogout()}
     >
       <LogOut size={22} />
@@ -85,13 +102,19 @@ export const CatProfile = () => {
   ) : undefined
 
   return (
-    <Layout title={title} contentClassName={s.content} headerAction={headerAction}>
-      <title>{profile ? t`${profile.displayName} / Мяутер` : t`Профиль / Мяутер`}</title>
+    <Layout
+      title={title}
+      contentClassName={s.content}
+      headerAction={headerAction}
+    >
+      <title>
+        {profile ? t`${profile.displayName} / Мяутер` : t`Профиль / Мяутер`}
+      </title>
 
       {!profile && (
         <div className={s.header}>
           <div className={s.avatarWrap}>
-            <Skeleton width={140} height={140} borderRadius="50%" />
+            <Skeleton width={140} height={140} borderRadius='50%' />
           </div>
           <Skeleton width={180} height={20} />
           <Skeleton width={240} height={14} />
@@ -108,7 +131,11 @@ export const CatProfile = () => {
             <div className={s.avatarWrap}>
               <Avatar src={profile.avatarUrl} alt={profile.displayName} />
               {profile.isOwn && (
-                <Link to={routes.settings} className={s.avatarEdit} aria-label="Настройки">
+                <Link
+                  to={routes.settings}
+                  className={s.avatarEdit}
+                  aria-label='Настройки'
+                >
                   <Pencil size={18} />
                 </Link>
               )}
@@ -116,9 +143,7 @@ export const CatProfile = () => {
 
             <h2 className={s.name}>{fullName}</h2>
 
-            {profile.bio && (
-              <p className={s.bio}>{profile.bio}</p>
-            )}
+            {profile.bio && <p className={s.bio}>{profile.bio}</p>}
 
             {profile.contacts && (
               <button className={s.contacts} onClick={handleCopyContacts}>
@@ -129,28 +154,35 @@ export const CatProfile = () => {
             <div className={s.stats}>
               <div className={s.stat}>
                 <span className={s.statCount}>{profile.followingCount}</span>
-                <span className={s.statLabel}><Trans>читает</Trans></span>
+                <span className={s.statLabel}>
+                  <Trans>читает</Trans>
+                </span>
               </div>
               <div className={s.stat}>
                 <span className={s.statCount}>{profile.followersCount}</span>
-                <span className={s.statLabel}>{plural(profile.followersCount, {
-                  one: 'читатель',
-                  few: 'читателя',
-                  many: 'читателей',
-                  other: 'читателей'
-                })}</span>
+                <span className={s.statLabel}>
+                  {plural(profile.followersCount, {
+                    one: 'читатель',
+                    few: 'читателя',
+                    many: 'читателей',
+                    other: 'читателей'
+                  })}
+                </span>
               </div>
             </div>
 
             {!profile.isOwn && (
               <button
-                className={profile.isFollowing ? s.unfollowButton : s.followButton}
+                className={
+                  profile.isFollowing ? s.unfollowButton : s.followButton
+                }
                 onClick={() => onFollow()}
               >
-                {profile.isFollowing
-                  ? <Trans>Отписаться</Trans>
-                  : <Trans>Подписаться</Trans>
-                }
+                {profile.isFollowing ? (
+                  <Trans>Отписаться</Trans>
+                ) : (
+                  <Trans>Подписаться</Trans>
+                )}
               </button>
             )}
           </div>

@@ -1,4 +1,8 @@
-import { type Notification, type PaginatedResponse, type UnreadCount } from '@shared/types'
+import {
+  type Notification,
+  type PaginatedResponse,
+  type UnreadCount
+} from '@shared/types'
 
 export type NotificationsResponse = PaginatedResponse<Notification>
 

@@ -18,7 +18,9 @@
   height: $icon-button-sm;
   border-radius: $radius-md;
   color: $color-primary;
-  transition: background 0.15s, opacity 0.15s;
+  transition:
+    background 0.15s,
+    opacity 0.15s;
 
   &:hover {
     background: $color-hover-bg;
@@ -181,7 +183,9 @@
     border: none;
     border-radius: $radius-button;
     cursor: pointer;
-    transition: background 0.15s, opacity 0.15s;
+    transition:
+      background 0.15s,
+      opacity 0.15s;
 
     &:hover {
       background: $color-primary-hover;

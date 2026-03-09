@@ -37,7 +37,15 @@ interface MeowCardProps {
   hideComments?: boolean
 }
 
-export const MeowCard = ({ meow, onLike, onRemeow, onReply, onDelete, isOwn, hideComments }: MeowCardProps) => {
+export const MeowCard = ({
+  meow,
+  onLike,
+  onRemeow,
+  onReply,
+  onDelete,
+  isOwn,
+  hideComments
+}: MeowCardProps) => {
   const [confirmingDelete, setConfirmingDelete] = useState(false)
 
   const handleCopyLink = useCallback(() => {
@@ -73,20 +81,23 @@ export const MeowCard = ({ meow, onLike, onRemeow, onReply, onDelete, isOwn, hid
           onClick: handleCopyLink
         },
         ...(isOwn && onDelete
-          ? [{
-              label: <Trans>Удалить</Trans>,
-              icon: Trash2,
-              onClick: () => setConfirmingDelete(true),
-              variant: 'danger' as const,
-              preventClose: true
-            }]
-          : [{
-              label: <Trans>Пожаловаться</Trans>,
-              icon: CircleAlert,
-              onClick: handleReport,
-              variant: 'danger' as const
-            }]
-        )
+          ? [
+              {
+                label: <Trans>Удалить</Trans>,
+                icon: Trash2,
+                onClick: () => setConfirmingDelete(true),
+                variant: 'danger' as const,
+                preventClose: true
+              }
+            ]
+          : [
+              {
+                label: <Trans>Пожаловаться</Trans>,
+                icon: CircleAlert,
+                onClick: handleReport,
+                variant: 'danger' as const
+              }
+            ])
       ]
 
   // определяем контент для отображения (ремяут показывает оригинал)
@@ -133,10 +144,11 @@ export const MeowCard = ({ meow, onLike, onRemeow, onReply, onDelete, isOwn, hid
             {isRemeow && (
               <span className={s.remeowLabel}>
                 <Repeat2 size={14} />
-                {meow.author.sex === Sex.FEMALE
-                  ? <Trans>ремяутнула</Trans>
-                  : <Trans>ремяутнул</Trans>
-                }
+                {meow.author.sex === Sex.FEMALE ? (
+                  <Trans>ремяутнула</Trans>
+                ) : (
+                  <Trans>ремяутнул</Trans>
+                )}
               </span>
             )}
             <TimeAgo date={meow.createdAt} />
@@ -162,7 +174,10 @@ export const MeowCard = ({ meow, onLike, onRemeow, onReply, onDelete, isOwn, hid
             className={s.quoteBlock}
           >
             <div className={s.quoteTop}>
-              <Avatar src={(meow.remeowOf || meow.replyTo)!.author.avatarUrl} alt="" />
+              <Avatar
+                src={(meow.remeowOf || meow.replyTo)!.author.avatarUrl}
+                alt=''
+              />
               <div className={s.quoteMeta}>
                 <span className={s.quoteAuthor}>
                   {(meow.remeowOf || meow.replyTo)!.author.displayName}
@@ -170,7 +185,10 @@ export const MeowCard = ({ meow, onLike, onRemeow, onReply, onDelete, isOwn, hid
               </div>
             </div>
             <div className={s.quoteContent}>
-              {highlightTildes((meow.remeowOf || meow.replyTo)!.content, s.tilde)}
+              {highlightTildes(
+                (meow.remeowOf || meow.replyTo)!.content,
+                s.tilde
+              )}
             </div>
           </Link>
         )}
@@ -180,20 +198,22 @@ export const MeowCard = ({ meow, onLike, onRemeow, onReply, onDelete, isOwn, hid
             <img
               className={s.image}
               src={meow.imageUrl}
-              alt=""
-              loading="lazy"
+              alt=''
+              loading='lazy'
             />
           </div>
         )}
 
         <div className={s.actions}>
-          {onRemeow && !isOwn && !isRemeow && (
-            meow.isRemeowed && meow.myRemeowId ? (
+          {onRemeow &&
+            !isOwn &&
+            !isRemeow &&
+            (meow.isRemeowed && meow.myRemeowId ? (
               <Link
                 to={routes.meowThread}
                 params={{ meowId: meow.myRemeowId }}
                 className={clsx(s.action, s.remeowed)}
-                aria-label="Ремяут"
+                aria-label='Ремяут'
               >
                 <Repeat2 size={18} />
                 {meow.remeowsCount > 0 && (
@@ -202,9 +222,9 @@ export const MeowCard = ({ meow, onLike, onRemeow, onReply, onDelete, isOwn, hid
               </Link>
             ) : (
               <button
-                type="button"
+                type='button'
                 className={s.action}
-                aria-label="Ремяут"
+                aria-label='Ремяут'
                 onClick={() => onRemeow(meow.id)}
               >
                 <Repeat2 size={18} />
@@ -212,30 +232,29 @@ export const MeowCard = ({ meow, onLike, onRemeow, onReply, onDelete, isOwn, hid
                   <span className={s.count}>{meow.remeowsCount}</span>
                 )}
               </button>
-            )
-          )}
+            ))}
 
-          {onReply && !isOwn && (
-            meow.isReplied && meow.myReplyId ? (
+          {onReply &&
+            !isOwn &&
+            (meow.isReplied && meow.myReplyId ? (
               <Link
                 to={routes.meowThread}
                 params={{ meowId: meow.myReplyId }}
                 className={clsx(s.action, s.replied)}
-                aria-label="Ответить"
+                aria-label='Ответить'
               >
                 <SendHorizontal size={18} />
               </Link>
             ) : (
               <button
-                type="button"
+                type='button'
                 className={s.action}
-                aria-label="Ответить"
+                aria-label='Ответить'
                 onClick={() => onReply(meow)}
               >
                 <SendHorizontal size={18} />
               </button>
-            )
-          )}
+            ))}
 
           <div className={s.actionsSpacer} />
 
@@ -244,7 +263,7 @@ export const MeowCard = ({ meow, onLike, onRemeow, onReply, onDelete, isOwn, hid
               to={routes.meowThread}
               params={{ meowId: meow.id }}
               className={s.action}
-              aria-label="Комментарии"
+              aria-label='Комментарии'
             >
               <MessageCircle size={18} />
               {meow.commentsCount > 0 && (
@@ -254,7 +273,7 @@ export const MeowCard = ({ meow, onLike, onRemeow, onReply, onDelete, isOwn, hid
           )}
 
           <button
-            type="button"
+            type='button'
             className={clsx(s.action, s.likeAction, meow.isLiked && s.liked)}
             aria-label={meow.isLiked ? 'Убрать лайк' : 'Лайк'}
             onClick={() => onLike(meow.id)}

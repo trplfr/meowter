@@ -2,7 +2,7 @@ import { toast } from 'sonner'
 
 import { showErrorToastFx, showSuccessToastFx } from '../models'
 
-showErrorToastFx.use((message) => {
+showErrorToastFx.use(message => {
   if (typeof window === 'undefined') {
     return
   }
@@ -10,7 +10,7 @@ showErrorToastFx.use((message) => {
   toast.error(message, { dismissible: true })
 })
 
-showSuccessToastFx.use((message) => {
+showSuccessToastFx.use(message => {
   if (typeof window === 'undefined') {
     return
   }

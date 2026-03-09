@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [v2, dev]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable Corepack
+        run: corepack enable && corepack prepare yarn@4.13.0
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Build shared
+        run: yarn workspace shared build
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Test API
+        run: yarn test:api
+
+      - name: Build
+        run: yarn build

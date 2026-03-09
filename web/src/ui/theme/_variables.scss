@@ -1,25 +1,32 @@
 // цвета
-$color-primary: #EB7E44;
-$color-primary-hover: #D4702E;
-$color-primary-active: #C46325;
-$color-primary-disabled: #F0C3A0;
-$color-bg: #FFFFFF;
-$color-white: #FFFFFF;
-$color-separator: #EEEEEE;
+$color-primary: #eb7e44;
+$color-primary-hover: #d4702e;
+$color-primary-active: #c46325;
+$color-primary-disabled: #f0c3a0;
+$color-bg: #ffffff;
+$color-white: #ffffff;
+$color-separator: #eeeeee;
 $color-text: #333333;
 $color-text-secondary: #999999;
 $color-icon-muted: #999999;
-$color-hover-bg: #EEEEEE;
-$color-bg-secondary: #F8F8F8;
-$color-error: #E53935;
-$color-success: #43A047;
+$color-hover-bg: #eeeeee;
+$color-bg-secondary: #f8f8f8;
+$color-error: #e53935;
+$color-success: #43a047;
 $color-overlay: rgba(0, 0, 0, 0.4);
 $color-overlay-dark: rgba(0, 0, 0, 0.5);
 $color-shadow: rgba(0, 0, 0, 0.08);
-$color-tilde-bg: rgba(#EB7E44, 0.12);
+$color-tilde-bg: rgba(#eb7e44, 0.12);
+$color-shimmer: #f5f5f5;
 
 // типографика
-$font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-family:
+  'Rubik',
+  -apple-system,
+  BlinkMacSystemFont,
+  'Segoe UI',
+  Roboto,
+  sans-serif;
 $font-size-xs: 12px;
 $font-size-badge: 11px;
 $font-size-sm: 14px;

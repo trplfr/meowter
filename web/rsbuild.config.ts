@@ -22,7 +22,7 @@ export default defineConfig({
     pluginReact(),
     pluginSass({
       sassLoaderOptions: {
-        additionalData: `@use 'sass:color'; @use '@ui/theme/variables' as *; @use '@ui/theme/mixins' as *;`
+        additionalData: `@use '@ui/theme/variables' as *; @use '@ui/theme/mixins' as *;`
       }
     })
   ],

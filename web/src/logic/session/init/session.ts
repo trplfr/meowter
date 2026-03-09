@@ -21,7 +21,7 @@ import {
 sample({
   clock: appStarted,
   source: $session,
-  filter: (session) => session === null,
+  filter: session => session === null,
   target: fetchSessionFx
 })
 
@@ -54,7 +54,7 @@ redirect({
       routes.recovery.opened
     ],
     source: $isAuthenticated,
-    filter: (isAuth) => isAuth
+    filter: isAuth => isAuth
   }),
   route: routes.feed
 })
@@ -88,7 +88,7 @@ redirect({
       routes.createMeow.opened
     ],
     source: $isAuthenticated,
-    filter: (isAuth) => !isAuth
+    filter: isAuth => !isAuth
   }),
   route: routes.unauthorized
 })
@@ -111,7 +111,7 @@ redirect({
 sample({
   clock: followChanged,
   source: $session,
-  filter: (session) => session !== null,
+  filter: session => session !== null,
   fn: (session, { delta }) => ({
     ...session!,
     followingCount: session!.followingCount + delta
@@ -132,9 +132,13 @@ redirect({
       createMeow: routes.createMeow.$isOpened,
       catProfile: routes.catProfile.$isOpened
     },
-    filter: (opened) =>
-      opened.feed || opened.search || opened.notifications ||
-      opened.settings || opened.createMeow || opened.catProfile
+    filter: opened =>
+      opened.feed ||
+      opened.search ||
+      opened.notifications ||
+      opened.settings ||
+      opened.createMeow ||
+      opened.catProfile
   }),
   route: routes.unauthorized
 })

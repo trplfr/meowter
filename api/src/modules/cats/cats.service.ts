@@ -4,7 +4,14 @@ import { eq, desc, sql, and, lt, inArray } from 'drizzle-orm'
 import { ErrorCode, NotificationType } from '@shared/types'
 
 import { DB, type Db } from '../../db/db.module'
-import { cats, meows, meowTags, likes, comments, follows } from '../../db/schema'
+import {
+  cats,
+  meows,
+  meowTags,
+  likes,
+  comments,
+  follows
+} from '../../db/schema'
 import { AppException } from '../../common/exceptions'
 import { NotificationsService } from '../notifications/notifications.service'
 
@@ -54,7 +61,12 @@ export class CatsService {
       const [row] = await this.db
         .select({ followerId: follows.followerId })
         .from(follows)
-        .where(and(eq(follows.followerId, currentUserId), eq(follows.followingId, cat.id)))
+        .where(
+          and(
+            eq(follows.followerId, currentUserId),
+            eq(follows.followingId, cat.id)
+          )
+        )
         .limit(1)
       isFollowing = !!row
     }
@@ -68,7 +80,12 @@ export class CatsService {
     }
   }
 
-  async getUserMeows(username: string, currentUserId?: string, cursor?: string, limit = 20) {
+  async getUserMeows(
+    username: string,
+    currentUserId?: string,
+    cursor?: string,
+    limit = 20
+  ) {
     const [cat] = await this.db
       .select({ id: cats.id })
       .from(cats)
@@ -115,7 +132,7 @@ export class CatsService {
 
     const hasMore = rows.length > limit
     const data = rows.slice(0, limit)
-    const meowIds = data.map((m) => m.id)
+    const meowIds = data.map(m => m.id)
 
     if (meowIds.length === 0) {
       return { data: [], cursor: null, hasMore: false }
@@ -142,7 +159,9 @@ export class CatsService {
       ? await this.db
           .select({ meowId: likes.meowId })
           .from(likes)
-          .where(and(inArray(likes.meowId, meowIds), eq(likes.userId, currentUserId)))
+          .where(
+            and(inArray(likes.meowId, meowIds), eq(likes.userId, currentUserId))
+          )
       : []
 
     // remeow counts
@@ -159,21 +178,33 @@ export class CatsService {
       ? await this.db
           .select({ id: meows.id, remeowOfId: meows.remeowOfId })
           .from(meows)
-          .where(and(inArray(meows.remeowOfId, meowIds), eq(meows.authorId, currentUserId)))
+          .where(
+            and(
+              inArray(meows.remeowOfId, meowIds),
+              eq(meows.authorId, currentUserId)
+            )
+          )
       : []
 
     const userReplies = currentUserId
       ? await this.db
           .select({ id: meows.id, replyToId: meows.replyToId })
           .from(meows)
-          .where(and(inArray(meows.replyToId, meowIds), eq(meows.authorId, currentUserId)))
+          .where(
+            and(
+              inArray(meows.replyToId, meowIds),
+              eq(meows.authorId, currentUserId)
+            )
+          )
       : []
 
     // загрузка replyTo / remeowOf previews
-    const refIds = [...new Set([
-      ...data.filter((m) => m.replyToId).map((m) => m.replyToId!),
-      ...data.filter((m) => m.remeowOfId).map((m) => m.remeowOfId!)
-    ])]
+    const refIds = [
+      ...new Set([
+        ...data.filter(m => m.replyToId).map(m => m.replyToId!),
+        ...data.filter(m => m.remeowOfId).map(m => m.remeowOfId!)
+      ])
+    ]
 
     let previewsMap = new Map<string, any>()
     if (refIds.length > 0) {
@@ -202,7 +233,7 @@ export class CatsService {
         .innerJoin(cats, eq(meows.authorId, cats.id))
         .where(inArray(meows.id, refIds))
 
-      previewsMap = new Map(previews.map((p) => [p.id, p]))
+      previewsMap = new Map(previews.map(p => [p.id, p]))
     }
 
     const tagsMap = new Map<string, typeof allTags>()
@@ -212,23 +243,27 @@ export class CatsService {
       tagsMap.set(tag.meowId, arr)
     }
 
-    const likeMap = new Map(likeCounts.map((l) => [l.meowId, l.count]))
-    const commentMap = new Map(commentCounts.map((c) => [c.meowId, c.count]))
-    const likedSet = new Set(userLikes.map((l) => l.meowId))
-    const remeowMap = new Map(remeowCounts.map((r) => [r.remeowOfId, r.count]))
-    const remeowedSet = new Set(userRemeows.map((r) => r.remeowOfId))
-    const myRemeowIdMap = new Map(userRemeows.map((r) => [r.remeowOfId, r.id]))
-    const repliedSet = new Set(userReplies.map((r) => r.replyToId))
-    const myReplyIdMap = new Map(userReplies.map((r) => [r.replyToId, r.id]))
+    const likeMap = new Map(likeCounts.map(l => [l.meowId, l.count]))
+    const commentMap = new Map(commentCounts.map(c => [c.meowId, c.count]))
+    const likedSet = new Set(userLikes.map(l => l.meowId))
+    const remeowMap = new Map(remeowCounts.map(r => [r.remeowOfId, r.count]))
+    const remeowedSet = new Set(userRemeows.map(r => r.remeowOfId))
+    const myRemeowIdMap = new Map(userRemeows.map(r => [r.remeowOfId, r.id]))
+    const repliedSet = new Set(userReplies.map(r => r.replyToId))
+    const myReplyIdMap = new Map(userReplies.map(r => [r.replyToId, r.id]))
 
-    const result = data.map((meow) => ({
+    const result = data.map(meow => ({
       id: meow.id,
       content: meow.content,
       imageUrl: meow.imageUrl,
       createdAt: meow.createdAt,
       updatedAt: meow.updatedAt,
       author: meow.author,
-      tags: (tagsMap.get(meow.id) || []).map((t) => ({ id: t.id, tag: t.tag, position: t.position })),
+      tags: (tagsMap.get(meow.id) || []).map(t => ({
+        id: t.id,
+        tag: t.tag,
+        position: t.position
+      })),
       likesCount: likeMap.get(meow.id) || 0,
       commentsCount: commentMap.get(meow.id) || 0,
       remeowsCount: remeowMap.get(meow.id) || 0,
@@ -238,10 +273,14 @@ export class CatsService {
       isReplied: repliedSet.has(meow.id),
       myReplyId: myReplyIdMap.get(meow.id) || null,
       replyTo: meow.replyToId ? previewsMap.get(meow.replyToId) || null : null,
-      remeowOf: meow.remeowOfId ? previewsMap.get(meow.remeowOfId) || null : null
+      remeowOf: meow.remeowOfId
+        ? previewsMap.get(meow.remeowOfId) || null
+        : null
     }))
 
-    const nextCursor = hasMore ? data[data.length - 1].createdAt.toISOString() : null
+    const nextCursor = hasMore
+      ? data[data.length - 1].createdAt.toISOString()
+      : null
 
     return { data: result, cursor: nextCursor, hasMore }
   }
@@ -258,7 +297,11 @@ export class CatsService {
     }
 
     if (target.id === currentUserId) {
-      throw new AppException(ErrorCode.VALIDATION_ERROR, 400, 'Cannot follow yourself')
+      throw new AppException(
+        ErrorCode.VALIDATION_ERROR,
+        400,
+        'Cannot follow yourself'
+      )
     }
 
     await this.db
@@ -267,7 +310,11 @@ export class CatsService {
       .onConflictDoNothing()
 
     // уведомление
-    await this.notificationsService.create(target.id, currentUserId, NotificationType.FOLLOW)
+    await this.notificationsService.create(
+      target.id,
+      currentUserId,
+      NotificationType.FOLLOW
+    )
 
     return { ok: true }
   }
@@ -285,7 +332,12 @@ export class CatsService {
 
     await this.db
       .delete(follows)
-      .where(and(eq(follows.followerId, currentUserId), eq(follows.followingId, target.id)))
+      .where(
+        and(
+          eq(follows.followerId, currentUserId),
+          eq(follows.followingId, target.id)
+        )
+      )
 
     return { ok: true }
   }

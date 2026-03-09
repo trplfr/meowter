@@ -1,0 +1,29 @@
+FROM node:22-alpine AS base
+RUN corepack enable && corepack prepare yarn@4.13.0
+
+WORKDIR /app
+COPY package.json yarn.lock .yarnrc.yml ./
+COPY web/package.json web/
+COPY shared/package.json shared/
+
+FROM base AS deps
+RUN yarn install --immutable
+
+FROM deps AS build
+COPY shared/ shared/
+COPY web/ web/
+RUN yarn workspace shared build
+RUN yarn workspace web build
+
+FROM node:22-alpine AS runner
+WORKDIR /app
+
+COPY --from=build /app/web/dist ./dist
+COPY --from=build /app/web/server.prod.js ./server.prod.js
+COPY --from=build /app/node_modules ./node_modules
+
+ENV NODE_ENV=production
+ENV SSR_API_URL=http://api:4000/api
+EXPOSE 3000
+
+CMD ["node", "server.prod.js"]

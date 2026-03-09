@@ -30,7 +30,9 @@ const parseError = async (error: unknown): Promise<never> => {
   let appError: AppError
 
   if (error instanceof HTTPError) {
-    const body = await error.response.json().catch(() => ({})) as Partial<ApiErrorResponse>
+    const body = (await error.response
+      .json()
+      .catch(() => ({}))) as Partial<ApiErrorResponse>
 
     appError = new AppError(
       body.code || ErrorCode.INTERNAL_ERROR,
@@ -49,13 +51,16 @@ const parseError = async (error: unknown): Promise<never> => {
   throw appError
 }
 
+const ssrApiUrl = process.env.SSR_API_URL || 'http://localhost:4000/api'
+
 export const api = ky.create({
-  prefixUrl: typeof window !== 'undefined' ? '/api' : 'http://localhost:4000/api',
+  prefixUrl:
+    typeof window !== 'undefined' ? '/api' : ssrApiUrl,
   credentials: 'include',
   retry: 0,
   hooks: {
     beforeRequest: [
-      (request) => {
+      request => {
         if (typeof window === 'undefined' && ssrCookieProvider) {
           const cookie = ssrCookieProvider()
           if (cookie) {
@@ -65,7 +70,7 @@ export const api = ky.create({
       }
     ],
     beforeError: [
-      async (error) => {
+      async error => {
         await parseError(error)
         return error
       }
