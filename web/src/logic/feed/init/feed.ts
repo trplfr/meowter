@@ -1,5 +1,4 @@
 import { sample } from 'effector'
-import { redirect } from 'atomic-router'
 import { concurrency } from '@farfetched/core'
 import { t } from '@lingui/core/macro'
 
@@ -108,7 +107,7 @@ sample({
   clock: meowLikeToggled,
   source: $meows,
   fn: (meows, meowId) => {
-    const meow = meows.find((m) => m.id === meowId)
+    const meow = meows.find(m => m.id === meowId)
     if (!meow) {
       return { meowId, isLiked: false }
     }
@@ -122,7 +121,7 @@ sample({
   clock: meowLikeToggled,
   source: $meows,
   fn: (meows, meowId) => {
-    const meow = meows.find((m) => m.id === meowId)
+    const meow = meows.find(m => m.id === meowId)
     if (!meow) {
       return { meowId, isLiked: false, likesCount: 0 }
     }
@@ -140,7 +139,7 @@ sample({
   clock: meowLikeToggled,
   source: $meows,
   fn: (meows, meowId) =>
-    meows.map((m) => {
+    meows.map(m => {
       if (m.id !== meowId) {
         return m
       }
@@ -164,7 +163,7 @@ sample({
 sample({
   clock: meowDeleted,
   source: $meows,
-  fn: (meows, meowId) => meows.filter((m) => m.id !== meowId),
+  fn: (meows, meowId) => meows.filter(m => m.id !== meowId),
   target: $meows
 })
 
@@ -184,7 +183,7 @@ sample({
 sample({
   clock: meowDeletedGlobal,
   source: $meows,
-  fn: (meows, meowId) => meows.filter((m) => m.id !== meowId),
+  fn: (meows, meowId) => meows.filter(m => m.id !== meowId),
   target: $meows
 })
 
@@ -200,7 +199,7 @@ sample({
   clock: remeowToggled,
   source: $meows,
   fn: (meows, meowId) => {
-    const meow = meows.find((m) => m.id === meowId)
+    const meow = meows.find(m => m.id === meowId)
     if (!meow) {
       return { meowId, isRemeowed: true, remeowsCount: 1, myRemeowId: null }
     }
@@ -219,7 +218,7 @@ sample({
   clock: remeowToggled,
   source: $meows,
   fn: (meows, meowId) =>
-    meows.map((m) => {
+    meows.map(m => {
       if (m.id !== meowId) {
         return m
       }
@@ -237,7 +236,7 @@ sample({
   clock: remeowMutation.finished.success,
   source: $meows,
   fn: (meows, { params: originalMeowId, result: remeow }) =>
-    meows.map((m) => {
+    meows.map(m => {
       if (m.id !== originalMeowId) {
         return m
       }
@@ -256,8 +255,8 @@ sample({
 sample({
   clock: remeowMutation.finished.success,
   source: $session,
-  filter: (session) => session !== null,
-  fn: (session) => ({ username: session!.username }),
+  filter: session => session !== null,
+  fn: session => ({ username: session!.username }),
   target: routes.catProfile.open
 })
 
@@ -265,9 +264,9 @@ sample({
 sample({
   clock: remeowChanged,
   source: $meows,
-  filter: (meows, { meowId }) => meows.some((m) => m.id === meowId),
+  filter: (meows, { meowId }) => meows.some(m => m.id === meowId),
   fn: (meows, { meowId, isRemeowed, remeowsCount, myRemeowId }) =>
-    meows.map((m) => {
+    meows.map(m => {
       if (m.id !== meowId) {
         return m
       }

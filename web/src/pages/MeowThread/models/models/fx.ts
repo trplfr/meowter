@@ -9,25 +9,31 @@ import {
   createComment,
   deleteComment,
   likeComment,
-  unlikeComment,
-  type MeowResponse,
-  type CommentsResponse,
-  type CommentResponse
+  unlikeComment
 } from '@logic/api/meows'
 import { type ToggleLikeParams, type ToggleLikeResult } from '@logic/feed'
 
-import { type FetchCommentsParams, type CreateCommentParams, type ToggleCommentLikeParams, type ToggleCommentLikeResult } from '../types'
+import {
+  type FetchCommentsParams,
+  type CreateCommentParams,
+  type ToggleCommentLikeParams,
+  type ToggleCommentLikeResult
+} from '../types'
 
 export const meowQuery = createQuery({
   handler: (id: string) => getMeow(id)
 })
 
 export const commentsQuery = createQuery({
-  handler: (params: FetchCommentsParams) => getComments(params.meowId, params.cursor)
+  handler: (params: FetchCommentsParams) =>
+    getComments(params.meowId, params.cursor)
 })
 
 export const toggleLikeMutation = createMutation({
-  handler: async ({ meowId, isLiked }: ToggleLikeParams): Promise<ToggleLikeResult> => {
+  handler: async ({
+    meowId,
+    isLiked
+  }: ToggleLikeParams): Promise<ToggleLikeResult> => {
     if (isLiked) {
       await unlikeMeow(meowId)
       return { meowId, isLiked: false }
@@ -39,7 +45,8 @@ export const toggleLikeMutation = createMutation({
 })
 
 export const createCommentMutation = createMutation({
-  handler: ({ meowId, content }: CreateCommentParams) => createComment(meowId, { content })
+  handler: ({ meowId, content }: CreateCommentParams) =>
+    createComment(meowId, { content })
 })
 
 export const deleteMeowMutation = createMutation({
@@ -51,7 +58,10 @@ export const deleteCommentMutation = createMutation({
 })
 
 export const toggleCommentLikeMutation = createMutation({
-  handler: async ({ commentId, isLiked }: ToggleCommentLikeParams): Promise<ToggleCommentLikeResult> => {
+  handler: async ({
+    commentId,
+    isLiked
+  }: ToggleCommentLikeParams): Promise<ToggleCommentLikeResult> => {
     if (isLiked) {
       await unlikeComment(commentId)
       return { commentId, isLiked: false }

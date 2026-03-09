@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
-import { eq, or, sql } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import * as bcrypt from 'bcrypt'
 import type Redis from 'ioredis'
 import { randomUUID } from 'crypto'
@@ -14,7 +14,12 @@ import { cats, follows } from '../../db/schema'
 import { AppException } from '../../common/exceptions'
 import type { JwtPayload } from '../../common/decorators'
 
-import type { RegisterDto, LoginDto, UpdateProfileDto, ChangePasswordDto } from './dto'
+import type {
+  RegisterDto,
+  LoginDto,
+  UpdateProfileDto,
+  ChangePasswordDto
+} from './dto'
 
 @Injectable()
 export class AuthService {
@@ -43,7 +48,11 @@ export class AuthService {
       .limit(1)
 
     if (byUsername) {
-      throw new AppException(ErrorCode.USERNAME_TAKEN, 409, 'Username already taken')
+      throw new AppException(
+        ErrorCode.USERNAME_TAKEN,
+        409,
+        'Username already taken'
+      )
     }
 
     const passwordHash = await bcrypt.hash(dto.password, 10)
@@ -76,13 +85,21 @@ export class AuthService {
       .limit(1)
 
     if (!user) {
-      throw new AppException(ErrorCode.INVALID_CREDENTIALS, 401, 'Invalid credentials')
+      throw new AppException(
+        ErrorCode.INVALID_CREDENTIALS,
+        401,
+        'Invalid credentials'
+      )
     }
 
     const valid = await bcrypt.compare(dto.password, user.passwordHash)
 
     if (!valid) {
-      throw new AppException(ErrorCode.INVALID_CREDENTIALS, 401, 'Invalid credentials')
+      throw new AppException(
+        ErrorCode.INVALID_CREDENTIALS,
+        401,
+        'Invalid credentials'
+      )
     }
 
     return this.issueTokens({
@@ -99,7 +116,11 @@ export class AuthService {
     const userId = await this.redis.get(`refresh:${refreshToken}`)
 
     if (!userId) {
-      throw new AppException(ErrorCode.REFRESH_TOKEN_INVALID, 401, 'Refresh token invalid')
+      throw new AppException(
+        ErrorCode.REFRESH_TOKEN_INVALID,
+        401,
+        'Refresh token invalid'
+      )
     }
 
     await this.redis.del(`refresh:${refreshToken}`)
@@ -175,9 +196,10 @@ export class AuthService {
 
   async updateProfile(userId: string, dto: UpdateProfileDto) {
     // если displayName задан явно = используем его, иначе fallback на firstName + lastName
-    const displayName = dto.displayName !== undefined
-      ? dto.displayName
-      : [dto.firstName, dto.lastName].filter(Boolean).join(' ') || undefined
+    const displayName =
+      dto.displayName !== undefined
+        ? dto.displayName
+        : [dto.firstName, dto.lastName].filter(Boolean).join(' ') || undefined
 
     const [user] = await this.db
       .update(cats)
@@ -243,7 +265,11 @@ export class AuthService {
     const valid = await bcrypt.compare(dto.oldPassword, user.passwordHash)
 
     if (!valid) {
-      throw new AppException(ErrorCode.WRONG_PASSWORD, 401, 'Old password is incorrect')
+      throw new AppException(
+        ErrorCode.WRONG_PASSWORD,
+        401,
+        'Old password is incorrect'
+      )
     }
 
     const passwordHash = await bcrypt.hash(dto.newPassword, 10)
@@ -269,7 +295,14 @@ export class AuthService {
     return user
   }
 
-  private async issueTokens(user: { id: string; username: string; email: string; displayName: string; avatarUrl: string | null; verified: boolean }) {
+  private async issueTokens(user: {
+    id: string
+    username: string
+    email: string
+    displayName: string
+    avatarUrl: string | null
+    verified: boolean
+  }) {
     const payload: JwtPayload = { sub: user.id, username: user.username }
 
     const accessToken = this.jwt.sign(payload, {
