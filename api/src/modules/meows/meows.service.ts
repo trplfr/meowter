@@ -10,6 +10,22 @@ import { NotificationsService } from '../notifications/notifications.service'
 
 import type { CreateMeowDto, CreateCommentDto } from './dto'
 
+// парсит @username из текста
+const parseMentions = (content: string): string[] => {
+  const regex = /@([\w\u0400-\u04FFёЁ]+)/g
+  const usernames: string[] = []
+  let match: RegExpExecArray | null
+
+  while ((match = regex.exec(content)) !== null) {
+    const username = match[1].toLowerCase()
+    if (!usernames.includes(username)) {
+      usernames.push(username)
+    }
+  }
+
+  return usernames
+}
+
 // парсит ~слова из текста
 const parseTildes = (content: string) => {
   const regex = /~([\w\u0400-\u04FFёЁ]+)/g
@@ -717,6 +733,19 @@ export class MeowsService {
       .from(cats)
       .where(eq(cats.id, authorId))
       .limit(1)
+
+    // уведомления для @упоминаний
+    const mentionedUsernames = parseMentions(dto.content)
+    if (mentionedUsernames.length > 0) {
+      const mentionedUsers = await this.db
+        .select({ id: cats.id, username: cats.username })
+        .from(cats)
+        .where(inArray(sql`lower(${cats.username})`, mentionedUsernames))
+
+      for (const user of mentionedUsers) {
+        await this.notificationsService.create(user.id, authorId, NotificationType.MENTION, meowId, comment.id)
+      }
+    }
 
     return { ...comment, author, isLiked: false, likesCount: 0 }
   }

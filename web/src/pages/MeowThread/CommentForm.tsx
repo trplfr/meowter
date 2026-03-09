@@ -7,12 +7,15 @@ import clsx from 'clsx'
 
 import { COMMENT_CONTENT_MAX } from '@shared/constants'
 
+import { highlightMentionsOverlay } from '@lib/meow'
+
 import { $commentText, $replyTrigger, commentTextChanged, commentSubmitted, createCommentMutation } from './models'
 
 import s from './MeowThread.module.scss'
 
 export const CommentForm = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const backdropRef = useRef<HTMLDivElement>(null)
   const [text, replyTrigger, pending] = useUnit([$commentText, $replyTrigger, createCommentMutation.$pending])
   const [onTextChange, onSubmit] = useUnit([commentTextChanged, commentSubmitted])
 
@@ -34,6 +37,12 @@ export const CommentForm = () => {
     }
   }
 
+  const handleScroll = (e: React.UIEvent<HTMLTextAreaElement>) => {
+    if (backdropRef.current) {
+      backdropRef.current.scrollTop = e.currentTarget.scrollTop
+    }
+  }
+
   return (
     <div className={s.commentFormWrap}>
       {isOverLimit && (
@@ -42,18 +51,24 @@ export const CommentForm = () => {
         </div>
       )}
       <div className={s.commentForm}>
-        <textarea
-          ref={textareaRef}
-          id="comment"
-          name="comment"
-          aria-label={t`Написать комментарий...`}
-          className={clsx(s.commentTextarea, isOverLimit && s.commentTextareaError)}
-          value={text}
-          onChange={(e) => onTextChange(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={t`Написать комментарий...`}
-          rows={2}
-        />
+        <div className={s.commentEditor}>
+          <div ref={backdropRef} className={s.commentBackdrop} aria-hidden>
+            {highlightMentionsOverlay(text)}
+          </div>
+          <textarea
+            ref={textareaRef}
+            id="comment"
+            name="comment"
+            aria-label={t`Написать комментарий...`}
+            className={clsx(s.commentTextarea, isOverLimit && s.commentTextareaError)}
+            value={text}
+            onChange={(e) => onTextChange(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onScroll={handleScroll}
+            placeholder={t`Написать комментарий...`}
+            rows={2}
+          />
+        </div>
         <button
           type="button"
           aria-label="Отправить"

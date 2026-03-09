@@ -85,6 +85,16 @@
   word-wrap: break-word;
 }
 
+.mention {
+  color: $color-primary;
+  text-decoration: none;
+  font-weight: 600;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 /* Comment actions */
 
 .commentActions {
@@ -174,18 +184,53 @@
   background: $color-bg;
 }
 
-.commentTextarea {
+.commentEditor {
   flex: 1;
-  resize: none;
-  border: 1px solid transparent;
+  position: relative;
+  min-height: 0;
+  background: $color-bg-secondary;
   border-radius: $radius-sm;
-  padding: $spacing-sm;
+}
+
+.commentBackdrop,
+.commentTextarea {
   font-size: $font-size-base;
   font-family: $font-family;
   line-height: 1.5;
+  padding: $spacing-sm;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.commentBackdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow-y: auto;
   color: $color-text;
-  background: $color-bg-secondary;
+  border: 1px solid transparent;
+  border-radius: $radius-sm;
+
+  [data-mention] {
+    color: $color-primary;
+    background: none;
+    font-weight: 600;
+  }
+}
+
+.commentTextarea {
+  width: 100%;
+  height: 100%;
+  min-height: calc($font-size-base * 1.5 * 2 + $spacing-sm * 2);
+  resize: none;
+  border: 1px solid transparent;
+  border-radius: $radius-sm;
+  position: relative;
   outline: none;
+  background: transparent;
+  color: transparent;
+  caret-color: $color-text;
   transition: border-color 0.15s;
 
   &::placeholder {
@@ -195,7 +240,6 @@
 
 .commentTextareaError {
   border-color: $color-error;
-  color: $color-error;
 }
 
 .commentSendButton {

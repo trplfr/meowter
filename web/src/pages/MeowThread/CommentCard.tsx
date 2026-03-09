@@ -7,6 +7,7 @@ import clsx from 'clsx'
 import { type Comment } from '@shared/types'
 
 import { routes } from '@core/router'
+import { highlightMentions } from '@lib/meow'
 
 import { Avatar, TimeAgo } from '@modules/MeowCard'
 
@@ -77,7 +78,7 @@ export const CommentCard = ({ comment, meowAuthorUsername, meowId, onReply, onLi
       ]
 
   return (
-    <div className={s.comment}>
+    <div id={`comment-${comment.id}`} className={s.comment}>
       <div className={s.commentTop}>
         <Link
           to={routes.catProfile}
@@ -108,7 +109,7 @@ export const CommentCard = ({ comment, meowAuthorUsername, meowId, onReply, onLi
         </div>
       </div>
 
-      <p className={s.commentContent}>{comment.content}</p>
+      <p className={s.commentContent}>{highlightMentions(comment.content, s.mention)}</p>
 
       <div className={s.commentActions}>
         <button

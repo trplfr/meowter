@@ -34,11 +34,22 @@ const NotificationText = ({ type, sex }: { type: NotificationType; sex: Sex | nu
     return f ? <Trans>ответила на ваш мяут</Trans> : <Trans>ответил на ваш мяут</Trans>
   }
 
+  if (type === NotificationType.MENTION) {
+    return f ? <Trans>упомянула вас</Trans> : <Trans>упомянул вас</Trans>
+  }
+
   return f ? <Trans>оценила ваш комментарий</Trans> : <Trans>оценил ваш комментарий</Trans>
 }
 
 export const NotificationCard = ({ notification }: NotificationCardProps) => {
-  const { actor, meow, type } = notification
+  const { actor, meow, comment, type } = notification
+
+  // для MENTION ссылка ведет на мяут с хешем коммента
+  const meowThreadHref = meow
+    ? comment
+      ? `/meow/${meow.id}#comment-${comment.id}`
+      : `/meow/${meow.id}`
+    : null
 
   return (
     <div className={s.card}>
@@ -67,7 +78,18 @@ export const NotificationCard = ({ notification }: NotificationCardProps) => {
         <TimeAgo date={notification.createdAt} />
       </div>
 
-      {meow && (
+      {comment && meowThreadHref && (
+        <a href={meowThreadHref} className={s.commentPreview}>
+          <div className={s.commentPreviewContent}>
+            {comment.content.length > 150
+              ? comment.content.slice(0, 150) + '...'
+              : comment.content
+            }
+          </div>
+        </a>
+      )}
+
+      {meow && !comment && (
         <Link
           to={routes.meowThread}
           params={{ meowId: meow.id }}

@@ -6,7 +6,13 @@ export enum NotificationType {
   MEOW_LIKE = 'MEOW_LIKE',
   COMMENT_LIKE = 'COMMENT_LIKE',
   REMEOW = 'REMEOW',
-  REPLY = 'REPLY'
+  REPLY = 'REPLY',
+  MENTION = 'MENTION'
+}
+
+export interface CommentPreview {
+  id: string
+  content: string
 }
 
 export interface Notification {
@@ -14,6 +20,7 @@ export interface Notification {
   type: NotificationType
   actor: User
   meow: Meow | null
+  comment: CommentPreview | null
   read: boolean
   createdAt: string
 }

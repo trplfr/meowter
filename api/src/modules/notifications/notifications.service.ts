@@ -146,11 +146,25 @@ export class NotificationsService {
       }
     }
 
+    // загружаем комменты для MENTION
+    const commentIds = [...new Set(data.filter((n) => n.commentId).map((n) => n.commentId!))]
+
+    let commentsMap = new Map<string, { id: string; content: string }>()
+    if (commentIds.length > 0) {
+      const commentRows = await this.db
+        .select({ id: comments.id, content: comments.content })
+        .from(comments)
+        .where(inArray(comments.id, commentIds))
+
+      commentsMap = new Map(commentRows.map((c) => [c.id, { id: c.id, content: c.content }]))
+    }
+
     const result = data.map((n) => ({
       id: n.id,
       type: n.type,
       actor: n.actor,
       meow: n.meowId ? meowsMap.get(n.meowId) || null : null,
+      comment: n.commentId ? commentsMap.get(n.commentId) || null : null,
       read: n.read,
       createdAt: n.createdAt
     }))

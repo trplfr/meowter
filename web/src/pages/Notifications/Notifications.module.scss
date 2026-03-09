@@ -132,3 +132,28 @@
   border-radius: $radius-sm;
   padding: 1px $radius-sm;
 }
+
+/* Comment preview (mentions) */
+
+.commentPreview {
+  display: block;
+  margin-top: $spacing-sm;
+  margin-left: $spacing-lg;
+  padding: $spacing-sm $spacing-md;
+  border-left: $separator-height * 2 solid $color-primary;
+  border-radius: 0 $radius-sm $radius-sm 0;
+  background: $color-bg-secondary;
+  text-decoration: none;
+}
+
+.commentPreviewContent {
+  font-size: $font-size-sm;
+  line-height: 1.4;
+  color: $color-text;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}

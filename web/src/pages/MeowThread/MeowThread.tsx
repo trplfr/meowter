@@ -32,6 +32,7 @@ export const route = routes.meowThread
 export const MeowThread = () => {
   const scrollRef = useRef<HTMLDivElement>(null)
   const prevCountRef = useRef(0)
+  const scrolledToHashRef = useRef(false)
   const [meow, commentsList, pending, session] = useUnit([$meow, $comments, meowQuery.$pending, $session])
   const [onLike, onMeowDelete, onReply, onCommentLike, onCommentDelete] = useUnit([
     meowLikeToggled,
@@ -48,6 +49,29 @@ export const MeowThread = () => {
     }
     prevCountRef.current = commentsList.length
   }, [commentsList.length])
+
+  // скролл к комменту по хешу из URL (из уведомлений)
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+    if (scrolledToHashRef.current || commentsList.length === 0) {
+      return
+    }
+
+    const hash = window.location.hash.slice(1)
+    if (!hash) {
+      return
+    }
+
+    const el = document.getElementById(hash)
+    if (el) {
+      scrolledToHashRef.current = true
+      requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      })
+    }
+  }, [commentsList])
 
   return (
     <Layout title={<Trans>Обсуждение</Trans>} contentClassName={s.content}>
