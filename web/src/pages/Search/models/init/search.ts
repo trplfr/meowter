@@ -1,4 +1,5 @@
 import { createStore, sample } from 'effector'
+import { concurrency } from '@farfetched/core'
 import { debounce } from 'patronum'
 import { querySync } from 'atomic-router'
 
@@ -14,7 +15,6 @@ import {
   $hasMore,
   $isOpen,
   $tagsLoaded,
-  searchPageOpened,
   queryChanged,
   tagSelected,
   searchTriggered,
@@ -23,9 +23,9 @@ import {
   meowLikeToggled,
   dropdownOpened,
   dropdownClosed,
-  fetchTagsFx,
-  fetchSearchFx,
-  toggleLikeFx
+  tagsQuery,
+  searchQuery,
+  toggleLikeMutation
 } from '../models'
 
 // синхронизация ?tag= с URL
@@ -37,52 +37,53 @@ querySync({
   route: routes.search
 })
 
-// загружаем теги при открытии
+// загружаем теги при открытии роута
 sample({
-  clock: searchPageOpened,
-  target: fetchTagsFx
+  clock: routes.search.opened,
+  target: tagsQuery.start
 })
 
 // сброс при открытии
 sample({
-  clock: searchPageOpened,
+  clock: routes.search.opened,
   fn: () => false,
   target: [$tagsLoaded, $isOpen]
 })
 
 sample({
-  clock: searchPageOpened,
+  clock: routes.search.opened,
   fn: () => null,
   target: [$selectedTag, $cursor]
 })
 
 sample({
-  clock: searchPageOpened,
+  clock: routes.search.opened,
   fn: (): never[] => [],
   target: $meows
 })
 
 sample({
-  clock: searchPageOpened,
+  clock: routes.search.opened,
   fn: () => false,
   target: $hasMore
 })
 
 // теги получены
 sample({
-  clock: fetchTagsFx.doneData,
+  clock: tagsQuery.finished.success,
+  fn: ({ result }) => result,
   target: $tags
 })
 
 sample({
-  clock: fetchTagsFx.doneData,
+  clock: tagsQuery.finished.success,
   fn: () => true,
   target: $tagsLoaded
 })
 
 // восстанавливаем тег из URL после загрузки тегов
 sample({
-  clock: fetchTagsFx.doneData,
+  clock: tagsQuery.finished.success,
   source: $urlTag,
   filter: (tag) => tag.length > 0,
   target: searchTriggered
@@ -90,7 +91,7 @@ sample({
 
 // обновляем query из URL тега
 sample({
-  clock: fetchTagsFx.doneData,
+  clock: tagsQuery.finished.success,
   source: $urlTag,
   target: $query
 })
@@ -164,7 +165,7 @@ sample({
 sample({
   clock: searchTriggered,
   fn: (tag) => ({ tag }),
-  target: fetchSearchFx
+  target: searchQuery.start
 })
 
 // синхронизация URL при выборе тега
@@ -200,35 +201,35 @@ sample({
 
 // результаты
 sample({
-  clock: fetchSearchFx.doneData,
+  clock: searchQuery.finished.success,
   source: {
     meows: $meows,
     cursor: $cursor
   },
-  fn: ({ meows, cursor }, response) => {
+  fn: ({ meows, cursor }, { result }) => {
     if (!cursor) {
-      return response.data
+      return result.data
     }
-    return [...meows, ...response.data]
+    return [...meows, ...result.data]
   },
   target: $meows
 })
 
 sample({
-  clock: fetchSearchFx.doneData,
-  fn: (response) => response.cursor,
+  clock: searchQuery.finished.success,
+  fn: ({ result }) => result.cursor,
   target: $cursor
 })
 
 sample({
-  clock: fetchSearchFx.doneData,
-  fn: (response) => response.hasMore,
+  clock: searchQuery.finished.success,
+  fn: ({ result }) => result.hasMore,
   target: $hasMore
 })
 
 // закрываем дропдаун после загрузки
 sample({
-  clock: fetchSearchFx.doneData,
+  clock: searchQuery.finished.success,
   fn: () => false,
   target: $isOpen
 })
@@ -245,7 +246,7 @@ sample({
     tag: tag!,
     cursor: cursor!
   }),
-  target: fetchSearchFx
+  target: searchQuery.start
 })
 
 // toggle лайка
@@ -259,27 +260,10 @@ sample({
     }
     return { meowId, isLiked: meow.isLiked }
   },
-  target: toggleLikeFx
+  target: toggleLikeMutation.start
 })
 
-sample({
-  clock: meowLikeToggled,
-  source: $meows,
-  fn: (meows, meowId) =>
-    meows.map((m) => {
-      if (m.id !== meowId) {
-        return m
-      }
-      return {
-        ...m,
-        isLiked: !m.isLiked,
-        likesCount: m.isLiked ? m.likesCount - 1 : m.likesCount + 1
-      }
-    }),
-  target: $meows
-})
-
-// стреляем глобальный лайк
+// стреляем глобальный лайк (ДО оптимистичного апдейта, иначе $meows уже обновлен)
 sample({
   clock: meowLikeToggled,
   source: $meows,
@@ -295,6 +279,24 @@ sample({
     }
   },
   target: meowLikeChanged
+})
+
+// оптимистичный апдейт лайка (ПОСЛЕ meowLikeChanged)
+sample({
+  clock: meowLikeToggled,
+  source: $meows,
+  fn: (meows, meowId) =>
+    meows.map((m) => {
+      if (m.id !== meowId) {
+        return m
+      }
+      return {
+        ...m,
+        isLiked: !m.isLiked,
+        likesCount: m.isLiked ? m.likesCount - 1 : m.likesCount + 1
+      }
+    }),
+  target: $meows
 })
 
 // слушаем лайки из других страниц (пропускаем если уже актуально)
@@ -331,3 +333,7 @@ sample({
   fn: ({ meows }, meow) => [meow, ...meows],
   target: $meows
 })
+
+// concurrency
+concurrency(tagsQuery, { strategy: 'TAKE_LATEST' })
+concurrency(searchQuery, { strategy: 'TAKE_LATEST' })

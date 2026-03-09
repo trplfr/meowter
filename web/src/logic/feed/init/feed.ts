@@ -1,24 +1,26 @@
 import { sample } from 'effector'
+import { concurrency } from '@farfetched/core'
+
+import { routes } from '@core/router'
 
 import {
   $meows,
   $cursor,
   $hasMore,
   $currentTag,
-  feedLoaded,
   feedLoadMore,
   meowCreated,
   meowLikeToggled,
   meowLikeChanged,
-  fetchFeedFx,
-  toggleLikeFx
+  feedQuery,
+  toggleLikeMutation
 } from '../models'
 
-// загрузка первой страницы
+// загрузка первой страницы при открытии роута
 sample({
-  clock: feedLoaded,
+  clock: routes.feed.opened,
   fn: () => ({}),
-  target: fetchFeedFx
+  target: feedQuery.start
 })
 
 // загрузка следующей страницы
@@ -33,50 +35,62 @@ sample({
     cursor: cursor!,
     tag: tag || undefined
   }),
-  target: fetchFeedFx
+  target: feedQuery.start
 })
 
 // сохраняем текущий тег из ответа
 sample({
-  clock: fetchFeedFx.doneData,
-  fn: (response) => response.tag,
+  clock: feedQuery.finished.success,
+  fn: ({ result }) => result.tag,
   target: $currentTag
 })
 
 // первая загрузка = замена, подгрузка = добавление
 sample({
-  clock: fetchFeedFx.doneData,
+  clock: feedQuery.finished.success,
   source: {
     meows: $meows,
     cursor: $cursor
   },
-  fn: ({ meows, cursor }, response) => {
+  fn: ({ meows, cursor }, { result }) => {
     if (!cursor) {
-      return response.data
+      return result.data
     }
-    return [...meows, ...response.data]
+    return [...meows, ...result.data]
   },
   target: $meows
 })
 
 sample({
-  clock: fetchFeedFx.doneData,
-  fn: (response) => response.cursor,
+  clock: feedQuery.finished.success,
+  fn: ({ result }) => result.cursor,
   target: $cursor
 })
 
 sample({
-  clock: fetchFeedFx.doneData,
-  fn: (response) => response.hasMore,
+  clock: feedQuery.finished.success,
+  fn: ({ result }) => result.hasMore,
   target: $hasMore
 })
 
-// новый мяут добавляется в начало
+// новый мяут: оптимистичное добавление + перезагрузка фида для обновления тегов
 sample({
   clock: meowCreated,
   source: $meows,
   fn: (meows, meow) => [meow, ...meows],
   target: $meows
+})
+
+sample({
+  clock: meowCreated,
+  fn: () => null,
+  target: [$cursor, $currentTag]
+})
+
+sample({
+  clock: meowCreated,
+  fn: () => ({}),
+  target: feedQuery.start
 })
 
 // toggle лайка
@@ -90,10 +104,28 @@ sample({
     }
     return { meowId, isLiked: meow.isLiked }
   },
-  target: toggleLikeFx
+  target: toggleLikeMutation.start
 })
 
-// оптимистичный апдейт лайка
+// стреляем глобальный лайк для синхронизации других страниц (ДО оптимистичного апдейта)
+sample({
+  clock: meowLikeToggled,
+  source: $meows,
+  fn: (meows, meowId) => {
+    const meow = meows.find((m) => m.id === meowId)
+    if (!meow) {
+      return { meowId, isLiked: false, likesCount: 0 }
+    }
+    return {
+      meowId,
+      isLiked: !meow.isLiked,
+      likesCount: meow.isLiked ? meow.likesCount - 1 : meow.likesCount + 1
+    }
+  },
+  target: meowLikeChanged
+})
+
+// оптимистичный апдейт лайка (ПОСЛЕ meowLikeChanged)
 sample({
   clock: meowLikeToggled,
   source: $meows,
@@ -111,20 +143,4 @@ sample({
   target: $meows
 })
 
-// стреляем глобальный лайк для синхронизации других страниц
-sample({
-  clock: meowLikeToggled,
-  source: $meows,
-  fn: (meows, meowId) => {
-    const meow = meows.find((m) => m.id === meowId)
-    if (!meow) {
-      return { meowId, isLiked: false, likesCount: 0 }
-    }
-    return {
-      meowId,
-      isLiked: !meow.isLiked,
-      likesCount: meow.isLiked ? meow.likesCount - 1 : meow.likesCount + 1
-    }
-  },
-  target: meowLikeChanged
-})
+concurrency(feedQuery, { strategy: 'TAKE_LATEST' })

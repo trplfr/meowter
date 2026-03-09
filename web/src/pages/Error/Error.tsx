@@ -1,6 +1,5 @@
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
-import { Helmet } from 'react-helmet-async'
 
 import { Layout } from '@ui/index'
 
@@ -11,9 +10,7 @@ import s from './Error.module.scss'
 export const Error = () => {
   return (
     <Layout>
-      <Helmet>
-        <title>{t`Ошибка / Мяутер`}</title>
-      </Helmet>
+      <title>{t`Ошибка / Мяутер`}</title>
 
       <div className={s.header} />
 

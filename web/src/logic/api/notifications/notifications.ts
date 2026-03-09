@@ -13,7 +13,7 @@ export const getNotifications = (cursor?: string) => {
 }
 
 export const getUnreadCount = () =>
-  api.get('notifications/unread-count').json<UnreadCountResponse>()
+  api.get('notifications/unread').json<UnreadCountResponse>()
 
 export const markAllRead = () =>
-  api.post('notifications/read-all').json<{ ok: boolean }>()
+  api.post('notifications/read').json<{ ok: boolean }>()

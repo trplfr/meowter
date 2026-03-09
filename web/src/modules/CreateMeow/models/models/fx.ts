@@ -1,7 +1,7 @@
-import { createEffect } from 'effector'
+import { createMutation } from '@farfetched/core'
 
-import { type Meow } from '@shared/types'
+import { createMeow } from '@logic/api/meows'
 
-import { type CreateMeowRequest } from '../types'
-
-export const createMeowFx = createEffect<CreateMeowRequest, Meow>()
+export const createMeowMutation = createMutation({
+  handler: createMeow
+})

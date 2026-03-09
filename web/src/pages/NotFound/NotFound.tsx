@@ -1,7 +1,6 @@
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
 import { ArrowLeft } from 'lucide-react'
-import { Helmet } from 'react-helmet-async'
 
 import { routes } from '@core/router'
 import { Layout } from '@ui/index'
@@ -15,9 +14,7 @@ export const route = routes.notFound
 export const NotFound = () => {
   return (
     <Layout>
-      <Helmet>
-        <title>{t`404 / Мяутер`}</title>
-      </Helmet>
+      <title>{t`404 / Мяутер`}</title>
 
       <header className={s.header}>
         <button className={s.back} onClick={() => history.back()}>

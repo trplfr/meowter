@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { I18nProvider } from '@lingui/react'
 import { createRoutesView, RouterProvider } from 'atomic-router-react'
-import { HelmetProvider } from 'react-helmet-async'
 import { Toaster } from 'sonner'
 
 import { toastOptions } from '@core/constants'
@@ -26,14 +25,12 @@ export const App = () => {
 
   return (
     <I18nProvider i18n={i18n}>
-      <HelmetProvider>
-        <ErrorBoundary>
-          <RouterProvider router={router}>
-            <RoutesView />
-            {mounted && <Toaster {...toastOptions} />}
-          </RouterProvider>
-        </ErrorBoundary>
-      </HelmetProvider>
+      <ErrorBoundary>
+        <RouterProvider router={router}>
+          <RoutesView />
+          {mounted && <Toaster {...toastOptions} />}
+        </RouterProvider>
+      </ErrorBoundary>
     </I18nProvider>
   )
 }

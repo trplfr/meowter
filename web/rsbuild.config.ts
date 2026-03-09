@@ -22,7 +22,7 @@ export default defineConfig({
     pluginReact(),
     pluginSass({
       sassLoaderOptions: {
-        additionalData: `@use '@ui/theme/variables' as *; @use '@ui/theme/mixins' as *;`
+        additionalData: `@use 'sass:color'; @use '@ui/theme/variables' as *; @use '@ui/theme/mixins' as *;`
       }
     })
   ],
@@ -115,11 +115,11 @@ export default defineConfig({
             .replace('lang=""', `lang="${result.locale}"`)
             .replace(
               '</head>',
-              `<script>self.__SSR_STATE__ = ${JSON.stringify(result.scopeData)}</script></head>`
+              `<script>self.__SSR_STATE__ = ${JSON.stringify(result.scopeData).replace(/</g, '\\u003c')}</script></head>`
             )
             .replace('<!--app-content-->', result.html)
 
-          res.writeHead(200, { 'Content-Type': 'text/html' })
+          res.writeHead(result.status || 200, { 'Content-Type': 'text/html' })
           res.end(html)
         } catch (err) {
           console.error('SSR render failed:', err)

@@ -19,6 +19,13 @@ export const setApiErrorHandler = (handler: (error: AppError) => void) => {
   onApiError = handler
 }
 
+// провайдер кук для SSR (устанавливается из серверного entry через AsyncLocalStorage)
+let ssrCookieProvider: (() => string) | null = null
+
+export const setSsrCookieProvider = (provider: () => string) => {
+  ssrCookieProvider = provider
+}
+
 const parseError = async (error: unknown): Promise<never> => {
   let appError: AppError
 
@@ -47,6 +54,16 @@ export const api = ky.create({
   credentials: 'include',
   retry: 0,
   hooks: {
+    beforeRequest: [
+      (request) => {
+        if (typeof window === 'undefined' && ssrCookieProvider) {
+          const cookie = ssrCookieProvider()
+          if (cookie) {
+            request.headers.set('cookie', cookie)
+          }
+        }
+      }
+    ],
     beforeError: [
       async (error) => {
         await parseError(error)
@@ -56,6 +73,11 @@ export const api = ky.create({
     afterResponse: [
       async (request, options, response) => {
         if (response.status !== 401) {
+          return response
+        }
+
+        // на сервере refresh невозможен (куки httpOnly не пробрасываются)
+        if (typeof window === 'undefined') {
           return response
         }
 
@@ -69,7 +91,7 @@ export const api = ky.create({
         }
 
         const refreshed = await ky.post('auth/refresh', {
-          prefixUrl: typeof window !== 'undefined' ? '/api' : 'http://localhost:4000/api',
+          prefixUrl: '/api',
           credentials: 'include',
           throwHttpErrors: false
         })

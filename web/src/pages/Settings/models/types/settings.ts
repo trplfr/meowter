@@ -1,9 +1,8 @@
-import { type User } from '@shared/types'
-
 import {
   type UpdateProfileRequest,
   type ChangePasswordRequest,
-  type ChangePasswordResponse
+  type ChangePasswordResponse,
+  type AuthResponse
 } from '@logic/api/auth'
 
 export interface SettingsForm {
@@ -32,6 +31,6 @@ export type PasswordFieldChanged = {
 }
 
 export type UpdateProfileParams = UpdateProfileRequest
-export type UpdateProfileResult = User
+export type UpdateProfileResult = AuthResponse
 export type ChangePasswordParams = ChangePasswordRequest
 export type ChangePasswordResult = ChangePasswordResponse

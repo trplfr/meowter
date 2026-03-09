@@ -1,2 +1,2 @@
 export { CreateMeowForm } from './CreateMeowForm'
-export { $text, $hasTildes, submitted, createMeowFx } from './models'
+export { $text, $hasTildes, submitted, createMeowMutation } from './models'

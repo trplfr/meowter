@@ -78,9 +78,10 @@ export class MeowsController {
     @CurrentUser() user: JwtPayload,
     @Query('cursor') cursor?: string,
     @Query('limit') limit?: string,
-    @Query('tag') tag?: string
+    @Query('tag') tag?: string,
+    @Query('sort') sort?: string
   ) {
-    return this.meows.getFeed(user.sub, cursor, limit ? parseInt(limit, 10) : 20, tag)
+    return this.meows.getFeed(user.sub, cursor, limit ? parseInt(limit, 10) : 20, tag, sort === 'popular' ? 'popular' : 'date')
   }
 
   @Get('tags')

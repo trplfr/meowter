@@ -13,6 +13,8 @@ export const errorMessages: Record<ErrorCode, () => string> = {
   [ErrorCode.FILE_TOO_LARGE]: () => t`Файл слишком большой (макс. 5 МБ)`,
   [ErrorCode.UNAUTHORIZED]: () => t`Необходимо авторизоваться`,
   [ErrorCode.VALIDATION_ERROR]: () => t`Проверьте введенные данные`,
+  [ErrorCode.WRONG_PASSWORD]: () => t`Неверный пароль`,
+  [ErrorCode.MEOW_NOT_FOUND]: () => t`Мяут не найден`,
   [ErrorCode.INTERNAL_ERROR]: () => t`Что-то пошло не так`
 }
 

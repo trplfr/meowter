@@ -11,7 +11,6 @@ export const $hasMore = createStore(false)
 export const $isOpen = createStore(false)
 export const $tagsLoaded = createStore(false)
 
-export const searchPageOpened = createEvent()
 export const queryChanged = createEvent<string>()
 export const tagSelected = createEvent<string>()
 export const searchTriggered = createEvent<string>()

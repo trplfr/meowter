@@ -148,7 +148,7 @@ export class MeowsService {
     return row.tag
   }
 
-  async getFeed(currentUserId: string, cursor?: string, limit = 20, tag?: string) {
+  async getFeed(currentUserId: string, cursor?: string, limit = 20, tag?: string, sort: 'date' | 'popular' = 'date') {
     // определяем тег для фильтрации
     const feedTag = tag || (await this.getLastTag(currentUserId))
 
@@ -167,15 +167,23 @@ export class MeowsService {
       }
     }
 
+    // для popular сортировки используем offset-пагинацию
+    const isPopular = sort === 'popular'
+    const offset = isPopular && cursor ? parseInt(cursor, 10) : 0
+
     const conditions: ReturnType<typeof eq>[] = []
 
-    if (cursor) {
+    // cursor-пагинация только для date-сортировки
+    if (cursor && !isPopular) {
       conditions.push(lt(meows.createdAt, new Date(cursor)))
     }
 
     if (taggedMeowIds) {
       conditions.push(inArray(meows.id, taggedMeowIds))
     }
+
+    // подзапрос количества лайков для сортировки по популярности
+    const likesCountSq = sql`(SELECT count(*) FROM ${likes} WHERE ${likes.meowId} = ${meows.id})`
 
     const rows = await this.db
       .select({
@@ -201,8 +209,9 @@ export class MeowsService {
       .from(meows)
       .innerJoin(cats, eq(meows.authorId, cats.id))
       .where(conditions.length > 0 ? and(...conditions) : undefined)
-      .orderBy(desc(meows.createdAt))
+      .orderBy(isPopular ? desc(likesCountSq) : desc(meows.createdAt), desc(meows.createdAt))
       .limit(limit + 1)
+      .offset(offset)
 
     const hasMore = rows.length > limit
     const data = rows.slice(0, limit)
@@ -268,8 +277,11 @@ export class MeowsService {
       isLiked: likedSet.has(meow.id)
     }))
 
+    // для popular = offset-курсор, для date = createdAt-курсор
     const nextCursor = hasMore
-      ? data[data.length - 1].createdAt.toISOString()
+      ? isPopular
+        ? String(offset + limit)
+        : data[data.length - 1].createdAt.toISOString()
       : null
 
     return { data: result, cursor: nextCursor, hasMore, tag: feedTag || null }

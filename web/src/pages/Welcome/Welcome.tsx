@@ -1,7 +1,6 @@
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
 import { Link } from 'atomic-router-react'
-import { Helmet } from 'react-helmet-async'
 
 import { routes } from '@core/router'
 import { Layout, Button } from '@ui/index'
@@ -15,9 +14,7 @@ export const route = routes.welcome
 export const Welcome = () => {
   return (
     <Layout>
-      <Helmet>
-        <title>{t`Мяутер`}</title>
-      </Helmet>
+      <title>{t`Мяутер`}</title>
 
       <div className={s.header} />
 

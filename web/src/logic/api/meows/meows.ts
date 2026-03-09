@@ -20,7 +20,7 @@ export const createMeow = (params: CreateMeowRequest) => {
   return api.post('meows', { body: formData }).json<MeowResponse>()
 }
 
-export const getFeed = (cursor?: string, tag?: string) => {
+export const getFeed = (cursor?: string, tag?: string, sort?: string) => {
   const searchParams: Record<string, string> = {}
 
   if (cursor) {
@@ -29,6 +29,10 @@ export const getFeed = (cursor?: string, tag?: string) => {
 
   if (tag) {
     searchParams.tag = tag
+  }
+
+  if (sort) {
+    searchParams.sort = sort
   }
 
   return api.get('meows/feed', { searchParams }).json<FeedResponse>()

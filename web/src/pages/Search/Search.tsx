@@ -3,15 +3,14 @@ import './models/init'
 import { useEffect, useRef } from 'react'
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
-import { Helmet } from 'react-helmet-async'
 import { useUnit } from 'effector-react'
-import { useInView } from 'react-intersection-observer'
 import { Search as SearchIcon, X } from 'lucide-react'
 
 import { routes } from '@core/router'
 
 import { AuthLayout } from '@modules/AuthLayout'
 import { MeowCard, MeowCardSkeleton } from '@modules/MeowCard'
+import { VirtualList } from '@ui/VirtualList'
 
 import {
   $tags,
@@ -21,14 +20,13 @@ import {
   $hasMore,
   $isOpen,
   $tagsLoaded,
-  searchPageOpened,
   queryChanged,
   tagSelected,
   cleared,
   loadMore,
   meowLikeToggled,
   dropdownOpened,
-  fetchSearchFx
+  searchQuery
 } from './models'
 
 import s from './Search.module.scss'
@@ -37,25 +35,14 @@ export const route = routes.search
 
 export const Search = () => {
   const [tags, query, selectedTag, meows, hasMore, isOpen, pending, tagsLoaded] = useUnit([
-    $tags, $query, $selectedTag, $meows, $hasMore, $isOpen, fetchSearchFx.pending, $tagsLoaded
+    $tags, $query, $selectedTag, $meows, $hasMore, $isOpen, searchQuery.$pending, $tagsLoaded
   ])
-  const [onOpen, onQueryChange, onTagSelect, onClear, onLoadMore, onLike, onDropdownOpen] = useUnit([
-    searchPageOpened, queryChanged, tagSelected, cleared, loadMore, meowLikeToggled, dropdownOpened
+  const [onQueryChange, onTagSelect, onClear, onLoadMore, onLike, onDropdownOpen] = useUnit([
+    queryChanged, tagSelected, cleared, loadMore, meowLikeToggled, dropdownOpened
   ])
 
   const inputRef = useRef<HTMLInputElement>(null)
   const wrapRef = useRef<HTMLDivElement>(null)
-  const { ref, inView } = useInView({ threshold: 0 })
-
-  useEffect(() => {
-    onOpen()
-  }, [])
-
-  useEffect(() => {
-    if (inView && hasMore && !pending) {
-      onLoadMore()
-    }
-  }, [inView, hasMore, pending])
 
   // закрытие дропдауна при клике вне
   useEffect(() => {
@@ -77,9 +64,7 @@ export const Search = () => {
 
   return (
     <AuthLayout title={<Trans>Поиск</Trans>} contentClassName={s.content}>
-      <Helmet>
-        <title>{t`Поиск / Мяутер`}</title>
-      </Helmet>
+      <title>{t`Поиск / Мяутер`}</title>
 
       <div className={s.searchWrap} ref={wrapRef}>
         <div className={s.inputWrap}>
@@ -142,18 +127,24 @@ export const Search = () => {
             </>
           )}
 
-          {meows.map((meow) => (
-            <MeowCard key={meow.id} meow={meow} onLike={onLike} />
-          ))}
+          {meows.length > 0 && (
+            <VirtualList
+              items={meows}
+              estimateSize={120}
+              hasMore={hasMore}
+              pending={pending}
+              onLoadMore={onLoadMore}
+              className={s.list}
+              renderItem={(meow) => (
+                <MeowCard key={meow.id} meow={meow} onLike={onLike} />
+              )}
+            />
+          )}
 
           {meows.length === 0 && !pending && (
             <div className={s.empty}>
               <Trans>Нет мяутов по теме ~{selectedTag}</Trans>
             </div>
-          )}
-
-          {hasMore && (
-            <div ref={ref} className={s.sentinel} />
           )}
         </div>
       )}

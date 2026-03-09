@@ -1,9 +1,7 @@
 import './models/init'
 
-import { useEffect } from 'react'
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
-import { Helmet } from 'react-helmet-async'
 import { useUnit } from 'effector-react'
 
 import { routes } from '@core/router'
@@ -14,11 +12,10 @@ import { MeowCard, MeowCardSkeleton } from '@modules/MeowCard'
 import {
   $meow,
   $comments,
-  threadOpened,
   meowLikeToggled,
   replyClicked,
   commentLikeToggled,
-  fetchMeowFx
+  meowQuery
 } from './models'
 import { CommentCard } from './CommentCard'
 import { CommentForm } from './CommentForm'
@@ -28,27 +25,16 @@ import s from './MeowThread.module.scss'
 export const route = routes.meowThread
 
 export const MeowThread = () => {
-  const [meow, commentsList, pending] = useUnit([$meow, $comments, fetchMeowFx.pending])
-  const [onOpen, onLike, onReply, onCommentLike] = useUnit([
-    threadOpened,
+  const [meow, commentsList, pending] = useUnit([$meow, $comments, meowQuery.$pending])
+  const [onLike, onReply, onCommentLike] = useUnit([
     meowLikeToggled,
     replyClicked,
     commentLikeToggled
   ])
 
-  const params = useUnit(routes.meowThread.$params)
-
-  useEffect(() => {
-    if (params.meowId) {
-      onOpen(params.meowId)
-    }
-  }, [params.meowId])
-
   return (
     <AuthLayout title={<Trans>Обсуждение</Trans>} contentClassName={s.content} backButton>
-      <Helmet>
-        <title>{t`Обсуждение / Мяутер`}</title>
-      </Helmet>
+      <title>{t`Обсуждение / Мяутер`}</title>
 
       <div className={s.threadScroll}>
         {!meow && pending && <MeowCardSkeleton />}

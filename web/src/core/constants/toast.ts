@@ -6,8 +6,7 @@ export const toastOptions: ToasterProps = {
     style: {
       fontFamily: 'var(--font-family)',
       fontSize: '14px',
-      borderRadius: '18px',
-      cursor: 'pointer'
+      borderRadius: '18px'
     },
     classNames: {
       error: 'toast-error',

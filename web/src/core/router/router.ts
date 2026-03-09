@@ -40,6 +40,6 @@ export const routesMap: RouteConfig[] = [
 
 /* Router */
 
-export const controls = createRouterControls()
+export const controls: ReturnType<typeof createRouterControls> = createRouterControls()
 
 export const router = createHistoryRouter({ routes: routesMap, controls })

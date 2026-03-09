@@ -1,2 +1,1 @@
-import './fx'
 import './notifications'

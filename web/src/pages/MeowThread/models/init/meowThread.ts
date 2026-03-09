@@ -1,5 +1,7 @@
 import { sample } from 'effector'
+import { concurrency } from '@farfetched/core'
 
+import { routes } from '@core/router'
 import { meowLikeChanged } from '@logic/feed'
 
 import {
@@ -16,12 +18,19 @@ import {
   commentSubmitted,
   replyClicked,
   commentLikeToggled,
-  fetchMeowFx,
-  fetchCommentsFx,
-  toggleLikeFx,
-  createCommentFx,
-  toggleCommentLikeFx
+  meowQuery,
+  commentsQuery,
+  toggleLikeMutation,
+  createCommentMutation,
+  toggleCommentLikeMutation
 } from '../models'
+
+// проброс из роута в событие модели (opened + updated для навигации между тредами)
+sample({
+  clock: [routes.meowThread.opened, routes.meowThread.updated],
+  fn: ({ params }) => params.meowId,
+  target: threadOpened
+})
 
 // сброс при открытии
 sample({
@@ -57,45 +66,46 @@ sample({
 // загрузка
 sample({
   clock: threadOpened,
-  target: fetchMeowFx
+  target: meowQuery.start
 })
 
 sample({
   clock: threadOpened,
   fn: (meowId) => ({ meowId }),
-  target: fetchCommentsFx
+  target: commentsQuery.start
 })
 
 sample({
-  clock: fetchMeowFx.doneData,
+  clock: meowQuery.finished.success,
+  fn: ({ result }) => result,
   target: $meow
 })
 
 // комментарии
 sample({
-  clock: fetchCommentsFx.doneData,
+  clock: commentsQuery.finished.success,
   source: {
     comments: $comments,
     cursor: $cursor
   },
-  fn: ({ comments, cursor }, response) => {
+  fn: ({ comments, cursor }, { result }) => {
     if (!cursor) {
-      return response.data
+      return result.data
     }
-    return [...comments, ...response.data]
+    return [...comments, ...result.data]
   },
   target: $comments
 })
 
 sample({
-  clock: fetchCommentsFx.doneData,
-  fn: (response) => response.cursor,
+  clock: commentsQuery.finished.success,
+  fn: ({ result }) => result.cursor,
   target: $cursor
 })
 
 sample({
-  clock: fetchCommentsFx.doneData,
-  fn: (response) => response.hasMore,
+  clock: commentsQuery.finished.success,
+  fn: ({ result }) => result.hasMore,
   target: $hasMore
 })
 
@@ -111,7 +121,7 @@ sample({
     meowId: meow!.id,
     cursor: cursor!
   }),
-  target: fetchCommentsFx
+  target: commentsQuery.start
 })
 
 // ввод текста комментария
@@ -154,27 +164,27 @@ sample({
     meowId: meow!.id,
     content: text.trim()
   }),
-  target: createCommentFx
+  target: createCommentMutation.start
 })
 
 // сброс текста после отправки
 sample({
-  clock: createCommentFx.done,
+  clock: createCommentMutation.finished.success,
   fn: () => '',
   target: $commentText
 })
 
 // добавляем новый комментарий в конец списка
 sample({
-  clock: createCommentFx.doneData,
+  clock: createCommentMutation.finished.success,
   source: $comments,
-  fn: (comments, comment) => [...comments, comment],
+  fn: (comments, { result }) => [...comments, result],
   target: $comments
 })
 
 // обновляем счетчик комментов у мяута
 sample({
-  clock: createCommentFx.doneData,
+  clock: createCommentMutation.finished.success,
   source: $meow,
   filter: (meow) => meow !== null,
   fn: (meow) => ({
@@ -193,7 +203,7 @@ sample({
     meowId: meow!.id,
     isLiked: meow!.isLiked
   }),
-  target: toggleLikeFx
+  target: toggleLikeMutation.start
 })
 
 // стреляем глобальный лайк (оптимистичный апдейт через meowLikeChanged listener ниже)
@@ -234,7 +244,7 @@ sample({
     }
     return { commentId, isLiked: comment.isLiked }
   },
-  target: toggleCommentLikeFx
+  target: toggleCommentLikeMutation.start
 })
 
 // оптимистичный апдейт лайка комментария
@@ -254,3 +264,6 @@ sample({
     }),
   target: $comments
 })
+
+concurrency(meowQuery, { strategy: 'TAKE_LATEST' })
+concurrency(commentsQuery, { strategy: 'TAKE_LATEST' })

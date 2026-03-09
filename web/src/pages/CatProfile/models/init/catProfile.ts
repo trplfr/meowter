@@ -1,5 +1,7 @@
 import { sample } from 'effector'
+import { concurrency } from '@farfetched/core'
 
+import { routes } from '@core/router'
 import { meowCreated, meowLikeChanged, followChanged } from '@logic/feed'
 import { $session } from '@logic/session'
 
@@ -12,11 +14,30 @@ import {
   loadMoreMeows,
   followToggled,
   meowLikeToggled,
-  fetchProfileFx,
-  fetchMeowsFx,
-  toggleFollowFx,
-  toggleMeowLikeFx
+  profileQuery,
+  catMeowsQuery,
+  toggleFollowMutation,
+  toggleLikeMutation
 } from '../models'
+
+// проброс из роута в событие модели (с обработкой /me и /cat/me)
+sample({
+  clock: [routes.catProfile.opened, routes.catProfile.updated],
+  source: $session,
+  filter: (session, { params }) => {
+    const username = params.username && params.username !== 'me'
+      ? params.username
+      : session?.username
+    return Boolean(username)
+  },
+  fn: (session, { params }) => {
+    if (!params.username || params.username === 'me') {
+      return session!.username
+    }
+    return params.username
+  },
+  target: profilePageOpened
+})
 
 // сброс при открытии нового профиля
 sample({
@@ -51,47 +72,48 @@ sample({
   source: $session,
   filter: (session, username) => !session || session.username !== username,
   fn: (_, username) => username,
-  target: fetchProfileFx
+  target: profileQuery.start
 })
 
 // мяуты всегда запрашиваем
 sample({
   clock: profilePageOpened,
   fn: (username) => ({ username }),
-  target: fetchMeowsFx
+  target: catMeowsQuery.start
 })
 
 // профиль загружен (чужой)
 sample({
-  clock: fetchProfileFx.doneData,
+  clock: profileQuery.finished.success,
+  fn: ({ result }) => result,
   target: $profile
 })
 
 // мяуты загружены
 sample({
-  clock: fetchMeowsFx.doneData,
+  clock: catMeowsQuery.finished.success,
   source: {
     meows: $meows,
     cursor: $cursor
   },
-  fn: ({ meows, cursor }, response) => {
+  fn: ({ meows, cursor }, { result }) => {
     if (!cursor) {
-      return response.data
+      return result.data
     }
-    return [...meows, ...response.data]
+    return [...meows, ...result.data]
   },
   target: $meows
 })
 
 sample({
-  clock: fetchMeowsFx.doneData,
-  fn: (response) => response.cursor,
+  clock: catMeowsQuery.finished.success,
+  fn: ({ result }) => result.cursor,
   target: $cursor
 })
 
 sample({
-  clock: fetchMeowsFx.doneData,
-  fn: (response) => response.hasMore,
+  clock: catMeowsQuery.finished.success,
+  fn: ({ result }) => result.hasMore,
   target: $hasMore
 })
 
@@ -107,7 +129,7 @@ sample({
     username: profile!.username,
     cursor: cursor!
   }),
-  target: fetchMeowsFx
+  target: catMeowsQuery.start
 })
 
 // новый мяут добавляем в начало, если смотрим свой профиль
@@ -131,7 +153,7 @@ sample({
     username: profile!.username,
     isFollowing: profile!.isFollowing
   }),
-  target: toggleFollowFx
+  target: toggleFollowMutation.start
 })
 
 // оптимистичный апдейт follow
@@ -172,28 +194,10 @@ sample({
     }
     return { meowId, isLiked: meow.isLiked }
   },
-  target: toggleMeowLikeFx
+  target: toggleLikeMutation.start
 })
 
-// оптимистичный апдейт лайка
-sample({
-  clock: meowLikeToggled,
-  source: $meows,
-  fn: (meows, meowId) =>
-    meows.map((m) => {
-      if (m.id !== meowId) {
-        return m
-      }
-      return {
-        ...m,
-        isLiked: !m.isLiked,
-        likesCount: m.isLiked ? m.likesCount - 1 : m.likesCount + 1
-      }
-    }),
-  target: $meows
-})
-
-// стреляем глобальный лайк
+// стреляем глобальный лайк (ДО оптимистичного апдейта, иначе $meows уже обновлен)
 sample({
   clock: meowLikeToggled,
   source: $meows,
@@ -209,6 +213,24 @@ sample({
     }
   },
   target: meowLikeChanged
+})
+
+// оптимистичный апдейт лайка (ПОСЛЕ meowLikeChanged)
+sample({
+  clock: meowLikeToggled,
+  source: $meows,
+  fn: (meows, meowId) =>
+    meows.map((m) => {
+      if (m.id !== meowId) {
+        return m
+      }
+      return {
+        ...m,
+        isLiked: !m.isLiked,
+        likesCount: m.isLiked ? m.likesCount - 1 : m.likesCount + 1
+      }
+    }),
+  target: $meows
 })
 
 // слушаем лайки из других страниц (пропускаем если уже актуально)
@@ -228,3 +250,6 @@ sample({
     }),
   target: $meows
 })
+
+concurrency(catMeowsQuery, { strategy: 'TAKE_LATEST' })
+concurrency(profileQuery, { strategy: 'TAKE_LATEST' })

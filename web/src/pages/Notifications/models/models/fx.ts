@@ -1,8 +1,13 @@
-import { createEffect } from 'effector'
+import { createQuery, createMutation } from '@farfetched/core'
 
-import { type NotificationsResponse } from '@logic/api/notifications'
+import { getNotifications, markAllRead } from '@logic/api/notifications'
 
 import { type FetchNotificationsParams } from '../types'
 
-export const fetchNotificationsFx = createEffect<FetchNotificationsParams, NotificationsResponse>()
-export const markAllReadFx = createEffect<void, { ok: boolean }>()
+export const notificationsQuery = createQuery({
+  handler: (params: FetchNotificationsParams) => getNotifications(params.cursor)
+})
+
+export const markAllReadMutation = createMutation({
+  handler: () => markAllRead()
+})

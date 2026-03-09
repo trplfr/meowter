@@ -14,7 +14,7 @@ import {
   imageSelected,
   imageRemoved,
   submitted,
-  createMeowFx
+  createMeowMutation
 } from './models'
 
 import { highlightTildes } from '@lib/meow'
@@ -25,7 +25,7 @@ export const CreateMeowForm = () => {
   const fileRef = useRef<HTMLInputElement>(null)
   const backdropRef = useRef<HTMLDivElement>(null)
 
-  const [text, hasTildes, preview, pending] = useUnit([$text, $hasTildes, $imagePreview, createMeowFx.pending])
+  const [text, hasTildes, preview, pending] = useUnit([$text, $hasTildes, $imagePreview, createMeowMutation.$pending])
   const [onTextChange, onImageSelect, onImageRemove, onSubmit] = useUnit([
     textChanged,
     imageSelected,

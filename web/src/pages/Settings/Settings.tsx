@@ -1,9 +1,8 @@
 import './models/init'
 
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
-import { Helmet } from 'react-helmet-async'
 import { useUnit } from 'effector-react'
 import { Download, Check, ChevronDown } from 'lucide-react'
 
@@ -20,7 +19,6 @@ import {
   $isDirty,
   $isPasswordDirty,
   $avatarPreview,
-  settingsPageOpened,
   fieldChanged,
   passwordFieldChanged,
   avatarSelected,
@@ -38,18 +36,14 @@ export const Settings = () => {
   const [session, form, passwordForm, isDirty, isPasswordDirty, avatarPreview] = useUnit([
     $session, $form, $passwordForm, $isDirty, $isPasswordDirty, $avatarPreview
   ])
-  const [onOpen, onFieldChange, onPasswordChange, onAvatarSelect, onSubmit] = useUnit([
-    settingsPageOpened, fieldChanged, passwordFieldChanged, avatarSelected, submitted
+  const [onFieldChange, onPasswordChange, onAvatarSelect, onSubmit] = useUnit([
+    fieldChanged, passwordFieldChanged, avatarSelected, submitted
   ])
   const [profilePending, passwordPending, avatarPending] = useUnit([
     updateProfileFx.pending, changePasswordFx.pending, uploadAvatarFx.pending
   ])
 
   const fileRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    onOpen()
-  }, [])
 
   const pending = profilePending || passwordPending || avatarPending
   const canSubmit = (isDirty || isPasswordDirty) && !pending
@@ -76,9 +70,7 @@ export const Settings = () => {
 
   return (
     <AuthLayout title={<Trans>Настройки</Trans>} contentClassName={s.content} headerAction={headerAction}>
-      <Helmet>
-        <title>{t`Настройки / Мяутер`}</title>
-      </Helmet>
+      <title>{t`Настройки / Мяутер`}</title>
 
       {/* Avatar */}
       <div className={s.avatarSection}>

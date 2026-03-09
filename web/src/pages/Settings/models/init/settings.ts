@@ -1,5 +1,6 @@
 import { sample } from 'effector'
 
+import { routes } from '@core/router'
 import { $session, sessionReceived } from '@logic/session'
 
 import {
@@ -12,7 +13,6 @@ import {
   $avatarFile,
   $isDirty,
   $isPasswordDirty,
-  settingsPageOpened,
   fieldChanged,
   passwordFieldChanged,
   avatarSelected,
@@ -24,7 +24,7 @@ import {
 
 // заполняем форму из сессии при открытии
 sample({
-  clock: settingsPageOpened,
+  clock: routes.settings.opened,
   source: $session,
   filter: (session) => session !== null,
   fn: (session): SettingsForm => ({
@@ -40,7 +40,7 @@ sample({
 
 // сброс пароля и аватара при открытии
 sample({
-  clock: settingsPageOpened,
+  clock: routes.settings.opened,
   fn: (): PasswordForm => ({
     oldPassword: '',
     newPassword: '',
@@ -50,13 +50,13 @@ sample({
 })
 
 sample({
-  clock: settingsPageOpened,
+  clock: routes.settings.opened,
   fn: () => null,
   target: [$avatarPreview, $avatarFile]
 })
 
 sample({
-  clock: settingsPageOpened,
+  clock: routes.settings.opened,
   fn: () => false,
   target: [$isDirty, $isPasswordDirty]
 })

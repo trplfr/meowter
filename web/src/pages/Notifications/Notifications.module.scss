@@ -4,6 +4,11 @@
 }
 
 .list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.skeletons {
   display: flex;
   flex-direction: column;
   gap: $spacing-xs;
@@ -15,10 +20,6 @@
   text-align: center;
   font-size: $font-size-base;
   color: $color-text-secondary;
-}
-
-.sentinel {
-  height: 1px;
 }
 
 /* Notification card */

@@ -1,4 +1,3 @@
-import { type CreateMeowRequest, type MeowResponse } from '@logic/api/meows'
+import { type CreateMeowRequest } from '@logic/api/meows'
 
 export type { CreateMeowRequest }
-export type { MeowResponse }

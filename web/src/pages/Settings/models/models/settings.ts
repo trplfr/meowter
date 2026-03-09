@@ -41,7 +41,6 @@ export const $isPasswordDirty = createStore(false)
 
 /* Events */
 
-export const settingsPageOpened = createEvent()
 export const fieldChanged = createEvent<SettingsFieldChanged>()
 export const passwordFieldChanged = createEvent<PasswordFieldChanged>()
 export const avatarSelected = createEvent<File>()

@@ -1,6 +1,5 @@
 import { t } from '@lingui/core/macro'
 import { ArrowLeft } from 'lucide-react'
-import { Helmet } from 'react-helmet-async'
 
 import { routes } from '@core/router'
 import { Layout } from '@ui/index'
@@ -13,9 +12,7 @@ export const route = routes.recovery
 export const Recovery = () => {
   return (
     <Layout>
-      <Helmet>
-        <title>{t`Восстановление / Мяутер`}</title>
-      </Helmet>
+      <title>{t`Восстановление / Мяутер`}</title>
 
       <header className={s.header}>
         <button className={s.back} onClick={() => history.back()}>

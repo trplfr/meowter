@@ -11,7 +11,7 @@ import {
   imageRemoved,
   submitted,
   formReset,
-  createMeowFx
+  createMeowMutation
 } from '../models'
 
 sample({
@@ -43,23 +43,24 @@ sample({
     image: $image
   },
   filter: ({ content }) => content.trim().length > 0,
-  target: createMeowFx
+  target: createMeowMutation.start
 })
 
 sample({
-  clock: [createMeowFx.done, formReset],
+  clock: [createMeowMutation.finished.success, formReset],
   fn: () => '',
   target: $text
 })
 
 sample({
-  clock: [createMeowFx.done, formReset],
+  clock: [createMeowMutation.finished.success, formReset],
   fn: () => null,
   target: [$image, $imagePreview]
 })
 
 // добавляем новый мяут в ленту
 sample({
-  clock: createMeowFx.doneData,
+  clock: createMeowMutation.finished.success,
+  fn: ({ result }) => result,
   target: meowCreated
 })

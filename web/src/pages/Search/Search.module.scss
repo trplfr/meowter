@@ -99,6 +99,11 @@
   gap: $spacing-xs;
 }
 
+.list {
+  flex: 1;
+  overflow-y: auto;
+}
+
 .empty {
   padding: $spacing-xl $spacing-md;
   text-align: center;
@@ -106,6 +111,3 @@
   color: $color-text-secondary;
 }
 
-.sentinel {
-  height: 1px;
-}

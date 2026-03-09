@@ -1,28 +1,27 @@
 import './models/init'
 
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
-import { Helmet } from 'react-helmet-async'
 import { useUnit } from 'effector-react'
-import { useInView } from 'react-intersection-observer'
 
 import { routes } from '@core/router'
-import { $session } from '@logic/session'
 
 import { AuthLayout } from '@modules/AuthLayout'
 import { MeowCard, MeowCardSkeleton, Avatar } from '@modules/MeowCard'
 import { Skeleton } from '@ui/Skeleton'
+import { VirtualList } from '@ui/VirtualList'
+
+import { type Meow } from '@shared/types'
 
 import {
   $profile,
   $meows,
   $hasMore,
-  profilePageOpened,
   loadMoreMeows,
   followToggled,
   meowLikeToggled,
-  fetchMeowsFx
+  catMeowsQuery
 } from './models'
 
 import s from './CatProfile.module.scss'
@@ -30,38 +29,22 @@ import s from './CatProfile.module.scss'
 export const route = routes.catProfile
 
 export const CatProfile = () => {
-  const [profile, meows, hasMore, pending, session] = useUnit([
-    $profile, $meows, $hasMore, fetchMeowsFx.pending, $session
+  const [profile, meows, hasMore, pending] = useUnit([
+    $profile, $meows, $hasMore, catMeowsQuery.$pending
   ])
-  const [onOpen, onLoadMore, onFollow, onLike] = useUnit([
-    profilePageOpened, loadMoreMeows, followToggled, meowLikeToggled
+  const [onLoadMore, onFollow, onLike] = useUnit([
+    loadMoreMeows, followToggled, meowLikeToggled
   ])
-
-  const params = useUnit(routes.catProfile.$params)
-  const { ref, inView } = useInView({ threshold: 0 })
-
-  useEffect(() => {
-    // /me или /cat/me -> подставляем свой username
-    const username = (!params.username || params.username === 'me') && session
-      ? session.username
-      : params.username
-
-    if (username) {
-      onOpen(username)
-    }
-  }, [params.username])
-
-  useEffect(() => {
-    if (inView && hasMore && !pending) {
-      onLoadMore()
-    }
-  }, [inView, hasMore, pending])
 
   const handleCopyContacts = useCallback(() => {
     if (profile?.contacts) {
       navigator.clipboard.writeText(profile.contacts)
     }
   }, [profile?.contacts])
+
+  const renderMeow = useCallback((meow: Meow) => (
+    <MeowCard meow={meow} onLike={onLike} />
+  ), [onLike])
 
   const title = profile ? `@${profile.username}` : ''
   const fullName = profile?.firstName && profile?.lastName
@@ -70,9 +53,7 @@ export const CatProfile = () => {
 
   return (
     <AuthLayout title={title} contentClassName={s.content}>
-      <Helmet>
-        <title>{profile ? t`${profile.displayName} / Мяутер` : t`Профиль / Мяутер`}</title>
-      </Helmet>
+      <title>{profile ? t`${profile.displayName} / Мяутер` : t`Профиль / Мяутер`}</title>
 
       {!profile && (
         <div className={s.header}>
@@ -131,21 +112,23 @@ export const CatProfile = () => {
             )}
           </div>
 
-          <div className={s.meows}>
-            {meows.map((meow) => (
-              <MeowCard key={meow.id} meow={meow} onLike={onLike} />
-            ))}
+          {meows.length === 0 && !pending && (
+            <div className={s.empty}>
+              <Trans>Пока нет мяутов</Trans>
+            </div>
+          )}
 
-            {meows.length === 0 && !pending && (
-              <div className={s.empty}>
-                <Trans>Пока нет мяутов</Trans>
-              </div>
-            )}
-
-            {hasMore && (
-              <div ref={ref} className={s.sentinel} />
-            )}
-          </div>
+          {meows.length > 0 && (
+            <VirtualList
+              items={meows}
+              estimateSize={120}
+              hasMore={hasMore}
+              pending={pending}
+              onLoadMore={onLoadMore}
+              renderItem={renderMeow}
+              className={s.virtualList}
+            />
+          )}
         </>
       )}
 

@@ -132,6 +132,14 @@
   }
 }
 
+/* Virtual list */
+
+.virtualList {
+  flex: 1;
+  overflow-y: auto;
+  background: $color-bg-secondary;
+}
+
 /* Meows list */
 
 .meows {

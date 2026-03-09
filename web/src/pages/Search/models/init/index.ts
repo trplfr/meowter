@@ -1,2 +1,1 @@
 import './search'
-import './fx'

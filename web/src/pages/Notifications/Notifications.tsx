@@ -1,23 +1,21 @@
 import './models/init'
 
-import { useEffect } from 'react'
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
-import { Helmet } from 'react-helmet-async'
 import { useUnit } from 'effector-react'
-import { useInView } from 'react-intersection-observer'
 
 import { routes } from '@core/router'
 
 import { AuthLayout } from '@modules/AuthLayout'
 import { MeowCardSkeleton } from '@modules/MeowCard'
 
+import { VirtualList } from '@ui/VirtualList'
+
 import {
   $notifications,
   $hasMore,
-  pageOpened,
   loadMore,
-  fetchNotificationsFx
+  notificationsQuery
 } from './models'
 import { NotificationCard } from './NotificationCard'
 
@@ -26,48 +24,40 @@ import s from './Notifications.module.scss'
 export const route = routes.notifications
 
 export const Notifications = () => {
-  const [notificationsList, hasMore, pending] = useUnit([$notifications, $hasMore, fetchNotificationsFx.pending])
-  const [onOpen, onLoadMore] = useUnit([pageOpened, loadMore])
-
-  const { ref: sentinelRef, inView } = useInView()
-
-  useEffect(() => {
-    onOpen()
-  }, [])
-
-  useEffect(() => {
-    if (inView && hasMore && !pending) {
-      onLoadMore()
-    }
-  }, [inView, hasMore, pending])
+  const [notificationsList, hasMore, pending] = useUnit([$notifications, $hasMore, notificationsQuery.$pending])
+  const onLoadMore = useUnit(loadMore)
 
   return (
     <AuthLayout title={<Trans>Уведомления</Trans>} contentClassName={s.content}>
-      <Helmet>
-        <title>{t`Уведомления / Мяутер`}</title>
-      </Helmet>
+      <title>{t`Уведомления / Мяутер`}</title>
 
-      <div className={s.list}>
-        {pending && notificationsList.length === 0 && (
-          <>
-            <MeowCardSkeleton />
-            <MeowCardSkeleton />
-            <MeowCardSkeleton />
-          </>
-        )}
+      {pending && notificationsList.length === 0 && (
+        <div className={s.skeletons}>
+          <MeowCardSkeleton />
+          <MeowCardSkeleton />
+          <MeowCardSkeleton />
+        </div>
+      )}
 
-        {notificationsList.map((notification) => (
-          <NotificationCard key={notification.id} notification={notification} />
-        ))}
+      {notificationsList.length > 0 && (
+        <VirtualList
+          items={notificationsList}
+          estimateSize={80}
+          hasMore={hasMore}
+          pending={pending}
+          onLoadMore={onLoadMore}
+          className={s.list}
+          renderItem={(notification) => (
+            <NotificationCard key={notification.id} notification={notification} />
+          )}
+        />
+      )}
 
-        {notificationsList.length === 0 && !pending && (
-          <div className={s.empty}>
-            <Trans>Пока нет уведомлений</Trans>
-          </div>
-        )}
-      </div>
-
-      {hasMore && <div ref={sentinelRef} className={s.sentinel} />}
+      {notificationsList.length === 0 && !pending && (
+        <div className={s.empty}>
+          <Trans>Пока нет уведомлений</Trans>
+        </div>
+      )}
     </AuthLayout>
   )
 }

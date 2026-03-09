@@ -23,14 +23,14 @@ export class NotificationsController {
     return this.notifications.getList(user.sub, cursor, limit ? parseInt(limit, 10) : 20)
   }
 
-  @Get('unread-count')
+  @Get('unread')
   @ApiOperation({ summary: 'Количество непрочитанных' })
   @ApiResponse({ status: 200, description: 'Счетчик' })
   async getUnreadCount(@CurrentUser() user: JwtPayload) {
     return this.notifications.getUnreadCount(user.sub)
   }
 
-  @Post('read-all')
+  @Post('read')
   @ApiOperation({ summary: 'Пометить все как прочитанные' })
   @ApiResponse({ status: 200, description: 'Отмечено' })
   async markAllRead(@CurrentUser() user: JwtPayload) {

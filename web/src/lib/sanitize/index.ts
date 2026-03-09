@@ -1,3 +1,1 @@
-/* Lib re-exports */
-
 export * from './sanitize'

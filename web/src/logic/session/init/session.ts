@@ -16,10 +16,12 @@ import {
   logoutFx
 } from '../models'
 
-/* App start -> check session */
+/* App start -> check session (пропускаем если уже есть от SSR) */
 
 sample({
   clock: appStarted,
+  source: $session,
+  filter: (session) => session === null,
   target: fetchSessionFx
 })
 

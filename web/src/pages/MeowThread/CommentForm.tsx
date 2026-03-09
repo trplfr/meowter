@@ -3,13 +3,13 @@ import { t } from '@lingui/core/macro'
 import { Send } from 'lucide-react'
 import { useUnit } from 'effector-react'
 
-import { $commentText, $replyTrigger, commentTextChanged, commentSubmitted, createCommentFx } from './models'
+import { $commentText, $replyTrigger, commentTextChanged, commentSubmitted, createCommentMutation } from './models'
 
 import s from './MeowThread.module.scss'
 
 export const CommentForm = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const [text, replyTrigger, pending] = useUnit([$commentText, $replyTrigger, createCommentFx.pending])
+  const [text, replyTrigger, pending] = useUnit([$commentText, $replyTrigger, createCommentMutation.$pending])
   const [onTextChange, onSubmit] = useUnit([commentTextChanged, commentSubmitted])
 
   // автофокус при нажатии "ответить"

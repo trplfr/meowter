@@ -1,0 +1,16 @@
+.container {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.content {
+  width: 100%;
+  position: relative;
+}
+
+.items {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
