@@ -1,7 +1,7 @@
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
 
-import { Layout } from '@ui/index'
+import { AuthLayout } from '@ui/index'
 
 import errorCat from '@assets/images/error.png'
 
@@ -9,7 +9,7 @@ import s from './Error.module.scss'
 
 export const Error = () => {
   return (
-    <Layout>
+    <AuthLayout>
       <title>{t`Ошибка / Мяутер`}</title>
 
       <div className={s.header} />
@@ -29,6 +29,6 @@ export const Error = () => {
           </button>
         </div>
       </div>
-    </Layout>
+    </AuthLayout>
   )
 }

@@ -3,7 +3,7 @@ import { Trans } from '@lingui/react/macro'
 import { Link } from 'atomic-router-react'
 
 import { routes } from '@core/router'
-import { Layout, Button } from '@ui/index'
+import { AuthLayout, Button } from '@ui/index'
 
 import helloCat from '@assets/images/hello.png'
 
@@ -13,7 +13,7 @@ export const route = routes.welcome
 
 export const Welcome = () => {
   return (
-    <Layout>
+    <AuthLayout>
       <title>{t`Мяутер`}</title>
 
       <div className={s.header} />
@@ -44,6 +44,6 @@ export const Welcome = () => {
           </Link>
         </div>
       </div>
-    </Layout>
+    </AuthLayout>
   )
 }

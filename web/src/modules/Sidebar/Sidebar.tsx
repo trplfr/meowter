@@ -1,80 +1,85 @@
-import { useRef } from 'react'
-import { Trans } from '@lingui/react/macro'
 import { Link } from 'atomic-router-react'
 import { useUnit } from 'effector-react'
 import clsx from 'clsx'
+import {
+  House,
+  Search,
+  Plus,
+  Heart,
+  User,
+  LogOut,
+  type LucideIcon
+} from 'lucide-react'
+
+import { type RouteInstance } from 'atomic-router'
 
 import { routes } from '@core/router'
 import { $session, logout } from '@logic/session'
-
-import logoutCat from '@assets/images/logout.png'
+import { $unreadCount } from '@logic/notifications'
 
 import s from './Sidebar.module.scss'
 
-interface SidebarProps {
-  open: boolean
-  onClose: () => void
+interface SidebarNavItem {
+  route: RouteInstance<any>
+  params?: Record<string, string>
+  icon: LucideIcon
+  active: boolean
+  create?: boolean
+  badge?: number
 }
 
-export const Sidebar = ({ open, onClose }: SidebarProps) => {
-  const [session, onLogout] = useUnit([$session, logout])
-  const hasBeenOpened = useRef(false)
+export const Sidebar = () => {
+  const [session, unreadCount, onLogout] = useUnit([$session, $unreadCount, logout])
 
-  if (open) {
-    hasBeenOpened.current = true
-  }
+  const isActive = useUnit({
+    feed: routes.feed.$isOpened,
+    search: routes.search.$isOpened,
+    createMeow: routes.createMeow.$isOpened,
+    notifications: routes.notifications.$isOpened,
+    catProfile: routes.catProfile.$isOpened
+  })
 
-  const handleLogout = () => {
-    onClose()
-    onLogout()
-  }
+  const navItems: SidebarNavItem[] = [
+    { route: routes.feed, icon: House, active: isActive.feed },
+    { route: routes.search, icon: Search, active: isActive.search },
+    { route: routes.createMeow, icon: Plus, active: isActive.createMeow, create: true },
+    { route: routes.notifications, icon: Heart, active: isActive.notifications, badge: unreadCount },
+    {
+      route: routes.catProfile,
+      params: { username: session?.username || 'me' },
+      icon: User,
+      active: isActive.catProfile
+    }
+  ]
 
   return (
-    <>
-      <div className={clsx(s.overlay, open && s.visible)} role="button" aria-label="Закрыть меню" onClick={onClose} />
-      <aside className={clsx(s.sidebar, hasBeenOpened.current && s.animated, open && s.open)}>
-        <div className={s.profile}>
-          {session?.avatarUrl ? (
-            <img className={s.avatar} src={session.avatarUrl} alt="" />
-          ) : (
-            <div className={s.avatarPlaceholder} />
-          )}
-
-          <p className={s.displayName}>{session?.displayName}</p>
-          <p className={s.username}>@{session?.username}</p>
-        </div>
-
-        <div className={s.separator} />
-
-        <nav className={s.nav} aria-label="Боковое меню">
-          <Link to={routes.feed} className={s.navItem} onClick={onClose}>
-            <Trans>Лента</Trans>
+    <aside className={s.sidebar}>
+      <nav className={s.nav} aria-label="Боковое меню">
+        {navItems.map((item, i) => (
+          <Link
+            key={i}
+            to={item.route}
+            params={item.params ?? {}}
+            className={clsx(
+              s.navItem,
+              item.active && s.active,
+              item.create && s.create
+            )}
+            aria-current={item.active ? 'page' : undefined}
+          >
+            <item.icon size={24} />
+            {item.badge !== undefined && item.badge > 0 && (
+              <span className={s.badge}>
+                {item.badge > 99 ? '99+' : item.badge}
+              </span>
+            )}
           </Link>
-          {session?.username && (
-            <Link
-              to={routes.catProfile}
-              params={{ username: session.username }}
-              className={s.navItem}
-              onClick={onClose}
-            >
-              <Trans>Профиль</Trans>
-            </Link>
-          )}
-          <Link to={routes.search} className={s.navItem} onClick={onClose}>
-            <Trans>Поиск</Trans>
-          </Link>
-          <Link to={routes.settings} className={s.navItem} onClick={onClose}>
-            <Trans>Настройки</Trans>
-          </Link>
-        </nav>
+        ))}
+      </nav>
 
-        <div className={s.footer}>
-          <img className={s.logoutCat} src={logoutCat} alt="" />
-          <button type="button" className={s.logoutButton} onClick={handleLogout}>
-            <Trans>Выйти из аккаунта</Trans>
-          </button>
-        </div>
-      </aside>
-    </>
+      <button type="button" className={s.logoutButton} onClick={() => onLogout()} aria-label="Выйти">
+        <LogOut size={24} />
+      </button>
+    </aside>
   )
 }

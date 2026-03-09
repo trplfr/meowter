@@ -11,6 +11,8 @@ interface NavigatorItem {
   params?: Record<string, string>
   icon: LucideIcon
   active: boolean
+  create?: boolean
+  badge?: number
 }
 
 interface NavigatorProps {
@@ -25,10 +27,19 @@ export const Navigator = ({ items }: NavigatorProps) => {
           key={i}
           to={item.route}
           params={item.params ?? {}}
-          className={clsx(s.item, item.active && s.active)}
+          className={clsx(
+            s.item,
+            item.active && s.active,
+            item.create && s.create
+          )}
           aria-current={item.active ? 'page' : undefined}
         >
           <item.icon size={24} />
+          {item.badge !== undefined && item.badge > 0 && (
+            <span className={s.badge}>
+              {item.badge > 99 ? '99+' : item.badge}
+            </span>
+          )}
         </Link>
       ))}
     </nav>

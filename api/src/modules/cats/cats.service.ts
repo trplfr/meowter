@@ -28,6 +28,7 @@ export class CatsService {
         contacts: cats.contacts,
         sex: cats.sex,
         avatarUrl: cats.avatarUrl,
+        verified: cats.verified,
         createdAt: cats.createdAt
       })
       .from(cats)
@@ -100,6 +101,7 @@ export class CatsService {
           contacts: cats.contacts,
           sex: cats.sex,
           avatarUrl: cats.avatarUrl,
+          verified: cats.verified,
           createdAt: cats.createdAt
         }
       })

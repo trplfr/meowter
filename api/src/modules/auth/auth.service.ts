@@ -61,7 +61,8 @@ export class AuthService {
         username: cats.username,
         email: cats.email,
         displayName: cats.displayName,
-        avatarUrl: cats.avatarUrl
+        avatarUrl: cats.avatarUrl,
+        verified: cats.verified
       })
 
     return this.issueTokens(user)
@@ -89,7 +90,8 @@ export class AuthService {
       username: user.username,
       email: user.email,
       displayName: user.displayName,
-      avatarUrl: user.avatarUrl
+      avatarUrl: user.avatarUrl,
+      verified: user.verified
     })
   }
 
@@ -108,7 +110,8 @@ export class AuthService {
         username: cats.username,
         email: cats.email,
         displayName: cats.displayName,
-        avatarUrl: cats.avatarUrl
+        avatarUrl: cats.avatarUrl,
+        verified: cats.verified
       })
       .from(cats)
       .where(eq(cats.id, userId))
@@ -140,6 +143,7 @@ export class AuthService {
         contacts: cats.contacts,
         sex: cats.sex,
         avatarUrl: cats.avatarUrl,
+        verified: cats.verified,
         createdAt: cats.createdAt
       })
       .from(cats)
@@ -198,6 +202,7 @@ export class AuthService {
         contacts: cats.contacts,
         sex: cats.sex,
         avatarUrl: cats.avatarUrl,
+        verified: cats.verified,
         createdAt: cats.createdAt
       })
 
@@ -264,7 +269,7 @@ export class AuthService {
     return user
   }
 
-  private async issueTokens(user: { id: string; username: string; email: string; displayName: string; avatarUrl: string | null }) {
+  private async issueTokens(user: { id: string; username: string; email: string; displayName: string; avatarUrl: string | null; verified: boolean }) {
     const payload: JwtPayload = { sub: user.id, username: user.username }
 
     const accessToken = this.jwt.sign(payload, {

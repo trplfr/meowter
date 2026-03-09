@@ -75,6 +75,7 @@ export class MeowsService {
           contacts: cats.contacts,
           sex: cats.sex,
           avatarUrl: cats.avatarUrl,
+          verified: cats.verified,
           createdAt: cats.createdAt
         }
       })
@@ -203,6 +204,7 @@ export class MeowsService {
           contacts: cats.contacts,
           sex: cats.sex,
           avatarUrl: cats.avatarUrl,
+          verified: cats.verified,
           createdAt: cats.createdAt
         }
       })
@@ -340,6 +342,7 @@ export class MeowsService {
           contacts: cats.contacts,
           sex: cats.sex,
           avatarUrl: cats.avatarUrl,
+          verified: cats.verified,
           createdAt: cats.createdAt
         }
       })
@@ -426,6 +429,7 @@ export class MeowsService {
         bio: cats.bio,
         contacts: cats.contacts,
         avatarUrl: cats.avatarUrl,
+        verified: cats.verified,
         createdAt: cats.createdAt
       })
       .from(cats)

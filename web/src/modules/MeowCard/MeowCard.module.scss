@@ -1,22 +1,18 @@
 /* Card */
 
 .card {
+  display: flex;
+  gap: $spacing-sm;
   padding: $spacing-md;
   background: $color-bg;
   border-bottom: $separator-height solid $color-separator;
 }
 
-/* Top: avatar + meta */
-
-.top {
-  display: flex;
-  align-items: center;
-  gap: $spacing-sm;
-  margin-bottom: $spacing-sm;
-}
+/* Left: avatar */
 
 .avatarLink {
   flex-shrink: 0;
+  padding: $spacing-xs 0 0;
 }
 
 .avatar {
@@ -38,10 +34,27 @@
   color: $color-text-secondary;
 }
 
+/* Right: body */
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Top: meta + more */
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
 .meta {
   display: flex;
-  flex-direction: column;
+  align-items: baseline;
+  gap: $spacing-xs;
   min-width: 0;
+  flex: 1;
 }
 
 .authorName {
@@ -52,11 +65,29 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.verified {
+  color: $color-primary;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
 }
 
 .time {
   font-size: $font-size-xs;
   color: $color-text-secondary;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.more {
+  flex-shrink: 0;
+  align-self: flex-start;
 }
 
 /* Content */
@@ -73,9 +104,9 @@
 
 .tilde {
   color: $color-primary;
-  background: rgba($color-primary, 0.12);
-  border-radius: 3px;
-  padding: 1px 4px;
+  background: $color-tilde-bg;
+  border-radius: $radius-sm;
+  padding: 1px $radius-sm;
 }
 
 /* Image */
@@ -97,26 +128,29 @@
 .actions {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: $spacing-sm;
 }
 
 .action {
   display: flex;
   align-items: center;
   gap: $spacing-xs;
-  height: 18px;
+  padding: $radius-sm $spacing-xs;
+  border-radius: $radius-sm;
   color: $color-icon-muted;
   font-size: $font-size-sm;
   text-decoration: none;
-  transition: color 0.15s;
+  transition: background 0.15s, color 0.15s;
 
-  &:active {
-    color: $color-text-secondary;
+  &:hover {
+    background: $color-hover-bg;
+    color: $color-text;
   }
 }
 
 .likeAction {
-  &:active {
+  &:hover {
     color: $color-primary;
   }
 }
@@ -127,6 +161,6 @@
 
 .count {
   font-size: $font-size-sm;
-  line-height: 18px;
+  line-height: $radius-lg;
   color: inherit;
 }

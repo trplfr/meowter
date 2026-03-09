@@ -17,19 +17,55 @@
 }
 
 .item {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: $icon-button-size;
+  height: $icon-button-size;
+  border-radius: $radius-md;
   color: $color-icon-muted;
-  transition: color 0.15s;
+  transition: background 0.15s, color 0.15s;
 
-  &:active {
-    color: $color-primary-active;
+  &:hover {
+    background: $color-hover-bg;
+    color: $color-text;
   }
 }
 
 .active {
   color: $color-primary;
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+.create {
+  background: $color-bg-secondary;
+  border-radius: $radius-md;
+
+  &:hover,
+  &.active {
+    color: $color-primary;
+  }
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 2px;
+  right: 0;
+  min-width: $radius-lg;
+  height: $radius-lg;
+  padding: 0 $radius-sm;
+  border-radius: $radius-round;
+  background: $color-primary;
+  color: $color-white;
+  font-size: $font-size-badge;
+  font-weight: 700;
+  line-height: $radius-lg;
+  text-align: center;
 }

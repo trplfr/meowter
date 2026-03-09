@@ -11,7 +11,7 @@ import { PASSWORD_MIN } from '@shared/constants'
 import { routes } from '@core/router'
 import { $session } from '@logic/session'
 
-import { AuthLayout } from '@modules/AuthLayout'
+import { Layout } from '@modules/Layout'
 
 import {
   $form,
@@ -69,7 +69,7 @@ export const Settings = () => {
   )
 
   return (
-    <AuthLayout title={<Trans>Настройки</Trans>} contentClassName={s.content} headerAction={headerAction}>
+    <Layout title={<Trans>Настройки</Trans>} contentClassName={s.content} headerAction={headerAction}>
       <title>{t`Настройки / Мяутер`}</title>
 
       {/* Avatar */}
@@ -225,6 +225,6 @@ export const Settings = () => {
       >
         <Trans>Обновить</Trans>
       </button>
-    </AuthLayout>
+    </Layout>
   )
 }

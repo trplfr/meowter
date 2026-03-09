@@ -1,51 +1,21 @@
-.mobile {
-  display: block;
-
-  @media (min-width: $breakpoint-desktop) {
-    display: none;
-  }
-}
-
-.desktop {
-  display: none;
-
-  @media (min-width: $breakpoint-desktop) {
-    display: block;
-  }
-}
-
-.layout {
+.content {
   padding: 0;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  height: $header-height;
-  gap: $spacing-sm;
-  padding: 0 $spacing-md;
-  border-bottom: $separator-height solid $color-separator;
-}
-
-.back {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: $color-primary;
-}
-
-.title {
-  flex: 1;
-  text-align: center;
-  font-size: 22px;
-  font-weight: 700;
 }
 
 .submit {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: $icon-button-sm;
+  height: $icon-button-sm;
+  border-radius: $radius-md;
   color: $color-primary;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: $color-hover-bg;
+    color: $color-primary-hover;
+  }
 
   &:disabled {
     color: $color-primary-disabled;

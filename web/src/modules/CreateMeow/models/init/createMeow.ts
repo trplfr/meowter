@@ -1,5 +1,7 @@
 import { sample } from 'effector'
+import { redirect } from 'atomic-router'
 
+import { routes } from '@core/router'
 import { meowCreated } from '@logic/feed'
 
 import {
@@ -63,4 +65,10 @@ sample({
   clock: createMeowMutation.finished.success,
   fn: ({ result }) => result,
   target: meowCreated
+})
+
+// переходим на фид после создания
+redirect({
+  clock: createMeowMutation.finished.success,
+  route: routes.feed
 })

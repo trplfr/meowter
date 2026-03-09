@@ -6,7 +6,7 @@ import { useUnit } from 'effector-react'
 
 import { routes } from '@core/router'
 
-import { AuthLayout } from '@modules/AuthLayout'
+import { Layout } from '@modules/Layout'
 import { MeowCard, MeowCardSkeleton } from '@modules/MeowCard'
 
 import {
@@ -33,7 +33,7 @@ export const MeowThread = () => {
   ])
 
   return (
-    <AuthLayout title={<Trans>Обсуждение</Trans>} contentClassName={s.content} backButton>
+    <Layout title={<Trans>Обсуждение</Trans>} contentClassName={s.content}>
       <title>{t`Обсуждение / Мяутер`}</title>
 
       <div className={s.threadScroll}>
@@ -48,6 +48,8 @@ export const MeowThread = () => {
             <CommentCard
               key={comment.id}
               comment={comment}
+              meowAuthorUsername={meow?.author.username || ''}
+              meowId={meow?.id || ''}
               onReply={onReply}
               onLike={onCommentLike}
             />
@@ -62,6 +64,6 @@ export const MeowThread = () => {
       </div>
 
       <CommentForm />
-    </AuthLayout>
+    </Layout>
   )
 }

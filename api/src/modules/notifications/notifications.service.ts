@@ -49,6 +49,7 @@ export class NotificationsService {
           contacts: cats.contacts,
           sex: cats.sex,
           avatarUrl: cats.avatarUrl,
+          verified: cats.verified,
           createdAt: cats.createdAt
         }
       })
@@ -84,6 +85,7 @@ export class NotificationsService {
             bio: cats.bio,
             contacts: cats.contacts,
             avatarUrl: cats.avatarUrl,
+            verified: cats.verified,
             createdAt: cats.createdAt
           }
         })

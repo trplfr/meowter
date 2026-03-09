@@ -1,0 +1,130 @@
+/* Trigger */
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $icon-button-trigger;
+  height: $icon-button-trigger;
+  border-radius: $radius-sm;
+  color: $color-icon-muted;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: $color-hover-bg;
+    color: $color-text;
+  }
+}
+
+/* Overlay */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: $color-overlay;
+  animation: fadeIn 0.2s ease;
+}
+
+/* Sheet */
+
+.sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 301;
+  background: $color-bg;
+  border-radius: $radius-lg $radius-lg 0 0;
+  padding: $spacing-sm $spacing-md $spacing-xl;
+  animation: slideUp 0.25s ease;
+
+  @media (min-width: $breakpoint-desktop) {
+    left: 50%;
+    right: auto;
+    width: 360px;
+    transform: translateX(-50%);
+    border-radius: $radius-lg;
+    bottom: auto;
+    top: 50%;
+    animation: fadeIn 0.2s ease;
+    transform: translate(-50%, -50%);
+    padding: $spacing-sm $spacing-md $spacing-md;
+  }
+}
+
+.handle {
+  width: $avatar-md;
+  height: $radius-sm;
+  border-radius: $radius-sm;
+  background: $color-separator;
+  margin: 0 auto $spacing-sm;
+
+  @media (min-width: $breakpoint-desktop) {
+    display: none;
+  }
+}
+
+/* Items */
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.item,
+.itemDanger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  background: $color-bg-secondary;
+  font-size: $font-size-base;
+  font-family: $font-family;
+  transition: background 0.15s;
+
+  &:hover {
+    background: $color-hover-bg;
+  }
+}
+
+.item {
+  color: $color-text;
+}
+
+.itemDanger {
+  color: $color-error;
+}
+
+.itemLabel {
+  font-weight: 500;
+}
+
+/* SR-only */
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Animations */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}

@@ -4,10 +4,12 @@ import { useCallback } from 'react'
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
 import { useUnit } from 'effector-react'
+import { LogOut } from 'lucide-react'
 
 import { routes } from '@core/router'
+import { logout } from '@logic/session'
 
-import { AuthLayout } from '@modules/AuthLayout'
+import { Layout } from '@modules/Layout'
 import { MeowCard, MeowCardSkeleton, Avatar } from '@modules/MeowCard'
 import { Skeleton } from '@ui/Skeleton'
 import { VirtualList } from '@ui/VirtualList'
@@ -32,8 +34,8 @@ export const CatProfile = () => {
   const [profile, meows, hasMore, pending] = useUnit([
     $profile, $meows, $hasMore, catMeowsQuery.$pending
   ])
-  const [onLoadMore, onFollow, onLike] = useUnit([
-    loadMoreMeows, followToggled, meowLikeToggled
+  const [onLoadMore, onFollow, onLike, onLogout] = useUnit([
+    loadMoreMeows, followToggled, meowLikeToggled, logout
   ])
 
   const handleCopyContacts = useCallback(() => {
@@ -51,8 +53,19 @@ export const CatProfile = () => {
     ? `${profile.firstName} ${profile.lastName}`
     : profile?.displayName || ''
 
+  const headerAction = profile?.isOwn ? (
+    <button
+      type="button"
+      className={s.logoutButton}
+      aria-label="Выйти"
+      onClick={() => onLogout()}
+    >
+      <LogOut size={22} />
+    </button>
+  ) : undefined
+
   return (
-    <AuthLayout title={title} contentClassName={s.content}>
+    <Layout title={title} contentClassName={s.content} headerAction={headerAction}>
       <title>{profile ? t`${profile.displayName} / Мяутер` : t`Профиль / Мяутер`}</title>
 
       {!profile && (
@@ -139,6 +152,6 @@ export const CatProfile = () => {
           <MeowCardSkeleton />
         </div>
       )}
-    </AuthLayout>
+    </Layout>
   )
 }

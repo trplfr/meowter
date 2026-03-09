@@ -1,119 +1,88 @@
-/* Overlay (mobile only) */
-
-.overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  background: rgba(0, 0, 0, 0.4);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s;
-
-  &.visible {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  @media (min-width: $breakpoint-desktop) {
-    display: none;
-  }
-}
-
-/* Sidebar */
+/* Sidebar = desktop only, icon nav */
 
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  z-index: 201;
-  width: 280px;
-  display: flex;
-  flex-direction: column;
-  background: $color-bg;
-  transform: translateX(-100%);
-
-  &.animated {
-    transition: transform 0.25s ease;
-  }
-
-  &.open {
-    transform: translateX(0);
-  }
+  display: none;
 
   @media (min-width: $breakpoint-desktop) {
-    position: static;
-    width: 100%;
-    z-index: auto;
-    transform: none;
-    transition: none;
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100dvh;
   }
-}
-
-.profile {
-  padding: $spacing-xl $spacing-lg $spacing-lg;
-}
-
-.avatar {
-  width: $avatar-lg;
-  height: $avatar-lg;
-  border-radius: $radius-round;
-  object-fit: cover;
-}
-
-.avatarPlaceholder {
-  width: $avatar-lg;
-  height: $avatar-lg;
-  border-radius: $radius-round;
-  background: $color-separator;
-}
-
-.displayName {
-  margin-top: $spacing-sm;
-  font-size: $font-size-base;
-  font-weight: 700;
-  color: $color-text;
-}
-
-.username {
-  font-size: $font-size-sm;
-  color: $color-text-secondary;
-}
-
-.separator {
-  height: $separator-height;
-  background: $color-separator;
 }
 
 .nav {
   display: flex;
   flex-direction: column;
-  padding: $spacing-sm 0;
+  align-items: center;
+  gap: $spacing-xs;
 }
 
 .navItem {
-  padding: $spacing-sm $spacing-lg;
-  font-size: $font-size-base;
-  font-weight: 500;
-  color: $color-text;
-  transition: background 0.15s;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $icon-button-size;
+  height: $icon-button-size;
+  border-radius: $radius-md;
+  color: $color-icon-muted;
+  transition: background 0.15s, color 0.15s;
 
-  &:active {
-    background: $color-separator;
+  &:hover {
+    background: $color-hover-bg;
+    color: $color-text;
   }
 }
 
-.footer {
-  margin-top: auto;
-  padding: $spacing-lg;
+.active {
+  color: $color-primary;
+
+  &:hover {
+    color: $color-primary;
+  }
 }
 
-.logoutCat {
-  display: block;
-  margin-bottom: $spacing-sm;
+.create {
+  display: none;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 2px;
+  right: 0;
+  min-width: $radius-lg;
+  height: $radius-lg;
+  padding: 0 $radius-sm;
+  border-radius: $radius-round;
+  background: $color-primary;
+  color: $color-white;
+  font-size: $font-size-badge;
+  font-weight: 700;
+  line-height: $radius-lg;
+  text-align: center;
 }
 
 .logoutButton {
-  font-size: $font-size-sm;
-  color: $color-primary;
+  position: absolute;
+  bottom: $spacing-lg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $icon-button-size;
+  height: $icon-button-size;
+  border-radius: $radius-md;
+  color: $color-icon-muted;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: $color-hover-bg;
+    color: $color-text;
+  }
 }

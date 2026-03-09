@@ -2,6 +2,26 @@
   padding: 0;
 }
 
+.logoutButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $icon-button-sm;
+  height: $icon-button-sm;
+  border-radius: $radius-md;
+  color: $color-icon-muted;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: $color-hover-bg;
+    color: $color-text;
+  }
+
+  @media (min-width: $breakpoint-desktop) {
+    display: none;
+  }
+}
+
 /* Profile header */
 
 .header {
@@ -31,8 +51,8 @@
     justify-content: center;
 
     svg {
-      width: 32px;
-      height: 32px;
+      width: $avatar-sm;
+      height: $avatar-sm;
     }
   }
 }
@@ -107,7 +127,7 @@
 
 .followButton {
   color: $color-primary;
-  border: 2px solid $color-primary;
+  border: $separator-height * 2 solid $color-primary;
   background: transparent;
 
   &:hover {
@@ -124,7 +144,7 @@
 .unfollowButton {
   color: $color-white;
   background: $color-primary;
-  border: 2px solid $color-primary;
+  border: $separator-height * 2 solid $color-primary;
 
   &:hover {
     background: $color-primary-hover;
@@ -161,5 +181,5 @@
 }
 
 .sentinel {
-  height: 1px;
+  height: $separator-height;
 }

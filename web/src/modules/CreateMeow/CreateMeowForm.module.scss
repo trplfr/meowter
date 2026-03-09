@@ -86,15 +86,15 @@
 
 .preview {
   position: relative;
-  width: 40px;
-  height: 40px;
-  border-radius: $radius-sm;
+  width: $bottom-nav-height;
+  align-self: stretch;
   overflow: hidden;
-  margin-left: auto;
 
   @media (min-width: $breakpoint-desktop) {
-    margin-left: 0;
-    margin-right: auto;
+    width: $avatar-md;
+    height: $avatar-md;
+    align-self: center;
+    border-radius: $radius-sm;
   }
 }
 
@@ -112,10 +112,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: $radius-lg;
+  height: $radius-lg;
   border-radius: $radius-sm;
-  background: rgba(0, 0, 0, 0.5);
+  background: $color-overlay-dark;
   color: $color-white;
 }
 
@@ -124,8 +124,7 @@
 .toolbar {
   display: flex;
   align-items: center;
-  height: 60px;
-  padding: 0 $spacing-md;
+  padding: 0;
   border-top: $separator-height solid $color-separator;
   background: $color-bg;
 
@@ -138,9 +137,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: $icon-button-size;
+  height: $icon-button-size;
+  margin: $spacing-xs;
   margin-left: auto;
+  border-radius: $radius-md;
   color: $color-icon-muted;
-  transition: color 0.15s;
+  background: transparent;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: $color-hover-bg;
+    color: $color-text;
+  }
 
   &:active {
     color: $color-primary;
@@ -149,6 +158,7 @@
   @media (min-width: $breakpoint-desktop) {
     margin-left: 0;
     margin-right: auto;
+    order: -1;
   }
 }
 
@@ -161,6 +171,9 @@
 
   @media (min-width: $breakpoint-desktop) {
     display: block;
+    margin-left: auto;
+    margin-right: $spacing-md;
+    align-self: center;
     padding: $spacing-xs $spacing-lg;
     font-size: $font-size-sm;
     font-weight: 600;

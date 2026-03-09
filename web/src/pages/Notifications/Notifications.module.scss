@@ -69,7 +69,7 @@
   margin-top: $spacing-sm;
   margin-left: $spacing-lg;
   padding: $spacing-sm $spacing-md;
-  border-left: 2px solid $color-separator;
+  border-left: $separator-height * 2 solid $color-separator;
   border-radius: 0 $radius-sm $radius-sm 0;
   background: $color-bg-secondary;
   text-decoration: none;
@@ -90,8 +90,8 @@
     flex-shrink: 0;
 
     svg {
-      width: 12px;
-      height: 12px;
+      width: $font-size-xs;
+      height: $font-size-xs;
     }
   }
 
@@ -128,7 +128,7 @@
 
 .tilde {
   color: $color-primary;
-  background: rgba($color-primary, 0.12);
-  border-radius: 3px;
-  padding: 1px 4px;
+  background: $color-tilde-bg;
+  border-radius: $radius-sm;
+  padding: 1px $radius-sm;
 }

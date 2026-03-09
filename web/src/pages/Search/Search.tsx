@@ -8,7 +8,7 @@ import { Search as SearchIcon, X } from 'lucide-react'
 
 import { routes } from '@core/router'
 
-import { AuthLayout } from '@modules/AuthLayout'
+import { Layout } from '@modules/Layout'
 import { MeowCard, MeowCardSkeleton } from '@modules/MeowCard'
 import { VirtualList } from '@ui/VirtualList'
 
@@ -34,11 +34,39 @@ import s from './Search.module.scss'
 export const route = routes.search
 
 export const Search = () => {
-  const [tags, query, selectedTag, meows, hasMore, isOpen, pending, tagsLoaded] = useUnit([
-    $tags, $query, $selectedTag, $meows, $hasMore, $isOpen, searchQuery.$pending, $tagsLoaded
+  const [
+    tags,
+    query,
+    selectedTag,
+    meows,
+    hasMore,
+    isOpen,
+    pending,
+    tagsLoaded
+  ] = useUnit([
+    $tags,
+    $query,
+    $selectedTag,
+    $meows,
+    $hasMore,
+    $isOpen,
+    searchQuery.$pending,
+    $tagsLoaded
   ])
-  const [onQueryChange, onTagSelect, onClear, onLoadMore, onLike, onDropdownOpen] = useUnit([
-    queryChanged, tagSelected, cleared, loadMore, meowLikeToggled, dropdownOpened
+  const [
+    onQueryChange,
+    onTagSelect,
+    onClear,
+    onLoadMore,
+    onLike,
+    onDropdownOpen
+  ] = useUnit([
+    queryChanged,
+    tagSelected,
+    cleared,
+    loadMore,
+    meowLikeToggled,
+    dropdownOpened
   ])
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -56,14 +84,15 @@ export const Search = () => {
   }, [])
 
   // фильтруем теги
-  const filteredTags = query.length > 0
-    ? tags.filter((tag) => tag.toLowerCase().includes(query.toLowerCase()))
-    : tags
+  const filteredTags =
+    query.length > 0
+      ? tags.filter(tag => tag.toLowerCase().includes(query.toLowerCase()))
+      : tags
 
   const showDropdown = isOpen && filteredTags.length > 0
 
   return (
-    <AuthLayout title={<Trans>Поиск</Trans>} contentClassName={s.content}>
+    <Layout title={<Trans>Поиск</Trans>} contentClassName={s.content}>
       <title>{t`Поиск / Мяутер`}</title>
 
       <div className={s.searchWrap} ref={wrapRef}>
@@ -71,17 +100,22 @@ export const Search = () => {
           <SearchIcon size={18} className={s.searchIcon} />
           <input
             ref={inputRef}
-            id="search"
-            name="search"
+            id='search'
+            name='search'
             aria-label={t`Поиск по темам...`}
             className={s.searchInput}
             placeholder={t`Поиск по темам...`}
             value={query}
-            onChange={(e) => onQueryChange(e.target.value)}
+            onChange={e => onQueryChange(e.target.value)}
             onFocus={() => onDropdownOpen()}
           />
           {query.length > 0 && (
-            <button type="button" aria-label="Очистить" className={s.clearButton} onClick={() => onClear()}>
+            <button
+              type='button'
+              aria-label='Очистить'
+              className={s.clearButton}
+              onClick={() => onClear()}
+            >
               <X size={16} />
             </button>
           )}
@@ -89,11 +123,11 @@ export const Search = () => {
 
         {showDropdown && (
           <div className={s.dropdown}>
-            {filteredTags.map((tag) => (
+            {filteredTags.map(tag => (
               <button
                 key={tag}
                 className={s.tagItem}
-                onMouseDown={(e) => e.preventDefault()}
+                onMouseDown={e => e.preventDefault()}
                 onClick={() => onTagSelect(tag)}
               >
                 ~{tag}
@@ -106,16 +140,22 @@ export const Search = () => {
       {/* нет тегов = пользователь ещё не использовал ~теги */}
       {!selectedTag && tags.length === 0 && tagsLoaded && (
         <div className={s.empty}>
-          <Trans>Вы ещё не использовали ~теги в своих мяутах. Напишите мяут с ~темой, чтобы открыть поиск!</Trans>
+          <Trans>
+            Вы ещё не использовали ~темы в своих мяутах. Напишите мяут с ~темой,
+            чтобы открыть поиск!
+          </Trans>
         </div>
       )}
 
       {/* ввод не совпал ни с одним тегом */}
-      {!selectedTag && tags.length > 0 && query.length > 0 && filteredTags.length === 0 && (
-        <div className={s.empty}>
-          <Trans>Вы ещё не говорили на эту тему</Trans>
-        </div>
-      )}
+      {!selectedTag &&
+        tags.length > 0 &&
+        query.length > 0 &&
+        filteredTags.length === 0 && (
+          <div className={s.empty}>
+            <Trans>Вы ещё не говорили на эту тему</Trans>
+          </div>
+        )}
 
       {selectedTag && (
         <div className={s.results}>
@@ -135,7 +175,7 @@ export const Search = () => {
               pending={pending}
               onLoadMore={onLoadMore}
               className={s.list}
-              renderItem={(meow) => (
+              renderItem={meow => (
                 <MeowCard key={meow.id} meow={meow} onLike={onLike} />
               )}
             />
@@ -148,6 +188,6 @@ export const Search = () => {
           )}
         </div>
       )}
-    </AuthLayout>
+    </Layout>
   )
 }

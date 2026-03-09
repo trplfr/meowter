@@ -3,7 +3,7 @@ import { Trans } from '@lingui/react/macro'
 import { Link } from 'atomic-router-react'
 
 import { routes } from '@core/router'
-import { Layout, Button } from '@ui/index'
+import { AuthLayout, Button } from '@ui/index'
 
 import credentialsCat from '@assets/images/credentials.png'
 
@@ -13,7 +13,7 @@ export const route = routes.unauthorized
 
 export const Unauthorized = () => {
   return (
-    <Layout>
+    <AuthLayout>
       <title>{t`Доступ запрещен / Мяутер`}</title>
 
       <div className={s.header} />
@@ -38,6 +38,6 @@ export const Unauthorized = () => {
           </Link>
         </div>
       </div>
-    </Layout>
+    </AuthLayout>
   )
 }

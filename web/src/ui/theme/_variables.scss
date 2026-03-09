@@ -8,18 +8,24 @@ $color-white: #FFFFFF;
 $color-separator: #EEEEEE;
 $color-text: #333333;
 $color-text-secondary: #999999;
-$color-icon-muted: #DDDDDD;
+$color-icon-muted: #999999;
+$color-hover-bg: #EEEEEE;
 $color-bg-secondary: #F8F8F8;
 $color-error: #E53935;
 $color-success: #43A047;
+$color-overlay: rgba(0, 0, 0, 0.4);
+$color-overlay-dark: rgba(0, 0, 0, 0.5);
+$color-shadow: rgba(0, 0, 0, 0.08);
+$color-tilde-bg: rgba(#EB7E44, 0.12);
 
 // типографика
 $font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 $font-size-xs: 12px;
+$font-size-badge: 11px;
 $font-size-sm: 14px;
 $font-size-base: 17px;
 $font-size-lg: 19px;
-$font-size-title: 28px;
+$font-size-title: 22px;
 
 // размеры аватаров
 $avatar-sm: 35px;
@@ -39,12 +45,16 @@ $spacing-xl: 30px;
 $breakpoint-desktop: 769px;
 
 // layout
-$content-width: 500px;
+$content-width: 640px;
+$auth-width: 500px;
 $sidebar-width: 300px;
 $panel-width: 350px;
 $header-height: 55px;
 $bottom-nav-height: 60px;
 $separator-height: 1px;
+$icon-button-size: 48px;
+$icon-button-sm: 36px;
+$icon-button-trigger: 28px;
 
 // border-radius
 $radius-sm: 4px;

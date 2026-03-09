@@ -6,7 +6,7 @@ import { useUnit } from 'effector-react'
 
 import { routes } from '@core/router'
 
-import { AuthLayout } from '@modules/AuthLayout'
+import { Layout } from '@modules/Layout'
 import { MeowCardSkeleton } from '@modules/MeowCard'
 
 import { VirtualList } from '@ui/VirtualList'
@@ -28,7 +28,7 @@ export const Notifications = () => {
   const onLoadMore = useUnit(loadMore)
 
   return (
-    <AuthLayout title={<Trans>Уведомления</Trans>} contentClassName={s.content}>
+    <Layout title={<Trans>Уведомления</Trans>} contentClassName={s.content}>
       <title>{t`Уведомления / Мяутер`}</title>
 
       {pending && notificationsList.length === 0 && (
@@ -58,6 +58,6 @@ export const Notifications = () => {
           <Trans>Пока нет уведомлений</Trans>
         </div>
       )}
-    </AuthLayout>
+    </Layout>
   )
 }

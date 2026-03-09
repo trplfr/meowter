@@ -11,7 +11,7 @@ import {
   feedQuery
 } from '@logic/feed'
 
-import { AuthLayout } from '@modules/AuthLayout'
+import { Layout } from '@modules/Layout'
 import { MeowCard, MeowCardSkeleton } from '@modules/MeowCard'
 import { VirtualList } from '@ui/VirtualList'
 
@@ -24,7 +24,7 @@ export const Feed = () => {
   const [onLoadMore, onLike] = useUnit([feedLoadMore, meowLikeToggled])
 
   return (
-    <AuthLayout title={<Trans>Лента</Trans>} contentClassName={s.content}>
+    <Layout title={<Trans>Лента</Trans>} contentClassName={s.content}>
       <title>{t`Лента / Мяутер`}</title>
 
       {pending && meows.length === 0 && (
@@ -55,6 +55,6 @@ export const Feed = () => {
           )}
         />
       )}
-    </AuthLayout>
+    </Layout>
   )
 }

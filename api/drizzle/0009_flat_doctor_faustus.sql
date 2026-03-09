@@ -1,0 +1,1 @@
+ALTER TABLE "cats" ADD COLUMN "verified" boolean DEFAULT false NOT NULL;

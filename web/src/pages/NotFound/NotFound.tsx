@@ -3,7 +3,7 @@ import { Trans } from '@lingui/react/macro'
 import { ArrowLeft } from 'lucide-react'
 
 import { routes } from '@core/router'
-import { Layout } from '@ui/index'
+import { AuthLayout } from '@ui/index'
 
 import notfoundCat from '@assets/images/notfound.png'
 
@@ -13,7 +13,7 @@ export const route = routes.notFound
 
 export const NotFound = () => {
   return (
-    <Layout>
+    <AuthLayout>
       <title>{t`404 / Мяутер`}</title>
 
       <header className={s.header}>
@@ -37,6 +37,6 @@ export const NotFound = () => {
           </button>
         </div>
       </div>
-    </Layout>
+    </AuthLayout>
   )
 }
