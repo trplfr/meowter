@@ -121,7 +121,10 @@ export const follows = pgTable(
       .defaultNow()
       .notNull()
   },
-  t => [primaryKey({ columns: [t.followerId, t.followingId] })]
+  t => [
+    primaryKey({ columns: [t.followerId, t.followingId] }),
+    index('idx_follows_following_id').on(t.followingId)
+  ]
 )
 
 /* Comments */

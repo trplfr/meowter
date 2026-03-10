@@ -31,10 +31,16 @@ export class AppExceptionFilter implements ExceptionFilter {
       const message =
         typeof response === 'string' ? response : (response as any).message
 
+      const code =
+        status === 401
+          ? ErrorCode.UNAUTHORIZED
+          : status === 429
+            ? ErrorCode.RATE_LIMIT_EXCEEDED
+            : ErrorCode.VALIDATION_ERROR
+
       res.status(status).send({
         statusCode: status,
-        code:
-          status === 401 ? ErrorCode.UNAUTHORIZED : ErrorCode.VALIDATION_ERROR,
+        code,
         message: Array.isArray(message) ? message[0] : message
       })
       return

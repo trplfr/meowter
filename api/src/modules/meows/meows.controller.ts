@@ -16,16 +16,14 @@ import {
   ApiConsumes
 } from '@nestjs/swagger'
 import type { FastifyRequest } from 'fastify'
-import { join, extname } from 'path'
-import { mkdir, writeFile } from 'fs/promises'
-import { randomUUID } from 'crypto'
+import { join } from 'path'
 
 import { ErrorCode } from '@shared/types'
 
 import { CurrentUser, type JwtPayload } from '../../common/decorators'
 import { AppException } from '../../common/exceptions'
 import { JwtAuthGuard, OptionalJwtAuthGuard } from '../../common/guards'
-import { isValidImage, stripHtml } from '../../common/lib'
+import { stripHtml, saveUpload } from '../../common/lib'
 
 import { MeowsService } from './meows.service'
 import { CreateMeowDto, CreateCommentDto } from './dto'
@@ -65,39 +63,17 @@ export class MeowsController {
       }
 
       if (part.type === 'file' && part.fieldname === 'image') {
-        if (!ALLOWED_MIMES.includes(part.mimetype)) {
-          throw new AppException(
-            ErrorCode.FILE_INVALID_TYPE,
-            400,
-            'Only PNG, JPEG, WebP and GIF allowed'
-          )
-        }
-
         const buffer = await part.toBuffer()
 
-        if (buffer.length > MAX_SIZE) {
-          throw new AppException(
-            ErrorCode.FILE_TOO_LARGE,
-            400,
-            'File too large (max 10MB)'
-          )
-        }
-
-        if (!isValidImage(buffer, part.mimetype)) {
-          throw new AppException(
-            ErrorCode.FILE_INVALID_TYPE,
-            400,
-            'Invalid image file'
-          )
-        }
-
-        const ext = extname(part.filename) || '.jpg'
-        const filename = `${randomUUID()}${ext}`
-
-        await mkdir(UPLOAD_DIR, { recursive: true })
-        await writeFile(join(UPLOAD_DIR, filename), buffer)
-
-        imageUrl = `/uploads/meows/${filename}`
+        imageUrl = await saveUpload({
+          buffer,
+          mimetype: part.mimetype,
+          filename: part.filename,
+          dir: UPLOAD_DIR,
+          allowedMimes: ALLOWED_MIMES,
+          maxSize: MAX_SIZE,
+          urlPrefix: '/uploads/meows/'
+        })
       }
     }
 

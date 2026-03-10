@@ -11,6 +11,7 @@ export const errorMessages: Record<ErrorCode, () => string> = {
   [ErrorCode.FILE_NOT_PROVIDED]: () => t`Файл не выбран`,
   [ErrorCode.FILE_INVALID_TYPE]: () => t`Допустимы только PNG, JPEG и WebP`,
   [ErrorCode.FILE_TOO_LARGE]: () => t`Файл слишком большой (макс. 5 МБ)`,
+  [ErrorCode.RATE_LIMIT_EXCEEDED]: () => t`Слишком много запросов, попробуйте позже`,
   [ErrorCode.UNAUTHORIZED]: () => t`Необходимо авторизоваться`,
   [ErrorCode.VALIDATION_ERROR]: () => t`Проверьте введенные данные`,
   [ErrorCode.WRONG_PASSWORD]: () => t`Неверный пароль`,

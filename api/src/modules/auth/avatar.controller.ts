@@ -6,16 +6,14 @@ import {
   ApiConsumes
 } from '@nestjs/swagger'
 import type { FastifyRequest } from 'fastify'
-import { join, extname } from 'path'
-import { mkdir, writeFile } from 'fs/promises'
-import { randomUUID } from 'crypto'
+import { join } from 'path'
 
 import { ErrorCode } from '@shared/types'
 
 import { CurrentUser, type JwtPayload } from '../../common/decorators'
 import { AppException } from '../../common/exceptions'
 import { JwtAuthGuard } from '../../common/guards'
-import { isValidImage } from '../../common/lib'
+import { saveUpload } from '../../common/lib'
 
 import { AuthService } from './auth.service'
 
@@ -45,39 +43,18 @@ export class AvatarController {
       )
     }
 
-    if (!ALLOWED_MIMES.includes(file.mimetype)) {
-      throw new AppException(
-        ErrorCode.FILE_INVALID_TYPE,
-        400,
-        'Only PNG, JPEG and WebP allowed'
-      )
-    }
-
     const buffer = await file.toBuffer()
 
-    if (buffer.length > MAX_SIZE) {
-      throw new AppException(
-        ErrorCode.FILE_TOO_LARGE,
-        400,
-        'File too large (max 5MB)'
-      )
-    }
+    const avatarUrl = await saveUpload({
+      buffer,
+      mimetype: file.mimetype,
+      filename: file.filename,
+      dir: UPLOAD_DIR,
+      allowedMimes: ALLOWED_MIMES,
+      maxSize: MAX_SIZE,
+      urlPrefix: '/uploads/avatars/'
+    })
 
-    if (!isValidImage(buffer, file.mimetype)) {
-      throw new AppException(
-        ErrorCode.FILE_INVALID_TYPE,
-        400,
-        'Invalid image file'
-      )
-    }
-
-    const ext = extname(file.filename) || '.jpg'
-    const filename = `${randomUUID()}${ext}`
-
-    await mkdir(UPLOAD_DIR, { recursive: true })
-    await writeFile(join(UPLOAD_DIR, filename), buffer)
-
-    const avatarUrl = `/uploads/avatars/${filename}`
     return this.auth.updateAvatar(user.sub, avatarUrl)
   }
 }

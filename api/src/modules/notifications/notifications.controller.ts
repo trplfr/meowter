@@ -3,6 +3,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 import { CurrentUser, type JwtPayload } from '../../common/decorators'
 import { JwtAuthGuard } from '../../common/guards'
+import { MeowsService } from '../meows/meows.service'
 
 import { NotificationsService } from './notifications.service'
 
@@ -12,7 +13,10 @@ const MAX_LIMIT = 100
 @Controller('notifications')
 @UseGuards(JwtAuthGuard)
 export class NotificationsController {
-  constructor(private readonly notifications: NotificationsService) {}
+  constructor(
+    private readonly notifications: NotificationsService,
+    private readonly meowsService: MeowsService
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'Список уведомлений' })
@@ -27,7 +31,8 @@ export class NotificationsController {
     return this.notifications.getList(
       user.sub,
       cursor,
-      parsedLimit
+      parsedLimit,
+      this.meowsService
     )
   }
 

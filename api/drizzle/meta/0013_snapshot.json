@@ -1,6 +1,6 @@
 {
-  "id": "c6ff876b-0132-44b8-a14c-0555975f3490",
-  "prevId": "5efa431c-a1e1-4c59-b547-9d0eb9c69d41",
+  "id": "23f9e83c-0331-40d6-81ef-e5cf2ae71501",
+  "prevId": "c6ff876b-0132-44b8-a14c-0555975f3490",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -311,7 +311,23 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "idx_follows_following_id": {
+          "name": "idx_follows_following_id",
+          "columns": [
+            {
+              "expression": "following_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "follows_follower_id_cats_id_fk": {
           "name": "follows_follower_id_cats_id_fk",

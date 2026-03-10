@@ -137,6 +137,7 @@ export class AuthController {
 
   @Patch('password')
   @UseGuards(JwtAuthGuard)
+  @Throttle({ default: { ttl: 60_000, limit: 5 } })
   @ApiOperation({ summary: 'Смена пароля' })
   @ApiResponse({ status: 200, description: 'Пароль изменен' })
   @ApiResponse({ status: 401, description: 'Неверный старый пароль' })

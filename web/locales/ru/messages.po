@@ -118,8 +118,8 @@ msgstr "Выберите аватар"
 msgid "Выдели слово, используя тильду:<0/><1>~работа</1>, чтобы составить ленту"
 msgstr "Выдели слово, используя тильду:<0/><1>~работа</1>, чтобы составить ленту"
 
-#: src/modules/MeowCard/MeowCard.tsx:63
-#: src/pages/MeowThread/CommentCard.tsx:51
+#: src/modules/MeowCard/MeowCard.tsx:66
+#: src/pages/MeowThread/CommentCard.tsx:54
 msgid "Да, удалить"
 msgstr "Да, удалить"
 
@@ -187,8 +187,8 @@ msgstr "Кажется, у нас что-то произошло..."
 msgid "Контакты"
 msgstr "Контакты"
 
-#: src/modules/MeowCard/MeowCard.tsx:79
-#: src/pages/MeowThread/CommentCard.tsx:67
+#: src/modules/MeowCard/MeowCard.tsx:82
+#: src/pages/MeowThread/CommentCard.tsx:70
 msgid "Копировать ссылку"
 msgstr "Копировать ссылку"
 
@@ -220,7 +220,7 @@ msgstr "Мужской"
 msgid "Мы пришлем новый пароль на почтовый адрес, указанный при регистрации"
 msgstr "Мы пришлем новый пароль на почтовый адрес, указанный при регистрации"
 
-#: src/lib/api/errors.ts:17
+#: src/lib/api/errors.ts:18
 msgid "Мяут не найден"
 msgstr "Мяут не найден"
 
@@ -266,7 +266,7 @@ msgstr "Настройки / Мяутер"
 msgid "Неверная почта или пароль"
 msgstr "Неверная почта или пароль"
 
-#: src/lib/api/errors.ts:16
+#: src/lib/api/errors.ts:17
 msgid "Неверный пароль"
 msgstr "Неверный пароль"
 
@@ -276,7 +276,7 @@ msgstr "Неверный пароль"
 msgid "Некорректный формат почты"
 msgstr "Некорректный формат почты"
 
-#: src/lib/api/errors.ts:14
+#: src/lib/api/errors.ts:15
 msgid "Необходимо авторизоваться"
 msgstr "Необходимо авторизоваться"
 
@@ -316,12 +316,12 @@ msgstr "ответил на ваш мяут"
 msgid "ответила на ваш мяут"
 msgstr "ответила на ваш мяут"
 
-#: src/pages/MeowThread/CommentCard.tsx:136
+#: src/pages/MeowThread/CommentCard.tsx:139
 msgid "Ответить"
 msgstr "Ответить"
 
-#: src/modules/MeowCard/MeowCard.tsx:72
-#: src/pages/MeowThread/CommentCard.tsx:60
+#: src/modules/MeowCard/MeowCard.tsx:75
+#: src/pages/MeowThread/CommentCard.tsx:63
 msgid "Отмена"
 msgstr "Отмена"
 
@@ -387,8 +387,8 @@ msgstr "подписался на вас"
 msgid "Подписаться"
 msgstr "Подписаться"
 
-#: src/modules/MeowCard/MeowCard.tsx:95
-#: src/pages/MeowThread/CommentCard.tsx:83
+#: src/modules/MeowCard/MeowCard.tsx:98
+#: src/pages/MeowThread/CommentCard.tsx:86
 msgid "Пожаловаться"
 msgstr "Пожаловаться"
 
@@ -449,7 +449,7 @@ msgstr "Превышено количество символов ({0}/{MEOW_CONT
 msgid "Придумайте новый пароль"
 msgstr "Придумайте новый пароль"
 
-#: src/lib/api/errors.ts:15
+#: src/lib/api/errors.ts:16
 msgid "Проверьте введенные данные"
 msgstr "Проверьте введенные данные"
 
@@ -474,7 +474,7 @@ msgstr "Регистрация / Мяутер"
 msgid "Ремяут!"
 msgstr "Ремяут!"
 
-#: src/modules/MeowCard/MeowCard.tsx:150
+#: src/modules/MeowCard/MeowCard.tsx:153
 msgid "ремяутнул"
 msgstr "ремяутнул"
 
@@ -482,7 +482,7 @@ msgstr "ремяутнул"
 msgid "ремяутнул ваш мяут"
 msgstr "ремяутнул ваш мяут"
 
-#: src/modules/MeowCard/MeowCard.tsx:148
+#: src/modules/MeowCard/MeowCard.tsx:151
 msgid "ремяутнула"
 msgstr "ремяутнула"
 
@@ -497,6 +497,10 @@ msgstr "Сессия истекла, войдите снова"
 #: src/modules/Auth/forms/RegisterForm/steps/Done/Done.tsx:28
 msgid "Скорее ставь аватарку, чтобы друзья смогли тебя найти"
 msgstr "Скорее ставь аватарку, чтобы друзья смогли тебя найти"
+
+#: src/lib/api/errors.ts:14
+msgid "Слишком много запросов, попробуйте позже"
+msgstr "Слишком много запросов, попробуйте позже"
 
 #: src/pages/NotFound/NotFound.tsx:31
 msgid "Такой страницы нет..."
@@ -528,8 +532,8 @@ msgstr "Уведомления / Мяутер"
 msgid "Удалено!"
 msgstr "Удалено!"
 
-#: src/modules/MeowCard/MeowCard.tsx:86
-#: src/pages/MeowThread/CommentCard.tsx:74
+#: src/modules/MeowCard/MeowCard.tsx:89
+#: src/pages/MeowThread/CommentCard.tsx:77
 msgid "Удалить"
 msgstr "Удалить"
 
@@ -561,7 +565,7 @@ msgstr "Фамилия"
 msgid "читает"
 msgstr "читает"
 
-#: src/lib/api/errors.ts:18
+#: src/lib/api/errors.ts:19
 msgid "Что-то пошло не так"
 msgstr "Что-то пошло не так"
 

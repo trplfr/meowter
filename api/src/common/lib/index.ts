@@ -1,3 +1,5 @@
 export { stripHtml } from './sanitize'
 export { isValidImage } from './validate-image'
 export { auditLog } from './audit'
+export { authorSelect } from './queries'
+export { saveUpload } from './upload'
