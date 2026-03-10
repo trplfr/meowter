@@ -30,7 +30,8 @@ const MIME_TYPES = {
 const template = readFileSync(join(distDir, 'index.html'), 'utf-8')
 
 // загружаем SSR-бандл
-const { render } = await import(join(serverDir, 'index.js'))
+const mod = await import(join(serverDir, 'index.js'))
+const render = mod.render || mod.default?.render || mod.default
 
 const PORT = parseInt(process.env.PORT || '3000', 10)
 
