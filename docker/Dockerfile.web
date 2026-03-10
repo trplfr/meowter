@@ -7,7 +7,7 @@ COPY web/package.json web/
 COPY shared/package.json shared/
 
 FROM base AS deps
-RUN yarn install --immutable
+RUN yarn install
 
 FROM deps AS build
 COPY shared/ shared/
