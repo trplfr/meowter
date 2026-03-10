@@ -2,7 +2,7 @@ name: CI
 
 on:
   pull_request:
-    branches: [v2, dev]
+    branches: [dev, master]
 
 jobs:
   lint-and-test:

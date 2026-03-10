@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "yarn workspace shared build && rsbuild dev",
+    "dev": "rsbuild dev",
     "build": "lingui compile --typescript && rsbuild build",
     "start": "node server.prod.js",
     "preview": "rsbuild preview",

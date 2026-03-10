@@ -1,72 +1,72 @@
 services:
-  postgres-prod:
+  postgres-dev:
     image: pgvector/pgvector:pg17
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${DB_USER:-meowter}
+      POSTGRES_USER: ${DB_USER:-meowter_dev}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME:-meowter}
+      POSTGRES_DB: ${DB_NAME:-meowter_dev}
     volumes:
-      - pg_data_prod:/var/lib/postgresql/data
+      - pg_data_dev:/var/lib/postgresql/data
     networks:
-      - internal-prod
+      - internal-dev
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-meowter}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-meowter_dev}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  redis-prod:
+  redis-dev:
     image: redis:7-alpine
     restart: unless-stopped
-    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
     volumes:
-      - redis_data_prod:/data
+      - redis_data_dev:/data
     networks:
-      - internal-prod
+      - internal-dev
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  api-prod:
-    image: ghcr.io/trplfr/meowter-api:prod
+  api-dev:
+    image: ghcr.io/trplfr/meowter-api:dev
     restart: unless-stopped
-    env_file: .env.prod
+    env_file: .env.dev
     environment:
       NODE_ENV: production
-      DATABASE_URL: postgresql://${DB_USER:-meowter}:${DB_PASSWORD}@postgres-prod:5432/${DB_NAME:-meowter}
-      REDIS_URL: redis://redis-prod:6379
+      DATABASE_URL: postgresql://${DB_USER:-meowter_dev}:${DB_PASSWORD}@postgres-dev:5432/${DB_NAME:-meowter_dev}
+      REDIS_URL: redis://redis-dev:6379
     volumes:
-      - ./uploads:/app/uploads
+      - ./uploads-dev:/app/uploads
     depends_on:
-      postgres-prod:
+      postgres-dev:
         condition: service_healthy
-      redis-prod:
+      redis-dev:
         condition: service_healthy
     networks:
-      - internal-prod
+      - internal-dev
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:4000/api/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
 
-  web-prod:
-    image: ghcr.io/trplfr/meowter-web:prod
+  web-dev:
+    image: ghcr.io/trplfr/meowter-web:dev
     restart: unless-stopped
     environment:
       NODE_ENV: production
-      SSR_API_URL: http://api-prod:4000/api
+      SSR_API_URL: http://api-dev:4000/api
     depends_on:
-      - api-prod
+      - api-dev
     networks:
-      - internal-prod
+      - internal-dev
 
 networks:
-  internal-prod:
+  internal-dev:
 
 volumes:
-  pg_data_prod:
-  redis_data_prod:
+  pg_data_dev:
+  redis_data_dev:

@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "yarn workspace shared build && nest start --watch",
-    "build": "yarn workspace shared build && nest build",
+    "dev": "nest start --watch",
+    "build": "nest build",
+    "build:full": "yarn workspace shared build && nest build",
     "start": "node dist/main.js",
     "test": "vitest run",
     "lint": "eslint src/",

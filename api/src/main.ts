@@ -44,7 +44,12 @@ const bootstrap = async () => {
 
   app.enableCors({
     origin: isProd
-      ? ['https://meowter.app', 'https://meowter.ru']
+      ? [
+          'https://meowter.app',
+          'https://meowter.ru',
+          'https://dev.meowter.app',
+          'https://dev.meowter.ru'
+        ]
       : ['http://localhost:3000'],
     credentials: true
   })

@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: [v2]
+    branches: [dev, master]
 
 env:
   REGISTRY: ghcr.io
@@ -23,12 +23,23 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set tag
+        id: tag
+        run: |
+          if [ "${{ github.ref_name }}" = "master" ]; then
+            echo "tag=prod" >> $GITHUB_OUTPUT
+          else
+            echo "tag=dev" >> $GITHUB_OUTPUT
+          fi
+
       - uses: docker/build-push-action@v5
         with:
           context: .
           file: docker/Dockerfile.api
           push: true
-          tags: ${{ env.API_IMAGE }}:latest,${{ env.API_IMAGE }}:${{ github.sha }}
+          tags: |
+            ${{ env.API_IMAGE }}:${{ steps.tag.outputs.tag }}
+            ${{ env.API_IMAGE }}:${{ github.sha }}
 
   build-web:
     runs-on: ubuntu-latest
@@ -43,17 +54,41 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set tag
+        id: tag
+        run: |
+          if [ "${{ github.ref_name }}" = "master" ]; then
+            echo "tag=prod" >> $GITHUB_OUTPUT
+          else
+            echo "tag=dev" >> $GITHUB_OUTPUT
+          fi
+
       - uses: docker/build-push-action@v5
         with:
           context: .
           file: docker/Dockerfile.web
           push: true
-          tags: ${{ env.WEB_IMAGE }}:latest,${{ env.WEB_IMAGE }}:${{ github.sha }}
+          tags: |
+            ${{ env.WEB_IMAGE }}:${{ steps.tag.outputs.tag }}
+            ${{ env.WEB_IMAGE }}:${{ github.sha }}
 
   deploy:
     needs: [build-api, build-web]
     runs-on: ubuntu-latest
     steps:
+      - name: Set environment
+        id: env
+        run: |
+          if [ "${{ github.ref_name }}" = "master" ]; then
+            echo "compose=docker-compose.prod.yml" >> $GITHUB_OUTPUT
+            echo "api=api-prod" >> $GITHUB_OUTPUT
+            echo "web=web-prod" >> $GITHUB_OUTPUT
+          else
+            echo "compose=docker-compose.dev.yml" >> $GITHUB_OUTPUT
+            echo "api=api-dev" >> $GITHUB_OUTPUT
+            echo "web=web-dev" >> $GITHUB_OUTPUT
+          fi
+
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1
         with:
@@ -62,6 +97,6 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd ~/meowter
-            docker compose -f docker-compose.prod.yml pull api web
-            docker compose -f docker-compose.prod.yml up -d --no-deps api web
+            docker compose -f ${{ steps.env.outputs.compose }} pull ${{ steps.env.outputs.api }} ${{ steps.env.outputs.web }}
+            docker compose -f ${{ steps.env.outputs.compose }} up -d --no-deps ${{ steps.env.outputs.api }} ${{ steps.env.outputs.web }}
             docker image prune -f

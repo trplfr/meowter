@@ -24,7 +24,10 @@ if (!root) {
 setApiErrorHandler(error => errorOccurred(error))
 
 // локаль из SSR (атрибут lang на <html>) или по домену
-const locale = document.documentElement.lang || (location.hostname.includes('meowter.ru') ? 'ru' : 'en')
+const locale =
+  document.documentElement.lang ||
+  (location.hostname.includes('ru') ? 'ru' : 'en')
+
 activateLocale(locale)
 
 const serverState = (globalThis as any).__SSR_STATE__
