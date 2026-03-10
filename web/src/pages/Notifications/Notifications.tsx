@@ -34,6 +34,7 @@ export const Notifications = () => {
   return (
     <Layout title={<Trans>Уведомления</Trans>} contentClassName={s.content}>
       <title>{t`Уведомления / Мяутер`}</title>
+      <meta name='robots' content='noindex' />
 
       {pending && notificationsList.length === 0 && (
         <div className={s.skeletons}>

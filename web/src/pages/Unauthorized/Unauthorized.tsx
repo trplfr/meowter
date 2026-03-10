@@ -15,6 +15,7 @@ export const Unauthorized = () => {
   return (
     <AuthLayout>
       <title>{t`Доступ запрещен / Мяутер`}</title>
+      <meta name='robots' content='noindex' />
 
       <div className={s.header} />
 

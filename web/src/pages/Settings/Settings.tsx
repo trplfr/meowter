@@ -93,6 +93,7 @@ export const Settings = () => {
       headerAction={headerAction}
     >
       <title>{t`Настройки / Мяутер`}</title>
+      <meta name='robots' content='noindex' />
 
       <form id='settings-form' className={s.form} onSubmit={handleSubmit}>
         {/* Avatar */}

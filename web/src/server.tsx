@@ -9,7 +9,7 @@ import ky from 'ky'
 
 import { routes, router } from '@core/router'
 import { activateLocale } from '@core/i18n'
-import { $session, appStarted, fetchSessionFx } from '@logic/session'
+import { $session, $origin, appStarted, fetchSessionFx } from '@logic/session'
 import { setSsrCookieProvider } from '@lib/api'
 
 import { App } from './App'
@@ -62,9 +62,16 @@ export const render = async (url: string, host = 'localhost', cookie = '') => {
 
   // оборачиваем рендер в контекст с куками, чтобы API-клиент их подхватил
   return ssrContext.run({ cookie }, async () => {
+    // origin из Host заголовка
+    const protocol = host.includes('localhost') ? 'http' : 'https'
+    const origin = `${protocol}://${host.split(':')[0]}`
+
     // fork с кешированной сессией (без повторного запроса)
     const scope = fork({
-      values: session ? [[$session, session]] : [],
+      values: [
+        [$origin, origin],
+        ...(session ? [[$session, session] as const] : [])
+      ],
       handlers: [
         [
           fetchSessionFx,

@@ -43,6 +43,7 @@ export const CreateMeow = () => {
       panel={null}
     >
       <title>{t`Мяутнуть / Мяутер`}</title>
+      <meta name='robots' content='noindex' />
       <CreateMeowForm />
     </Layout>
   )

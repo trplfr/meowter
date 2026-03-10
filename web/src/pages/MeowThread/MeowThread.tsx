@@ -6,10 +6,11 @@ import { Trans } from '@lingui/react/macro'
 import { useUnit } from 'effector-react'
 
 import { routes } from '@core/router'
-import { $session } from '@logic/session'
+import { $origin, $session } from '@logic/session'
 
 import { Layout } from '@modules/Layout'
 import { MeowCard, MeowCardSkeleton } from '@modules/MeowCard'
+import { SEO } from '@ui/Seo'
 import { ScrollButton } from '@ui/index'
 
 import {
@@ -33,11 +34,12 @@ export const MeowThread = () => {
   const scrollRef = useRef<HTMLDivElement>(null)
   const prevCountRef = useRef(0)
   const scrolledToHashRef = useRef(false)
-  const [meow, commentsList, pending, session] = useUnit([
+  const [meow, commentsList, pending, session, origin] = useUnit([
     $meow,
     $comments,
     meowQuery.$pending,
-    $session
+    $session,
+    $origin
   ])
   const [onLike, onMeowDelete, onReply, onCommentLike, onCommentDelete] =
     useUnit([
@@ -88,7 +90,55 @@ export const MeowThread = () => {
 
   return (
     <Layout title={<Trans>Обсуждение</Trans>} contentClassName={s.content}>
-      <title>{t`Обсуждение / Мяутер`}</title>
+      <title>
+        {meow
+          ? t`${meow.author.displayName}: ${meow.content.slice(0, 60)} / Мяутер`
+          : t`Обсуждение / Мяутер`}
+      </title>
+      {meow && (
+        <>
+          <meta name='description' content={meow.content.slice(0, 160)} />
+          <meta property='og:title' content={`${meow.author.displayName} в Мяутере`} />
+          <meta property='og:description' content={meow.content.slice(0, 160)} />
+          <meta property='og:type' content='article' />
+          <meta property='og:url' content={`${origin}/meow/${meow.id}`} />
+          {meow.imageUrl && <meta property='og:image' content={meow.imageUrl} />}
+          {meow.author.avatarUrl && !meow.imageUrl && (
+            <meta property='og:image' content={meow.author.avatarUrl} />
+          )}
+          <meta name='twitter:card' content={meow.imageUrl ? 'summary_large_image' : 'summary'} />
+          <SEO path={`/meow/${meow.id}`} />
+          <script type='application/ld+json'>
+            {JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'SocialMediaPosting',
+              headline: meow.content.slice(0, 110),
+              articleBody: meow.content,
+              author: {
+                '@type': 'Person',
+                name: meow.author.displayName,
+                url: `${origin}/cat/${meow.author.username}`
+              },
+              datePublished: meow.createdAt,
+              dateModified: meow.updatedAt,
+              url: `${origin}/meow/${meow.id}`,
+              interactionStatistic: [
+                {
+                  '@type': 'InteractionCounter',
+                  interactionType: 'https://schema.org/LikeAction',
+                  userInteractionCount: meow.likesCount
+                },
+                {
+                  '@type': 'InteractionCounter',
+                  interactionType: 'https://schema.org/CommentAction',
+                  userInteractionCount: meow.commentsCount
+                }
+              ],
+              ...(meow.imageUrl ? { image: meow.imageUrl } : {})
+            })}
+          </script>
+        </>
+      )}
 
       <div ref={scrollRef} className={s.threadScroll}>
         {!meow && pending && <MeowCardSkeleton />}

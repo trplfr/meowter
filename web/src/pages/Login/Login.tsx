@@ -13,6 +13,8 @@ export const Login = () => {
   return (
     <AuthLayout>
       <title>{t`Вход / Мяутер`}</title>
+      <meta name='description' content={t`Войдите в свой аккаунт Мяутера`} />
+      <meta name='robots' content='noindex' />
 
       <header className={s.header}>
         <button className={s.back} onClick={() => history.back()}>

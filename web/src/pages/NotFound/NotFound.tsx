@@ -15,6 +15,7 @@ export const NotFound = () => {
   return (
     <AuthLayout>
       <title>{t`404 / Мяутер`}</title>
+      <meta name='robots' content='noindex' />
 
       <header className={s.header}>
         <button className={s.back} onClick={() => history.back()}>

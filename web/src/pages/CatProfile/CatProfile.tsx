@@ -10,11 +10,12 @@ import { LogOut, Pencil } from 'lucide-react'
 import { type Meow, type MeowPreview } from '@shared/types'
 
 import { routes } from '@core/router'
-import { logout } from '@logic/session'
+import { $origin, logout } from '@logic/session'
 import { meowDeleted, remeowToggled, replyInitiated } from '@logic/feed'
 
 import { Layout } from '@modules/Layout'
 import { MeowCard, MeowCardSkeleton, Avatar } from '@modules/MeowCard'
+import { SEO } from '@ui/Seo'
 import { Skeleton } from '@ui/Skeleton'
 import { VirtualList } from '@ui/VirtualList'
 
@@ -33,11 +34,12 @@ import s from './CatProfile.module.scss'
 export const route = routes.catProfile
 
 export const CatProfile = () => {
-  const [profile, meows, hasMore, pending] = useUnit([
+  const [profile, meows, hasMore, pending, origin] = useUnit([
     $profile,
     $meows,
     $hasMore,
-    catMeowsQuery.$pending
+    catMeowsQuery.$pending,
+    $origin
   ])
   const [onLoadMore, onFollow, onLike, onLogout, onDelete, onRemeow, onReply] =
     useUnit([
@@ -110,6 +112,32 @@ export const CatProfile = () => {
       <title>
         {profile ? t`${profile.displayName} / Мяутер` : t`Профиль / Мяутер`}
       </title>
+      {profile && (
+        <>
+          <meta name='description' content={profile.bio || t`Профиль @${profile.username} в Мяутере`} />
+          <meta property='og:title' content={`${profile.displayName} (@${profile.username})`} />
+          <meta property='og:description' content={profile.bio || t`Профиль @${profile.username} в Мяутере`} />
+          <meta property='og:type' content='profile' />
+          <meta property='og:url' content={`${origin}/cat/${profile.username}`} />
+          {profile.avatarUrl && <meta property='og:image' content={profile.avatarUrl} />}
+          <meta name='twitter:card' content='summary' />
+          <SEO path={`/cat/${profile.username}`} />
+          <script type='application/ld+json'>
+            {JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'ProfilePage',
+              mainEntity: {
+                '@type': 'Person',
+                name: profile.displayName,
+                alternateName: `@${profile.username}`,
+                url: `${origin}/cat/${profile.username}`,
+                ...(profile.avatarUrl ? { image: profile.avatarUrl } : {}),
+                ...(profile.bio ? { description: profile.bio } : {})
+              }
+            })}
+          </script>
+        </>
+      )}
 
       {!profile && (
         <div className={s.header}>

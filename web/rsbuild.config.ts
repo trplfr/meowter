@@ -79,7 +79,8 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': 'http://localhost:4000',
-      '/uploads': 'http://localhost:4000'
+      '/uploads': 'http://localhost:4000',
+      '/sitemap.xml': 'http://localhost:4000'
     }
   },
   dev: {

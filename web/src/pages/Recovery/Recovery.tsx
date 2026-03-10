@@ -13,6 +13,7 @@ export const Recovery = () => {
   return (
     <AuthLayout>
       <title>{t`Восстановление / Мяутер`}</title>
+      <meta name='robots' content='noindex' />
 
       <header className={s.header}>
         <button className={s.back} onClick={() => history.back()}>

@@ -9,6 +9,7 @@ import { AuthModule } from './modules/auth/auth.module'
 import { MeowsModule } from './modules/meows/meows.module'
 import { CatsModule } from './modules/cats/cats.module'
 import { NotificationsModule } from './modules/notifications/notifications.module'
+import { SitemapModule } from './modules/sitemap/sitemap.module'
 import { HealthController } from './health.controller'
 
 @Module({
@@ -23,7 +24,8 @@ import { HealthController } from './health.controller'
     AuthModule,
     MeowsModule,
     CatsModule,
-    NotificationsModule
+    NotificationsModule,
+    SitemapModule
   ],
   controllers: [HealthController],
   providers: [{

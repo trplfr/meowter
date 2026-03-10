@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /settings
+Disallow: /notifications
+Disallow: /unauthorized
+
+Sitemap: https://meowter.app/sitemap.xml
+Sitemap: https://meowter.ru/sitemap.xml

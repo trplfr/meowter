@@ -54,6 +54,7 @@ export const Feed = () => {
   return (
     <Layout title={<Trans>Лента</Trans>} contentClassName={s.content}>
       <title>{t`Лента / Мяутер`}</title>
+      <meta name='robots' content='noindex' />
 
       {pending && meows.length === 0 && (
         <div className={s.skeletons}>

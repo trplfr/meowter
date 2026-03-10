@@ -123,6 +123,7 @@ export const Search = () => {
   return (
     <Layout title={<Trans>Поиск</Trans>} contentClassName={s.content}>
       <title>{t`Поиск / Мяутер`}</title>
+      <meta name='robots' content='noindex' />
 
       <div className={s.searchWrap} ref={wrapRef}>
         <div className={s.inputWrap}>
