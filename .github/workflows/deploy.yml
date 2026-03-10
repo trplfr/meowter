@@ -81,10 +81,12 @@ jobs:
         run: |
           if [ "${{ github.ref_name }}" = "master" ]; then
             echo "compose=docker-compose.prod.yml" >> $GITHUB_OUTPUT
+            echo "envfile=.env.prod" >> $GITHUB_OUTPUT
             echo "api=api-prod" >> $GITHUB_OUTPUT
             echo "web=web-prod" >> $GITHUB_OUTPUT
           else
             echo "compose=docker-compose.dev.yml" >> $GITHUB_OUTPUT
+            echo "envfile=.env.dev" >> $GITHUB_OUTPUT
             echo "api=api-dev" >> $GITHUB_OUTPUT
             echo "web=web-dev" >> $GITHUB_OUTPUT
           fi
@@ -97,6 +99,7 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd ~/meowter
-            docker compose -f ${{ steps.env.outputs.compose }} pull ${{ steps.env.outputs.api }} ${{ steps.env.outputs.web }}
-            docker compose -f ${{ steps.env.outputs.compose }} up -d --no-deps ${{ steps.env.outputs.api }} ${{ steps.env.outputs.web }}
+            git pull --ff-only
+            docker compose -f ${{ steps.env.outputs.compose }} --env-file ${{ steps.env.outputs.envfile }} pull ${{ steps.env.outputs.api }} ${{ steps.env.outputs.web }}
+            docker compose -f ${{ steps.env.outputs.compose }} --env-file ${{ steps.env.outputs.envfile }} up -d --no-deps ${{ steps.env.outputs.api }} ${{ steps.env.outputs.web }}
             docker image prune -f
