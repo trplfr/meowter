@@ -16,6 +16,7 @@ RUN yarn workspace shared build
 RUN yarn workspace api build
 
 FROM node:22-alpine AS runner
+RUN apk add --no-cache curl
 WORKDIR /app
 
 COPY --from=build /app/api/dist ./api/dist
