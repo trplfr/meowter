@@ -46,36 +46,39 @@ export class CatsService {
       throw new AppException(ErrorCode.USER_NOT_FOUND, 404, 'User not found')
     }
 
-    const [{ count: followingCount }] = await this.db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(follows)
-      .where(eq(follows.followerId, cat.id))
-
-    const [{ count: followersCount }] = await this.db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(follows)
-      .where(eq(follows.followingId, cat.id))
-
-    let isFollowing = false
-    if (currentUserId && currentUserId !== cat.id) {
-      const [row] = await this.db
-        .select({ followerId: follows.followerId })
+    // параллельно загружаем счетчики и проверку подписки
+    const [
+      [{ count: followingCount }],
+      [{ count: followersCount }],
+      followRow
+    ] = await Promise.all([
+      this.db
+        .select({ count: sql<number>`count(*)::int` })
         .from(follows)
-        .where(
-          and(
-            eq(follows.followerId, currentUserId),
-            eq(follows.followingId, cat.id)
-          )
-        )
-        .limit(1)
-      isFollowing = !!row
-    }
+        .where(eq(follows.followerId, cat.id)),
+      this.db
+        .select({ count: sql<number>`count(*)::int` })
+        .from(follows)
+        .where(eq(follows.followingId, cat.id)),
+      currentUserId && currentUserId !== cat.id
+        ? this.db
+            .select({ followerId: follows.followerId })
+            .from(follows)
+            .where(
+              and(
+                eq(follows.followerId, currentUserId),
+                eq(follows.followingId, cat.id)
+              )
+            )
+            .limit(1)
+        : Promise.resolve([])
+    ])
 
     return {
       ...cat,
       followingCount,
       followersCount,
-      isFollowing,
+      isFollowing: followRow.length > 0,
       isOwn: currentUserId === cat.id
     }
   }
@@ -138,67 +141,7 @@ export class CatsService {
       return { data: [], cursor: null, hasMore: false }
     }
 
-    const allTags = await this.db
-      .select()
-      .from(meowTags)
-      .where(inArray(meowTags.meowId, meowIds))
-
-    const likeCounts = await this.db
-      .select({ meowId: likes.meowId, count: sql<number>`count(*)::int` })
-      .from(likes)
-      .where(inArray(likes.meowId, meowIds))
-      .groupBy(likes.meowId)
-
-    const commentCounts = await this.db
-      .select({ meowId: comments.meowId, count: sql<number>`count(*)::int` })
-      .from(comments)
-      .where(inArray(comments.meowId, meowIds))
-      .groupBy(comments.meowId)
-
-    const userLikes = currentUserId
-      ? await this.db
-          .select({ meowId: likes.meowId })
-          .from(likes)
-          .where(
-            and(inArray(likes.meowId, meowIds), eq(likes.userId, currentUserId))
-          )
-      : []
-
-    // remeow counts
-    const remeowCounts = await this.db
-      .select({
-        remeowOfId: meows.remeowOfId,
-        count: sql<number>`count(*)::int`
-      })
-      .from(meows)
-      .where(inArray(meows.remeowOfId, meowIds))
-      .groupBy(meows.remeowOfId)
-
-    const userRemeows = currentUserId
-      ? await this.db
-          .select({ id: meows.id, remeowOfId: meows.remeowOfId })
-          .from(meows)
-          .where(
-            and(
-              inArray(meows.remeowOfId, meowIds),
-              eq(meows.authorId, currentUserId)
-            )
-          )
-      : []
-
-    const userReplies = currentUserId
-      ? await this.db
-          .select({ id: meows.id, replyToId: meows.replyToId })
-          .from(meows)
-          .where(
-            and(
-              inArray(meows.replyToId, meowIds),
-              eq(meows.authorId, currentUserId)
-            )
-          )
-      : []
-
-    // загрузка replyTo / remeowOf previews
+    // загружаем все enrichment-данные параллельно
     const refIds = [
       ...new Set([
         ...data.filter(m => m.replyToId).map(m => m.replyToId!),
@@ -206,35 +149,96 @@ export class CatsService {
       ])
     ]
 
-    let previewsMap = new Map<string, any>()
-    if (refIds.length > 0) {
-      const previews = await this.db
+    const [
+      allTags,
+      likeCounts,
+      commentCounts,
+      userLikes,
+      remeowCounts,
+      userRemeows,
+      userReplies,
+      previewsMap
+    ] = await Promise.all([
+      this.db
+        .select()
+        .from(meowTags)
+        .where(inArray(meowTags.meowId, meowIds)),
+      this.db
+        .select({ meowId: likes.meowId, count: sql<number>`count(*)::int` })
+        .from(likes)
+        .where(inArray(likes.meowId, meowIds))
+        .groupBy(likes.meowId),
+      this.db
+        .select({ meowId: comments.meowId, count: sql<number>`count(*)::int` })
+        .from(comments)
+        .where(inArray(comments.meowId, meowIds))
+        .groupBy(comments.meowId),
+      currentUserId
+        ? this.db
+            .select({ meowId: likes.meowId })
+            .from(likes)
+            .where(
+              and(inArray(likes.meowId, meowIds), eq(likes.userId, currentUserId))
+            )
+        : Promise.resolve([] as { meowId: string }[]),
+      this.db
         .select({
-          id: meows.id,
-          content: meows.content,
-          imageUrl: meows.imageUrl,
-          createdAt: meows.createdAt,
-          author: {
-            id: cats.id,
-            username: cats.username,
-            displayName: cats.displayName,
-            firstName: cats.firstName,
-            lastName: cats.lastName,
-            email: cats.email,
-            bio: cats.bio,
-            contacts: cats.contacts,
-            sex: cats.sex,
-            avatarUrl: cats.avatarUrl,
-            verified: cats.verified,
-            createdAt: cats.createdAt
-          }
+          remeowOfId: meows.remeowOfId,
+          count: sql<number>`count(*)::int`
         })
         .from(meows)
-        .innerJoin(cats, eq(meows.authorId, cats.id))
-        .where(inArray(meows.id, refIds))
-
-      previewsMap = new Map(previews.map(p => [p.id, p]))
-    }
+        .where(inArray(meows.remeowOfId, meowIds))
+        .groupBy(meows.remeowOfId),
+      currentUserId
+        ? this.db
+            .select({ id: meows.id, remeowOfId: meows.remeowOfId })
+            .from(meows)
+            .where(
+              and(
+                inArray(meows.remeowOfId, meowIds),
+                eq(meows.authorId, currentUserId)
+              )
+            )
+        : Promise.resolve([] as { id: string; remeowOfId: string | null }[]),
+      currentUserId
+        ? this.db
+            .select({ id: meows.id, replyToId: meows.replyToId })
+            .from(meows)
+            .where(
+              and(
+                inArray(meows.replyToId, meowIds),
+                eq(meows.authorId, currentUserId)
+              )
+            )
+        : Promise.resolve([] as { id: string; replyToId: string | null }[]),
+      refIds.length > 0
+        ? this.db
+            .select({
+              id: meows.id,
+              content: meows.content,
+              imageUrl: meows.imageUrl,
+              createdAt: meows.createdAt,
+              author: {
+                id: cats.id,
+                username: cats.username,
+                displayName: cats.displayName,
+                firstName: cats.firstName,
+                lastName: cats.lastName,
+                email: cats.email,
+                bio: cats.bio,
+                contacts: cats.contacts,
+                sex: cats.sex,
+                avatarUrl: cats.avatarUrl,
+                verified: cats.verified,
+                createdAt: cats.createdAt
+              }
+            })
+            .from(meows)
+            .innerJoin(cats, eq(meows.authorId, cats.id))
+            .where(inArray(meows.id, refIds))
+            .then(rows => new Map(rows.map(p => [p.id, p])))
+        : Promise.resolve(new Map<string, any>())
+    ])
 
     const tagsMap = new Map<string, typeof allTags>()
     for (const tag of allTags) {

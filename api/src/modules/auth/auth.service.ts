@@ -175,15 +175,17 @@ export class AuthService {
       throw new AppException(ErrorCode.USER_NOT_FOUND, 404, 'User not found')
     }
 
-    const [{ count: followingCount }] = await this.db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(follows)
-      .where(eq(follows.followerId, user.id))
-
-    const [{ count: followersCount }] = await this.db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(follows)
-      .where(eq(follows.followingId, user.id))
+    const [[{ count: followingCount }], [{ count: followersCount }]] =
+      await Promise.all([
+        this.db
+          .select({ count: sql<number>`count(*)::int` })
+          .from(follows)
+          .where(eq(follows.followerId, user.id)),
+        this.db
+          .select({ count: sql<number>`count(*)::int` })
+          .from(follows)
+          .where(eq(follows.followingId, user.id))
+      ])
 
     return {
       ...user,
@@ -232,15 +234,17 @@ export class AuthService {
       throw new AppException(ErrorCode.USER_NOT_FOUND, 404, 'User not found')
     }
 
-    const [{ count: followingCount }] = await this.db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(follows)
-      .where(eq(follows.followerId, user.id))
-
-    const [{ count: followersCount }] = await this.db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(follows)
-      .where(eq(follows.followingId, user.id))
+    const [[{ count: followingCount }], [{ count: followersCount }]] =
+      await Promise.all([
+        this.db
+          .select({ count: sql<number>`count(*)::int` })
+          .from(follows)
+          .where(eq(follows.followerId, user.id)),
+        this.db
+          .select({ count: sql<number>`count(*)::int` })
+          .from(follows)
+          .where(eq(follows.followingId, user.id))
+      ])
 
     return {
       ...user,

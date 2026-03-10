@@ -1,4 +1,4 @@
-import { Global, Module } from '@nestjs/common'
+import { Global, Inject, Module, type OnModuleDestroy } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { drizzle, type NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { Pool } from 'pg'
@@ -40,4 +40,10 @@ export type Db = NodePgDatabase<typeof schema>
   ],
   exports: [DB, DB_POOL]
 })
-export class DbModule {}
+export class DbModule implements OnModuleDestroy {
+  constructor(@Inject(DB_POOL) private readonly pool: Pool) {}
+
+  async onModuleDestroy() {
+    await this.pool.end()
+  }
+}

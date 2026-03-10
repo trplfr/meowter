@@ -5,16 +5,39 @@ import { AuthService } from '../auth.service'
 
 /* Mocks */
 
-const mockDb = {
-  select: vi.fn().mockReturnThis(),
-  from: vi.fn().mockReturnThis(),
-  where: vi.fn().mockReturnThis(),
-  limit: vi.fn(),
-  insert: vi.fn().mockReturnThis(),
-  values: vi.fn().mockReturnThis(),
-  returning: vi.fn(),
-  update: vi.fn().mockReturnThis(),
-  set: vi.fn().mockReturnThis()
+// результаты запросов, выбираются по порядку
+let queryResults: any[] = []
+let queryIndex = 0
+
+// каждый вызов select/insert/update создает независимую цепочку
+const createQueryChain = (resolve: () => any) => {
+  const chain: any = {}
+  chain.from = vi.fn().mockReturnValue(chain)
+  chain.where = vi.fn().mockReturnValue(chain)
+  chain.limit = vi.fn().mockImplementation(() => resolve())
+  chain.values = vi.fn().mockReturnValue(chain)
+  chain.returning = vi.fn().mockImplementation(() => resolve())
+  chain.set = vi.fn().mockReturnValue(chain)
+  chain.groupBy = vi.fn().mockReturnValue(chain)
+  // для запросов без limit/returning = then-able
+  chain.then = (fn: any) => Promise.resolve(resolve()).then(fn)
+  return chain
+}
+
+const mockDb: any = {
+  select: vi.fn().mockImplementation(() => {
+    const idx = queryIndex++
+    return createQueryChain(() => queryResults[idx])
+  }),
+  insert: vi.fn().mockImplementation(() => {
+    const idx = queryIndex++
+    return createQueryChain(() => queryResults[idx])
+  }),
+  update: vi.fn().mockImplementation(() => {
+    const idx = queryIndex++
+    return createQueryChain(() => queryResults[idx])
+  }),
+  transaction: vi.fn()
 }
 
 const mockRedis = {
@@ -52,24 +75,25 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    queryResults = []
+    queryIndex = 0
     service = createService()
   })
 
   describe('register', () => {
     it('создает пользователя и возвращает токены', async () => {
-      // email check
-      mockDb.limit.mockResolvedValueOnce([])
-      // username check
-      mockDb.limit.mockResolvedValueOnce([])
-      mockDb.returning.mockResolvedValueOnce([
-        {
+      queryResults = [
+        [], // email check (select -> limit)
+        [], // username check (select -> limit)
+        [{ // insert -> returning
           id: '1',
           username: 'whiskers',
           email: 'whiskers@meowter.app',
           displayName: 'whiskers',
-          avatarUrl: null
-        }
-      ])
+          avatarUrl: null,
+          verified: false
+        }]
+      ]
 
       const result = await service.register({
         username: 'whiskers',
@@ -84,7 +108,9 @@ describe('AuthService', () => {
     })
 
     it('бросает AppException если email занят', async () => {
-      mockDb.limit.mockResolvedValueOnce([{ id: '1' }])
+      queryResults = [
+        [{ id: '1' }] // email check = found
+      ]
 
       await expect(
         service.register({
@@ -96,8 +122,10 @@ describe('AuthService', () => {
     })
 
     it('бросает AppException если username занят', async () => {
-      mockDb.limit.mockResolvedValueOnce([]) // email свободен
-      mockDb.limit.mockResolvedValueOnce([{ id: '1' }]) // username занят
+      queryResults = [
+        [], // email = free
+        [{ id: '1' }] // username = taken
+      ]
 
       await expect(
         service.register({
@@ -111,16 +139,17 @@ describe('AuthService', () => {
 
   describe('login', () => {
     it('возвращает токены при верных данных', async () => {
-      mockDb.limit.mockResolvedValueOnce([
-        {
+      queryResults = [
+        [{ // select user
           id: '1',
           username: 'whiskers',
           email: 'whiskers@meowter.app',
           displayName: 'whiskers',
           avatarUrl: null,
+          verified: false,
           passwordHash: 'hashed-password'
-        }
-      ])
+        }]
+      ]
       vi.mocked(bcrypt.compare).mockResolvedValueOnce(true as never)
 
       const result = await service.login({
@@ -133,7 +162,9 @@ describe('AuthService', () => {
     })
 
     it('бросает AppException при неверной почте', async () => {
-      mockDb.limit.mockResolvedValueOnce([])
+      queryResults = [
+        [] // user not found
+      ]
 
       await expect(
         service.login({ email: 'wrong@meowter.app', password: 'pass' })
@@ -141,14 +172,14 @@ describe('AuthService', () => {
     })
 
     it('бросает AppException при неверном пароле', async () => {
-      mockDb.limit.mockResolvedValueOnce([
-        {
+      queryResults = [
+        [{
           id: '1',
           username: 'whiskers',
           email: 'whiskers@meowter.app',
           passwordHash: 'hashed-password'
-        }
-      ])
+        }]
+      ]
       vi.mocked(bcrypt.compare).mockResolvedValueOnce(false as never)
 
       await expect(
@@ -160,15 +191,16 @@ describe('AuthService', () => {
   describe('refresh', () => {
     it('выдает новые токены по валидному refresh token', async () => {
       mockRedis.get.mockResolvedValueOnce('user-id-1')
-      mockDb.limit.mockResolvedValueOnce([
-        {
+      queryResults = [
+        [{ // select user
           id: 'user-id-1',
           username: 'whiskers',
           email: 'whiskers@meowter.app',
           displayName: 'whiskers',
-          avatarUrl: null
-        }
-      ])
+          avatarUrl: null,
+          verified: false
+        }]
+      ]
 
       const result = await service.refresh('valid-refresh-token')
 
@@ -194,9 +226,9 @@ describe('AuthService', () => {
   })
 
   describe('me', () => {
-    it('возвращает профиль пользователя', async () => {
-      mockDb.limit.mockResolvedValueOnce([
-        {
+    it('возвращает профиль пользователя с подписками', async () => {
+      queryResults = [
+        [{ // select user
           id: '1',
           username: 'whiskers',
           email: 'whiskers@meowter.app',
@@ -204,16 +236,23 @@ describe('AuthService', () => {
           bio: null,
           avatarUrl: null,
           createdAt: new Date()
-        }
-      ])
+        }],
+        [{ count: 5 }], // followingCount (Promise.all)
+        [{ count: 10 }] // followersCount (Promise.all)
+      ]
 
       const result = await service.me({ sub: '1', username: 'whiskers' })
 
       expect(result.username).toBe('whiskers')
+      expect(result.followingCount).toBe(5)
+      expect(result.followersCount).toBe(10)
+      expect(result.isOwn).toBe(true)
     })
 
     it('бросает AppException если пользователь не найден', async () => {
-      mockDb.limit.mockResolvedValueOnce([])
+      queryResults = [
+        [] // user not found
+      ]
 
       await expect(
         service.me({ sub: 'non-existent', username: 'ghost' })
