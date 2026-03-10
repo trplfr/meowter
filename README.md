@@ -1,40 +1,85 @@
 <p align="center">
-  <img src="https://i.imgur.com/mhRDVJP.png">
+  <img src="https://raw.githubusercontent.com/trplfr/meowter/dev/web/src/assets/images/hello.png" alt="Meowter" width="200">
 </p>
 
-[![GitHub stars](https://img.shields.io/github/stars/trplfr/meowter.svg?style=flat-square)](https://github.com/trplfr/meowter/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/trplfr/meowter.svg?style=flat-square)](https://github.com/trplfr/meowter/network)
+<h3 align="center">Meowter</h3>
 
-meowter is a responsive [React](https://reactjs.org/) app that utilises Redux and Router.
+<p align="center">
+  Social network for cats, by cats.<br>
+  Posts are <b>meows</b>. Tilde syntax (<code>~word</code>) builds your feed by semantic similarity.<br>
+  No passive scrolling = to read, you gotta meow first.
+</p>
 
-<!-- ![] -->
+---
 
-## Installation
-[node.js](http://nodejs.org/download/) and npm.
+## What's this?
 
-If you would like to download the code and try it for yourself:
+A cat-themed twitter-like where every post is a meow. Write with `~tilde` tags and your feed fills up with semantically similar content (pgvector magic). The catch? You can't just lurk. Meow or leave.
 
-1. Clone the repo: `git@github.com:trplfr/meowter`
-2. `cd meowter/client`
-2. Install packages for client: `npm i`
-3. Build project, start client and launch: `npm run start`
-2. `cd meowter/server`
-2. Install packages for server: `npm i`
-3. Build project, start server and launch: `npm run start:dev`
-4. Open your browser at: `http://localhost:8080`
+## Stack
 
-## Tools
-Key tools used in this project are:
+**Frontend**: React 19, TypeScript 5.9, Effector, Rsbuild SSR, atomic-router, farfetched, SCSS Modules, lingui
 
-| Tool             | Description   |
-| :-------------:|--------------|
-| [React](https://reactjs.org/) | A JavaScript library for building user interfaces |
-| [Redux](https://redux.js.org/) | A Predictable State Container for React |
-| [Router](https://github.com/ReactTraining/react-router) | Declarative routing for React |
-| [NestJS](https://github.com/ReactTraining/react-router) | A progressive Node.js framework for building efficient, reliable and scalable server-side applications |
+**Backend**: NestJS + Fastify, Drizzle ORM, PostgreSQL + pgvector, Redis
 
-## Node.js
-Supports LTS version (v12).
+**Infra**: Yarn 4 workspaces, Docker Compose, nginx, Let's Encrypt, GitHub Actions
+
+## Structure
+
+```
+meowter/
+├── web/       # frontend (React SSR)
+├── api/       # backend (NestJS)
+├── shared/    # shared types
+└── docker/    # Dockerfiles, nginx
+```
+
+## Development
+
+```bash
+yarn install
+
+# postgres + redis
+docker compose up -d
+
+# api + web
+yarn dev
+
+# api:  http://localhost:4000/api
+# web:  http://localhost:3000
+# docs: http://localhost:4000/api/docs (swagger)
+```
+
+## Deployment
+
+Two environments, one VPS, zero excuses:
+
+| Environment | Branch | Domains |
+|-------------|--------|---------|
+| dev | `dev` | dev.meowter.app, dev.meowter.ru |
+| prod | `master` | meowter.app, meowter.ru |
+
+Push to `dev` or `master` = GitHub Actions builds Docker images and deploys automatically.
+
+```bash
+# ship to dev
+git checkout dev && git merge my-branch && git push origin dev
+
+# ship to prod
+git checkout master && git merge dev && git push origin master
+```
+
+## Key Concepts
+
+- **Meows, not tweets** = every post is a meow. Because cats
+- **Tilde tags** (`~word`) = semantic feed powered by pgvector embeddings
+- **No lurkers** = write to unlock the feed
+- **SSR** = server-side rendering with Effector scope per request
+
+## License
+
+Source-available. View, study, fork for personal/educational use = go ahead. Commercial use or running as a service = ask first. See [LICENSE](LICENSE).
 
 ## Author
+
 [Valentine C.](https://github.com/trplfr)

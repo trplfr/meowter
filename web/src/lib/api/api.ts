@@ -51,11 +51,11 @@ const parseError = async (error: unknown): Promise<never> => {
   throw appError
 }
 
-const ssrApiUrl = process.env.SSR_API_URL || 'http://localhost:4000/api'
-
 export const api = ky.create({
   prefixUrl:
-    typeof window !== 'undefined' ? '/api' : ssrApiUrl,
+    typeof window !== 'undefined'
+      ? '/api'
+      : (process.env.SSR_API_URL || 'http://localhost:4000/api'),
   credentials: 'include',
   retry: 0,
   hooks: {

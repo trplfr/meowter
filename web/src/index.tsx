@@ -26,7 +26,7 @@ setApiErrorHandler(error => errorOccurred(error))
 // локаль из SSR (атрибут lang на <html>) или по домену
 const locale =
   document.documentElement.lang ||
-  (location.hostname.includes('ru') ? 'ru' : 'en')
+  (location.hostname.endsWith('.app') ? 'en' : 'ru')
 
 activateLocale(locale)
 

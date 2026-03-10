@@ -21,11 +21,11 @@ setSsrCookieProvider(() => ssrContext.getStore()?.cookie || '')
 
 // определяем локаль по домену
 const getLocale = (host: string) => {
-  if (host.includes('meowter.ru')) {
-    return 'ru'
+  if (host.endsWith('.app')) {
+    return 'en'
   }
 
-  return 'en'
+  return 'ru'
 }
 
 const GUEST_PATHS = ['/', '/login', '/register', '/recovery']
