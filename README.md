@@ -54,10 +54,10 @@ yarn dev
 
 Two environments, one VPS, zero excuses:
 
-| Environment | Branch | Domains |
-|-------------|--------|---------|
-| dev | `dev` | dev.meowter.app, dev.meowter.ru |
-| prod | `master` | meowter.app, meowter.ru |
+| Environment | Branch |
+|-------------|-------|
+| dev | `dev` |
+| prod | `master` |
 
 Push to `dev` or `master` = GitHub Actions builds Docker images and deploys automatically.
 
