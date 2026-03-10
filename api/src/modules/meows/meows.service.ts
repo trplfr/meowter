@@ -472,7 +472,7 @@ export class MeowsService {
 
   async getUserTags(userId: string): Promise<string[]> {
     // один запрос: собственные теги + теги из ремяутов, дедупликация по stem
-    const rows = await this.db.execute<{ tag: string; stem: string }>(sql`
+    const { rows } = await this.db.execute<{ tag: string; stem: string }>(sql`
       SELECT DISTINCT ON (stem) tag, stem FROM (
         SELECT ${meowTags.tag} AS tag, ${meowTags.stem} AS stem
         FROM ${meowTags}
@@ -487,7 +487,7 @@ export class MeowsService {
       ORDER BY stem
     `)
 
-    return rows.rows.map(r => r.tag)
+    return rows.map(r => r.tag)
   }
 
   // SQL-условие сопоставления тегов: exact stem + prefix (длинные) + levenshtein (короткие) + stem levenshtein
@@ -516,7 +516,7 @@ export class MeowsService {
 
   // проверяет, есть ли у пользователя доступ к тегу (писал сам или ремяукал) = один запрос через EXISTS
   private async userHasTag(userId: string, tag: string): Promise<boolean> {
-    const [result] = await this.db.execute<{ found: boolean }>(sql`
+    const { rows } = await this.db.execute<{ found: boolean }>(sql`
       SELECT EXISTS (
         SELECT 1 FROM ${meowTags}
         INNER JOIN ${meows} ON ${meowTags.meowId} = ${meows.id}
@@ -528,7 +528,7 @@ export class MeowsService {
       ) AS found
     `)
 
-    return result.found
+    return rows[0].found
   }
 
   // находит последний тег из последнего meow пользователя
