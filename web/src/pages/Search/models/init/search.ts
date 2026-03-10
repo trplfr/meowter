@@ -43,6 +43,15 @@ sample({
   target: tagsQuery.start
 })
 
+// при обновлении query params (уже на /search, кликнули ~tag) = запускаем поиск по $urlTag
+sample({
+  clock: routes.search.updated,
+  source: { urlTag: $urlTag, tagsLoaded: $tagsLoaded },
+  filter: ({ urlTag, tagsLoaded }) => urlTag.length > 0 && tagsLoaded,
+  fn: ({ urlTag }) => urlTag,
+  target: searchTriggered
+})
+
 // сброс при открытии
 sample({
   clock: routes.search.opened,

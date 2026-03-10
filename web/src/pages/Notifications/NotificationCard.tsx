@@ -66,11 +66,8 @@ const NotificationText = ({
 export const NotificationCard = ({ notification }: NotificationCardProps) => {
   const { actor, meow, comment, type } = notification
 
-  // для MENTION ссылка ведет на мяут с хешем коммента
-  const meowThreadHref = meow
-    ? comment
-      ? `/meow/${meow.id}#comment-${comment.id}`
-      : `/meow/${meow.id}`
+  const commentHref = meow && comment
+    ? `/meow/${meow.id}#comment-${comment.id}`
     : null
 
   return (
@@ -100,8 +97,8 @@ export const NotificationCard = ({ notification }: NotificationCardProps) => {
         <TimeAgo date={notification.createdAt} />
       </div>
 
-      {comment && meowThreadHref && (
-        <a href={meowThreadHref} className={s.commentPreview}>
+      {comment && commentHref && (
+        <a href={commentHref} className={s.commentPreview}>
           <div className={s.commentPreviewContent}>
             {comment.content.length > 150
               ? comment.content.slice(0, 150) + '...'

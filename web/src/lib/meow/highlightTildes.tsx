@@ -1,4 +1,7 @@
 import { type ReactNode } from 'react'
+import { Link } from 'atomic-router-react'
+
+import { routes } from '@core/router'
 
 // разбивает текст на фрагменты, оборачивая ~слово в mark или ссылку
 export const highlightTildes = (
@@ -20,13 +23,14 @@ export const highlightTildes = (
 
     if (linkable) {
       parts.push(
-        <a
+        <Link
           key={`tilde-${match.index}`}
-          href={`/search?tag=${encodeURIComponent(tag)}`}
+          to={routes.search}
+          query={{ tag }}
           className={className}
         >
           {match[0]}
-        </a>
+        </Link>
       )
     } else {
       parts.push(

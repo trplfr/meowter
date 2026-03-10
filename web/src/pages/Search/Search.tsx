@@ -1,7 +1,6 @@
 import './models/init'
 
-import { useCallback } from 'react'
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
 import { useUnit } from 'effector-react'
@@ -31,6 +30,7 @@ import {
   loadMore,
   meowLikeToggled,
   dropdownOpened,
+  dropdownClosed,
   searchQuery
 } from './models'
 
@@ -67,6 +67,7 @@ export const Search = () => {
     onLoadMore,
     onLike,
     onDropdownOpen,
+    onDropdownClose,
     onDelete,
     onRemeow,
     onReply
@@ -77,6 +78,7 @@ export const Search = () => {
     loadMore,
     meowLikeToggled,
     dropdownOpened,
+    dropdownClosed,
     meowDeleted,
     remeowToggled,
     replyInitiated
@@ -103,12 +105,12 @@ export const Search = () => {
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) {
-        onClear()
+        onDropdownClose()
       }
     }
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
-  }, [onClear])
+  }, [onDropdownClose])
 
   // фильтруем теги
   const filteredTags =
