@@ -23,7 +23,7 @@ COPY --from=build /app/web/server.prod.js ./server.prod.js
 COPY --from=build /app/node_modules ./node_modules
 
 ENV NODE_ENV=production
-ENV SSR_API_URL=http://api:4000/api
+# SSR_API_URL задается в docker-compose (api-prod / api-dev)
 EXPOSE 3000
 
 CMD ["node", "server.prod.js"]
