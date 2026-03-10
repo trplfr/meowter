@@ -16,6 +16,7 @@ web/.env
 uploads/
 uploads-dev/
 api/uploads/
+api/src/db/seed.ts
 
 certs/
 
