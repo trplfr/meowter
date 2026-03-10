@@ -6,6 +6,8 @@ import { JwtAuthGuard } from '../../common/guards'
 
 import { NotificationsService } from './notifications.service'
 
+const MAX_LIMIT = 100
+
 @ApiTags('Notifications')
 @Controller('notifications')
 @UseGuards(JwtAuthGuard)
@@ -20,10 +22,12 @@ export class NotificationsController {
     @Query('cursor') cursor?: string,
     @Query('limit') limit?: string
   ) {
+    const parsedLimit = limit ? Math.min(parseInt(limit, 10) || 20, MAX_LIMIT) : 20
+
     return this.notifications.getList(
       user.sub,
       cursor,
-      limit ? parseInt(limit, 10) : 20
+      parsedLimit
     )
   }
 

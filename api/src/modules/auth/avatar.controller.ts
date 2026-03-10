@@ -15,6 +15,7 @@ import { ErrorCode } from '@shared/types'
 import { CurrentUser, type JwtPayload } from '../../common/decorators'
 import { AppException } from '../../common/exceptions'
 import { JwtAuthGuard } from '../../common/guards'
+import { isValidImage } from '../../common/lib'
 
 import { AuthService } from './auth.service'
 
@@ -59,6 +60,14 @@ export class AvatarController {
         ErrorCode.FILE_TOO_LARGE,
         400,
         'File too large (max 5MB)'
+      )
+    }
+
+    if (!isValidImage(buffer, file.mimetype)) {
+      throw new AppException(
+        ErrorCode.FILE_INVALID_TYPE,
+        400,
+        'Invalid image file'
       )
     }
 

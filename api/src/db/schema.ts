@@ -6,62 +6,84 @@ import {
   timestamp,
   integer,
   boolean,
-  primaryKey
+  primaryKey,
+  index
 } from 'drizzle-orm/pg-core'
 
 /* Cats */
 
-export const cats = pgTable('cats', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  username: varchar('username', { length: 30 }).unique().notNull(),
-  email: varchar('email', { length: 255 }).unique().notNull(),
-  passwordHash: text('password_hash').notNull(),
-  displayName: varchar('display_name', { length: 50 }).notNull(),
-  firstName: varchar('first_name', { length: 50 }),
-  lastName: varchar('last_name', { length: 50 }),
-  bio: text('bio'),
-  contacts: varchar('contacts', { length: 255 }),
-  sex: varchar('sex', { length: 10 }),
-  avatarUrl: text('avatar_url'),
-  verified: boolean('verified').default(false).notNull(),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .defaultNow()
-    .notNull()
-})
+export const cats = pgTable(
+  'cats',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    username: varchar('username', { length: 30 }).unique().notNull(),
+    email: varchar('email', { length: 255 }).unique().notNull(),
+    passwordHash: text('password_hash').notNull(),
+    displayName: varchar('display_name', { length: 50 }).notNull(),
+    firstName: varchar('first_name', { length: 50 }),
+    lastName: varchar('last_name', { length: 50 }),
+    bio: text('bio'),
+    contacts: varchar('contacts', { length: 255 }),
+    sex: varchar('sex', { length: 10 }),
+    avatarUrl: text('avatar_url'),
+    verified: boolean('verified').default(false).notNull(),
+    deletedAt: timestamp('deleted_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull()
+  }
+)
 
 /* Meows */
 
-export const meows = pgTable('meows', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  authorId: uuid('author_id')
-    .references(() => cats.id, { onDelete: 'cascade' })
-    .notNull(),
-  content: text('content').notNull(),
-  imageUrl: text('image_url'),
-  replyToId: uuid('reply_to_id'),
-  remeowOfId: uuid('remeow_of_id'),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .defaultNow()
-    .notNull()
-})
+export const meows = pgTable(
+  'meows',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    authorId: uuid('author_id')
+      .references(() => cats.id, { onDelete: 'cascade' })
+      .notNull(),
+    content: text('content').notNull(),
+    imageUrl: text('image_url'),
+    replyToId: uuid('reply_to_id'),
+    remeowOfId: uuid('remeow_of_id'),
+    deletedAt: timestamp('deleted_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull()
+  },
+  t => [
+    index('idx_meows_author_id').on(t.authorId),
+    index('idx_meows_created_at').on(t.createdAt),
+    index('idx_meows_reply_to_id').on(t.replyToId),
+    index('idx_meows_remeow_of_id').on(t.remeowOfId)
+  ]
+)
 
 /* Meow Tags */
 
-export const meowTags = pgTable('meow_tags', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  meowId: uuid('meow_id')
-    .references(() => meows.id, { onDelete: 'cascade' })
-    .notNull(),
-  tag: varchar('tag', { length: 100 }).notNull(),
-  stem: varchar('stem', { length: 100 }).notNull(),
-  position: integer('position').notNull()
-})
+export const meowTags = pgTable(
+  'meow_tags',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    meowId: uuid('meow_id')
+      .references(() => meows.id, { onDelete: 'cascade' })
+      .notNull(),
+    tag: varchar('tag', { length: 100 }).notNull(),
+    stem: varchar('stem', { length: 100 }).notNull(),
+    position: integer('position').notNull()
+  },
+  t => [
+    index('idx_meow_tags_meow_id').on(t.meowId),
+    index('idx_meow_tags_stem').on(t.stem)
+  ]
+)
 
 /* Likes */
 
@@ -78,7 +100,10 @@ export const likes = pgTable(
       .defaultNow()
       .notNull()
   },
-  t => [primaryKey({ columns: [t.userId, t.meowId] })]
+  t => [
+    primaryKey({ columns: [t.userId, t.meowId] }),
+    index('idx_likes_meow_id').on(t.meowId)
+  ]
 )
 
 /* Follows */
@@ -101,20 +126,26 @@ export const follows = pgTable(
 
 /* Comments */
 
-export const comments = pgTable('comments', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  meowId: uuid('meow_id')
-    .references(() => meows.id, { onDelete: 'cascade' })
-    .notNull(),
-  authorId: uuid('author_id')
-    .references(() => cats.id, { onDelete: 'cascade' })
-    .notNull(),
-  content: text('content').notNull(),
-  parentId: uuid('parent_id'),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .defaultNow()
-    .notNull()
-})
+export const comments = pgTable(
+  'comments',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    meowId: uuid('meow_id')
+      .references(() => meows.id, { onDelete: 'cascade' })
+      .notNull(),
+    authorId: uuid('author_id')
+      .references(() => cats.id, { onDelete: 'cascade' })
+      .notNull(),
+    content: text('content').notNull(),
+    parentId: uuid('parent_id'),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull()
+  },
+  t => [
+    index('idx_comments_meow_id').on(t.meowId)
+  ]
+)
 
 /* Comment Likes */
 
@@ -136,21 +167,28 @@ export const commentLikes = pgTable(
 
 /* Notifications */
 
-export const notifications = pgTable('notifications', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  userId: uuid('user_id')
-    .references(() => cats.id, { onDelete: 'cascade' })
-    .notNull(),
-  actorId: uuid('actor_id')
-    .references(() => cats.id, { onDelete: 'cascade' })
-    .notNull(),
-  type: varchar('type', { length: 20 }).notNull(),
-  meowId: uuid('meow_id').references(() => meows.id, { onDelete: 'cascade' }),
-  commentId: uuid('comment_id').references(() => comments.id, {
-    onDelete: 'cascade'
-  }),
-  read: boolean('read').default(false).notNull(),
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .defaultNow()
-    .notNull()
-})
+export const notifications = pgTable(
+  'notifications',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id')
+      .references(() => cats.id, { onDelete: 'cascade' })
+      .notNull(),
+    actorId: uuid('actor_id')
+      .references(() => cats.id, { onDelete: 'cascade' })
+      .notNull(),
+    type: varchar('type', { length: 20 }).notNull(),
+    meowId: uuid('meow_id').references(() => meows.id, { onDelete: 'cascade' }),
+    commentId: uuid('comment_id').references(() => comments.id, {
+      onDelete: 'cascade'
+    }),
+    read: boolean('read').default(false).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull()
+  },
+  t => [
+    index('idx_notifications_user_id').on(t.userId),
+    index('idx_notifications_user_read').on(t.userId, t.read)
+  ]
+)

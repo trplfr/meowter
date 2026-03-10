@@ -25,6 +25,7 @@ import { ErrorCode } from '@shared/types'
 import { CurrentUser, type JwtPayload } from '../../common/decorators'
 import { AppException } from '../../common/exceptions'
 import { JwtAuthGuard, OptionalJwtAuthGuard } from '../../common/guards'
+import { isValidImage, stripHtml } from '../../common/lib'
 
 import { MeowsService } from './meows.service'
 import { CreateMeowDto, CreateCommentDto } from './dto'
@@ -32,6 +33,7 @@ import { CreateMeowDto, CreateCommentDto } from './dto'
 const UPLOAD_DIR = join(process.cwd(), 'uploads', 'meows')
 const ALLOWED_MIMES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif']
 const MAX_SIZE = 10 * 1024 * 1024 // 10 MB
+const MAX_LIMIT = 100
 
 @ApiTags('Meows')
 @Controller('meows')
@@ -52,7 +54,7 @@ export class MeowsController {
 
     for await (const part of parts) {
       if (part.type === 'field' && part.fieldname === 'content') {
-        content = part.value as string
+        content = stripHtml(part.value as string)
       }
 
       if (part.type === 'field' && part.fieldname === 'replyToId') {
@@ -78,6 +80,14 @@ export class MeowsController {
             ErrorCode.FILE_TOO_LARGE,
             400,
             'File too large (max 10MB)'
+          )
+        }
+
+        if (!isValidImage(buffer, part.mimetype)) {
+          throw new AppException(
+            ErrorCode.FILE_INVALID_TYPE,
+            400,
+            'Invalid image file'
           )
         }
 
@@ -116,10 +126,12 @@ export class MeowsController {
     @Query('tag') tag?: string,
     @Query('sort') sort?: string
   ) {
+    const parsedLimit = limit ? Math.min(parseInt(limit, 10) || 20, MAX_LIMIT) : 20
+
     return this.meows.getFeed(
       user.sub,
       cursor,
-      limit ? parseInt(limit, 10) : 20,
+      parsedLimit,
       tag,
       sort === 'popular' ? 'popular' : 'date'
     )
@@ -195,11 +207,13 @@ export class MeowsController {
     @Query('cursor') cursor?: string,
     @Query('limit') limit?: string
   ) {
+    const parsedLimit = limit ? Math.min(parseInt(limit, 10) || 20, MAX_LIMIT) : 20
+
     return this.meows.getComments(
       id,
       user?.sub,
       cursor,
-      limit ? parseInt(limit, 10) : 20
+      parsedLimit
     )
   }
 

@@ -14,6 +14,8 @@ import { JwtAuthGuard, OptionalJwtAuthGuard } from '../../common/guards'
 
 import { CatsService } from './cats.service'
 
+const MAX_LIMIT = 100
+
 @ApiTags('Cats')
 @Controller('cats')
 export class CatsController {
@@ -41,11 +43,13 @@ export class CatsController {
     @Query('cursor') cursor?: string,
     @Query('limit') limit?: string
   ) {
+    const parsedLimit = limit ? Math.min(parseInt(limit, 10) || 20, MAX_LIMIT) : 20
+
     return this.cats.getUserMeows(
       username,
       user?.sub,
       cursor,
-      limit ? parseInt(limit, 10) : 20
+      parsedLimit
     )
   }
 

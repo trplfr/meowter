@@ -12,6 +12,7 @@ import { DB, type Db } from '../../db/db.module'
 import { REDIS } from '../../db/redis.module'
 import { cats, follows } from '../../db/schema'
 import { AppException } from '../../common/exceptions'
+import { auditLog } from '../../common/lib'
 import type { JwtPayload } from '../../common/decorators'
 
 import type {
@@ -74,6 +75,8 @@ export class AuthService {
         verified: cats.verified
       })
 
+    auditLog('register', user.id, { username: dto.username, email: dto.email })
+
     return this.issueTokens(user)
   }
 
@@ -101,6 +104,8 @@ export class AuthService {
         'Invalid credentials'
       )
     }
+
+    auditLog('login', user.id, { email: dto.email })
 
     return this.issueTokens({
       id: user.id,
@@ -282,6 +287,8 @@ export class AuthService {
       .update(cats)
       .set({ passwordHash, updatedAt: new Date() })
       .where(eq(cats.id, userId))
+
+    auditLog('password_change', userId)
 
     return { ok: true }
   }

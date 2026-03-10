@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { eq, asc, desc, sql, and, lt, gt, inArray } from 'drizzle-orm'
+import { eq, asc, desc, sql, and, lt, gt, inArray, isNull } from 'drizzle-orm'
 
 import { ErrorCode, NotificationType } from '@shared/types'
 
@@ -80,7 +80,7 @@ export class MeowsService {
       const [original] = await this.db
         .select({ id: meows.id })
         .from(meows)
-        .where(eq(meows.id, replyToId))
+        .where(and(eq(meows.id, replyToId), isNull(meows.deletedAt)))
         .limit(1)
 
       if (!original) {
@@ -150,7 +150,7 @@ export class MeowsService {
         remeowOfId: meows.remeowOfId
       })
       .from(meows)
-      .where(eq(meows.id, meowId))
+      .where(and(eq(meows.id, meowId), isNull(meows.deletedAt)))
       .limit(1)
 
     if (!original) {
@@ -231,7 +231,7 @@ export class MeowsService {
       })
       .from(meows)
       .innerJoin(cats, eq(meows.authorId, cats.id))
-      .where(eq(meows.id, id))
+      .where(and(eq(meows.id, id), isNull(meows.deletedAt)))
       .limit(1)
 
     return row || null
@@ -253,7 +253,7 @@ export class MeowsService {
       })
       .from(meows)
       .innerJoin(cats, eq(meows.authorId, cats.id))
-      .where(inArray(meows.id, ids))
+      .where(and(inArray(meows.id, ids), isNull(meows.deletedAt)))
 
     return new Map(rows.map(r => [r.id, r]))
   }
@@ -272,7 +272,7 @@ export class MeowsService {
       })
       .from(meows)
       .innerJoin(cats, eq(meows.authorId, cats.id))
-      .where(eq(meows.id, id))
+      .where(and(eq(meows.id, id), isNull(meows.deletedAt)))
       .limit(1)
 
     if (!meow) {
@@ -495,7 +495,7 @@ export class MeowsService {
     const isPopular = sort === 'popular'
     const offset = isPopular && cursor ? parseInt(cursor, 10) : 0
 
-    const conditions: ReturnType<typeof eq>[] = []
+    const conditions: ReturnType<typeof eq>[] = [isNull(meows.deletedAt)]
 
     // cursor-пагинация только для date-сортировки
     if (cursor && !isPopular) {
@@ -669,7 +669,7 @@ export class MeowsService {
     const [meow] = await this.db
       .select({ id: meows.id, authorId: meows.authorId })
       .from(meows)
-      .where(eq(meows.id, meowId))
+      .where(and(eq(meows.id, meowId), isNull(meows.deletedAt)))
       .limit(1)
 
     if (!meow) {
@@ -777,7 +777,7 @@ export class MeowsService {
     const [meow] = await this.db
       .select({ id: meows.id })
       .from(meows)
-      .where(eq(meows.id, meowId))
+      .where(and(eq(meows.id, meowId), isNull(meows.deletedAt)))
       .limit(1)
 
     if (!meow) {
@@ -902,7 +902,7 @@ export class MeowsService {
     const [meow] = await this.db
       .select({ id: meows.id, authorId: meows.authorId })
       .from(meows)
-      .where(eq(meows.id, id))
+      .where(and(eq(meows.id, id), isNull(meows.deletedAt)))
       .limit(1)
 
     if (!meow) {
@@ -913,7 +913,10 @@ export class MeowsService {
       throw new AppException(ErrorCode.UNAUTHORIZED, 403, 'Not your meow')
     }
 
-    await this.db.delete(meows).where(eq(meows.id, id))
+    await this.db
+      .update(meows)
+      .set({ deletedAt: new Date() })
+      .where(eq(meows.id, id))
 
     return { ok: true }
   }

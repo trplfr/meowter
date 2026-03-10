@@ -9,9 +9,13 @@ import {
   UseGuards
 } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { Throttle } from '@nestjs/throttler'
 import type { FastifyReply, FastifyRequest } from 'fastify'
 
+import { ErrorCode } from '@shared/types'
+
 import { CurrentUser, type JwtPayload } from '../../common/decorators'
+import { AppException } from '../../common/exceptions'
 import { JwtAuthGuard } from '../../common/guards'
 
 import { AuthService } from './auth.service'
@@ -35,6 +39,7 @@ export class AuthController {
   constructor(private readonly auth: AuthService) {}
 
   @Post('register')
+  @Throttle({ default: { ttl: 60_000, limit: 3 } })
   @ApiOperation({ summary: 'Регистрация нового пользователя' })
   @ApiResponse({ status: 201, description: 'Пользователь создан' })
   @ApiResponse({ status: 409, description: 'Пользователь уже существует' })
@@ -50,6 +55,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @Throttle({ default: { ttl: 60_000, limit: 5 } })
   @ApiOperation({ summary: 'Вход в аккаунт' })
   @ApiResponse({ status: 200, description: 'Успешный вход' })
   @ApiResponse({ status: 401, description: 'Неверные данные' })
@@ -65,6 +71,7 @@ export class AuthController {
   }
 
   @Post('refresh')
+  @Throttle({ default: { ttl: 60_000, limit: 10 } })
   @ApiOperation({ summary: 'Обновление токенов' })
   @ApiResponse({ status: 200, description: 'Токены обновлены' })
   @ApiResponse({ status: 401, description: 'Невалидный refresh token' })
@@ -75,8 +82,11 @@ export class AuthController {
     const token = req.cookies?.refresh_token
 
     if (!token) {
-      res.status(401)
-      return { message: 'Refresh token отсутствует' }
+      throw new AppException(
+        ErrorCode.REFRESH_TOKEN_INVALID,
+        401,
+        'Refresh token missing'
+      )
     }
 
     const { accessToken, refreshToken, user } = await this.auth.refresh(token)

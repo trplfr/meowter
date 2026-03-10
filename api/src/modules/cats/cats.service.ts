@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { eq, desc, sql, and, lt, inArray } from 'drizzle-orm'
+import { eq, desc, sql, and, lt, inArray, isNull } from 'drizzle-orm'
 
 import { ErrorCode, NotificationType } from '@shared/types'
 
@@ -100,8 +100,8 @@ export class CatsService {
     }
 
     const conditions = cursor
-      ? and(eq(meows.authorId, cat.id), lt(meows.createdAt, new Date(cursor)))
-      : eq(meows.authorId, cat.id)
+      ? and(eq(meows.authorId, cat.id), lt(meows.createdAt, new Date(cursor)), isNull(meows.deletedAt))
+      : and(eq(meows.authorId, cat.id), isNull(meows.deletedAt))
 
     const rows = await this.db
       .select({
