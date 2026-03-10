@@ -2,12 +2,12 @@ FROM node:22-alpine AS base
 RUN corepack enable && corepack prepare yarn@4.13.0
 
 WORKDIR /app
-COPY package.json yarn.lock .yarnrc.yml ./
+COPY package.json yarn.lock .yarnrc.yml tsconfig.base.json ./
 COPY api/package.json api/
 COPY shared/package.json shared/
 
 FROM base AS deps
-RUN yarn install --immutable
+RUN yarn install
 
 FROM deps AS build
 COPY shared/ shared/
