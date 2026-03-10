@@ -7,7 +7,7 @@ COPY api/package.json api/
 COPY shared/package.json shared/
 
 FROM base AS deps
-RUN yarn install
+RUN yarn install --immutable
 
 FROM deps AS build
 COPY shared/ shared/
