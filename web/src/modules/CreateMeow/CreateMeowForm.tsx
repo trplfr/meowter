@@ -22,6 +22,7 @@ import {
   createMeowMutation
 } from './models'
 
+import { $weeklyTag } from '@logic/topics'
 import { highlightTildes } from '@lib/meow'
 
 import { Avatar } from '@modules/MeowCard'
@@ -32,12 +33,13 @@ export const CreateMeowForm = () => {
   const fileRef = useRef<HTMLInputElement>(null)
   const backdropRef = useRef<HTMLDivElement>(null)
 
-  const [text, hasTildes, preview, replyTo, pending] = useUnit([
+  const [text, hasTildes, preview, replyTo, pending, weeklyTag] = useUnit([
     $text,
     $hasTildes,
     $imagePreview,
     $replyToMeow,
-    createMeowMutation.$pending
+    createMeowMutation.$pending,
+    $weeklyTag
   ])
   const [onTextChange, onImageSelect, onImageRemove, onSubmit, onClearReply] =
     useUnit([
@@ -92,6 +94,25 @@ export const CreateMeowForm = () => {
               Превышено количество символов ({text.length}/{MEOW_CONTENT_MAX})
             </Trans>
           </span>
+        ) : weeklyTag ? (
+          <Trans>
+            Тема недели:{' '}
+            <button
+              type='button'
+              className={s.weeklyTagBtn}
+              onClick={() =>
+                onTextChange(
+                  text + (text.length > 0 ? ' ' : '') + `~${weeklyTag}`
+                )
+              }
+            >
+              ~{weeklyTag}
+            </button>
+            <br />
+            Выдели слово, используя тильду:
+            <br />
+            <span className={s.tilde}>~работа</span>, чтобы составить ленту
+          </Trans>
         ) : (
           <Trans>
             Выдели слово, используя тильду:

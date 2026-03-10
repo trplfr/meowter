@@ -52,16 +52,6 @@ export const Credentials = () => {
           onChange={e => onChange({ field: 'username', value: e.target.value })}
         />
         <Input
-          id='register-password'
-          name='password'
-          autoComplete='new-password'
-          placeholder={t`Пароль`}
-          isPassword
-          value={form.password}
-          error={errors.password ?? undefined}
-          onChange={e => onChange({ field: 'password', value: e.target.value })}
-        />
-        <Input
           id='register-email'
           name='email'
           autoComplete='email'
@@ -70,6 +60,16 @@ export const Credentials = () => {
           value={form.email}
           error={errors.email ?? undefined}
           onChange={e => onChange({ field: 'email', value: e.target.value })}
+        />
+        <Input
+          id='register-password'
+          name='password'
+          autoComplete='new-password'
+          placeholder={t`Пароль`}
+          isPassword
+          value={form.password}
+          error={errors.password ?? undefined}
+          onChange={e => onChange({ field: 'password', value: e.target.value })}
         />
       </div>
 

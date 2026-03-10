@@ -15,6 +15,7 @@ import {
 import { AppException } from '../../common/exceptions'
 import { authorSelect } from '../../common/lib'
 import { NotificationsService } from '../notifications/notifications.service'
+import { TopicsService } from '../topics/topics.service'
 
 import type { CreateMeowDto, CreateCommentDto } from './dto'
 
@@ -51,7 +52,8 @@ const parseTildes = (content: string) => {
 export class MeowsService {
   constructor(
     @Inject(DB) private readonly db: Db,
-    private readonly notificationsService: NotificationsService
+    private readonly notificationsService: NotificationsService,
+    private readonly topicsService: TopicsService
   ) {}
 
   async create(
@@ -558,22 +560,28 @@ export class MeowsService {
     // определяем тег для фильтрации
     const feedTag = tag || (await this.getLastTag(currentUserId))
 
-    // если тег передан явно, проверяем доступ (писал сам или ремяукал)
-    if (tag && feedTag) {
+    // нет тега = пустая лента (юзер ещё не писал с ~тегами)
+    if (!feedTag) {
+      return { data: [], cursor: null, hasMore: false, tag: null }
+    }
+
+    // если тег передан явно, проверяем доступ (писал сам, ремяукал или тема недели)
+    if (tag) {
       const hasAccess = await this.userHasTag(currentUserId, feedTag)
       if (!hasAccess) {
-        return { data: [], cursor: null, hasMore: false, tag: feedTag }
+        const topic = await this.topicsService.getCurrentTopic()
+        const isWeeklyTag = topic && (topic.tags.ru === feedTag || topic.tags.en === feedTag)
+        if (!isWeeklyTag) {
+          return { data: [], cursor: null, hasMore: false, tag: feedTag }
+        }
       }
     }
 
-    // если есть тег, находим meowIds с этим тегом
-    let taggedMeowIds: string[] | null = null
-    if (feedTag) {
-      taggedMeowIds = await this.findMeowIdsByTag(feedTag)
+    // находим meowIds с этим тегом
+    const taggedMeowIds = await this.findMeowIdsByTag(feedTag)
 
-      if (taggedMeowIds.length === 0) {
-        return { data: [], cursor: null, hasMore: false, tag: feedTag }
-      }
+    if (taggedMeowIds.length === 0) {
+      return { data: [], cursor: null, hasMore: false, tag: feedTag }
     }
 
     // для popular сортировки используем offset-пагинацию
@@ -587,9 +595,7 @@ export class MeowsService {
       conditions.push(lt(meows.createdAt, new Date(cursor)))
     }
 
-    if (taggedMeowIds) {
-      conditions.push(inArray(meows.id, taggedMeowIds))
-    }
+    conditions.push(inArray(meows.id, taggedMeowIds))
 
     // подзапрос количества лайков для сортировки по популярности
     const likesCountSq = sql`(SELECT count(*) FROM ${likes} WHERE ${likes.meowId} = ${meows.id})`

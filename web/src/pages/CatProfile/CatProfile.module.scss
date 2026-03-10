@@ -200,11 +200,56 @@
   }
 }
 
-.empty {
+.emptyMeows {
   padding: $spacing-xl $spacing-md;
   text-align: center;
+  background: $color-bg-secondary;
+  flex: 1;
+}
+
+.emptyText {
   font-size: $font-size-base;
   color: $color-text-secondary;
+}
+
+.emptyHint {
+  margin-top: $spacing-sm;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.5;
+}
+
+.emptyLink {
+  color: $color-text-secondary;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  transition: color 0.15s;
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+.highlight {
+  color: $color-primary;
+}
+
+.weeklyHint {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.weeklyLink {
+  color: $color-text-secondary;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  transition: color 0.15s;
+
+  &:hover {
+    color: $color-primary;
+  }
 }
 
 .sentinel {

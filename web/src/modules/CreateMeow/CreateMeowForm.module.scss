@@ -87,6 +87,25 @@
   color: $color-primary;
 }
 
+.weeklyTagBtn {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  color: $color-primary;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+
+  &:hover {
+    text-decoration-style: solid;
+  }
+}
+
 .overLimit {
   color: $color-error;
 }

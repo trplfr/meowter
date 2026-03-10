@@ -1,8 +1,9 @@
-import { sample } from 'effector'
+import { createStore, sample } from 'effector'
 import { concurrency } from '@farfetched/core'
+import { querySync } from 'atomic-router'
 import { t } from '@lingui/core/macro'
 
-import { routes } from '@core/router'
+import { routes, controls } from '@core/router'
 import { showSuccessToastFx } from '@logic/notifications'
 import { $session } from '@logic/session'
 
@@ -25,11 +26,36 @@ import {
   remeowMutation
 } from '../models'
 
-// загрузка первой страницы при открытии роута
+// отдельный стор для ?theme= в URL (не путать с $currentTag из API-ответа)
+const $urlTheme = createStore<string | null>(null)
+
+querySync({
+  source: { theme: $urlTheme },
+  controls,
+  route: routes.feed
+})
+
+// при открытии роута: если ?theme= задан = грузим по нему, иначе обычный фид
 sample({
   clock: routes.feed.opened,
-  fn: () => ({}),
+  source: $urlTheme,
+  fn: (theme) => ({ tag: theme || undefined }),
   target: feedQuery.start
+})
+
+// перезагрузка при смене ?theme= (навигация)
+sample({
+  clock: routes.feed.updated,
+  source: $urlTheme,
+  fn: (theme) => ({ tag: theme || undefined }),
+  target: feedQuery.start
+})
+
+// сброс курсора и мяутов при смене ?theme=
+sample({
+  clock: routes.feed.updated,
+  fn: () => null,
+  target: $cursor
 })
 
 // загрузка следующей страницы
@@ -47,7 +73,7 @@ sample({
   target: feedQuery.start
 })
 
-// сохраняем текущий тег из ответа
+// сохраняем текущий тег из ответа (не влияет на URL)
 sample({
   clock: feedQuery.finished.success,
   fn: ({ result }) => result.tag,

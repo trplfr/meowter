@@ -11,6 +11,7 @@ import { type Meow, type MeowPreview } from '@shared/types'
 import { routes } from '@core/router'
 import { $session } from '@logic/session'
 import { meowDeleted, remeowToggled, replyInitiated } from '@logic/feed'
+import { $weeklyTag } from '@logic/topics'
 
 import { Layout } from '@modules/Layout'
 import { MeowCard, MeowCardSkeleton } from '@modules/MeowCard'
@@ -48,7 +49,8 @@ export const Search = () => {
     isOpen,
     pending,
     tagsLoaded,
-    session
+    session,
+    weeklyTag
   ] = useUnit([
     $tags,
     $query,
@@ -58,7 +60,8 @@ export const Search = () => {
     $isOpen,
     searchQuery.$pending,
     $tagsLoaded,
-    $session
+    $session,
+    $weeklyTag
   ])
   const [
     onQueryChange,
@@ -118,7 +121,17 @@ export const Search = () => {
       ? tags.filter(tag => tag.toLowerCase().includes(query.toLowerCase()))
       : tags
 
-  const showDropdown = isOpen && filteredTags.length > 0
+  // тема недели всегда первая в списке
+  const hasWeeklyTag = Boolean(weeklyTag)
+  const weeklyTagMatchesQuery =
+    hasWeeklyTag &&
+    (query.length === 0 ||
+      weeklyTag!.toLowerCase().includes(query.toLowerCase()))
+  const tagsWithoutWeekly = hasWeeklyTag
+    ? filteredTags.filter(tag => tag !== weeklyTag)
+    : filteredTags
+  const showDropdown =
+    isOpen && (filteredTags.length > 0 || weeklyTagMatchesQuery)
 
   return (
     <Layout title={<Trans>Поиск</Trans>} contentClassName={s.content}>
@@ -153,7 +166,16 @@ export const Search = () => {
 
         {showDropdown && (
           <div className={s.dropdown}>
-            {filteredTags.map(tag => (
+            {weeklyTagMatchesQuery && (
+              <button
+                className={s.tagItem}
+                onMouseDown={e => e.preventDefault()}
+                onClick={() => onTagSelect(weeklyTag!)}
+              >
+                🔥 ~{weeklyTag}
+              </button>
+            )}
+            {tagsWithoutWeekly.map(tag => (
               <button
                 key={tag}
                 className={s.tagItem}
@@ -168,7 +190,7 @@ export const Search = () => {
       </div>
 
       {/* нет тегов = пользователь ещё не использовал ~теги */}
-      {!selectedTag && tags.length === 0 && tagsLoaded && (
+      {!selectedTag && tags.length === 0 && tagsLoaded && !weeklyTag && (
         <div className={s.empty}>
           <Trans>
             Вы ещё не использовали ~темы в своих мяутах. Напишите мяут с ~темой,
@@ -181,7 +203,8 @@ export const Search = () => {
       {!selectedTag &&
         tags.length > 0 &&
         query.length > 0 &&
-        filteredTags.length === 0 && (
+        filteredTags.length === 0 &&
+        !weeklyTagMatchesQuery && (
           <div className={s.empty}>
             <Trans>Вы ещё не говорили на эту тему</Trans>
           </div>

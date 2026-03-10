@@ -12,6 +12,7 @@ import { type Meow, type MeowPreview } from '@shared/types'
 import { routes } from '@core/router'
 import { $origin, logout } from '@logic/session'
 import { meowDeleted, remeowToggled, replyInitiated } from '@logic/feed'
+import { $weeklyTag } from '@logic/topics'
 
 import { Layout } from '@modules/Layout'
 import { MeowCard, MeowCardSkeleton, Avatar } from '@modules/MeowCard'
@@ -34,12 +35,13 @@ import s from './CatProfile.module.scss'
 export const route = routes.catProfile
 
 export const CatProfile = () => {
-  const [profile, meows, hasMore, pending, origin] = useUnit([
+  const [profile, meows, hasMore, pending, origin, weeklyTag] = useUnit([
     $profile,
     $meows,
     $hasMore,
     catMeowsQuery.$pending,
-    $origin
+    $origin,
+    $weeklyTag
   ])
   const [onLoadMore, onFollow, onLike, onLogout, onDelete, onRemeow, onReply] =
     useUnit([
@@ -114,12 +116,26 @@ export const CatProfile = () => {
       </title>
       {profile && (
         <>
-          <meta name='description' content={profile.bio || t`Профиль @${profile.username} в Мяутере`} />
-          <meta property='og:title' content={`${profile.displayName} (@${profile.username})`} />
-          <meta property='og:description' content={profile.bio || t`Профиль @${profile.username} в Мяутере`} />
+          <meta
+            name='description'
+            content={profile.bio || t`Профиль @${profile.username} в Мяутере`}
+          />
+          <meta
+            property='og:title'
+            content={`${profile.displayName} (@${profile.username})`}
+          />
+          <meta
+            property='og:description'
+            content={profile.bio || t`Профиль @${profile.username} в Мяутере`}
+          />
           <meta property='og:type' content='profile' />
-          <meta property='og:url' content={`${origin}/cat/${profile.username}`} />
-          {profile.avatarUrl && <meta property='og:image' content={profile.avatarUrl} />}
+          <meta
+            property='og:url'
+            content={`${origin}/cat/${profile.username}`}
+          />
+          {profile.avatarUrl && (
+            <meta property='og:image' content={profile.avatarUrl} />
+          )}
           <meta name='twitter:card' content='summary' />
           <SEO path={`/cat/${profile.username}`} />
           <script type='application/ld+json'>
@@ -216,8 +232,36 @@ export const CatProfile = () => {
           </div>
 
           {meows.length === 0 && !pending && (
-            <div className={s.empty}>
-              <Trans>Пока нет мяутов</Trans>
+            <div className={s.emptyMeows}>
+              <p className={s.emptyText}>
+                <Trans>Пока нет мяутов</Trans>
+              </p>
+              {profile.isOwn && (
+                <>
+                  <p className={s.emptyHint}>
+                    <Trans>
+                      <Link to={routes.createMeow} className={s.emptyLink}>
+                        Напиши первый мяут
+                      </Link>{' '}
+                      с <span className={s.highlight}>~темой</span>
+                    </Trans>
+                  </p>
+                  {weeklyTag && (
+                    <p className={s.weeklyHint}>
+                      <Trans>
+                        или{' '}
+                        <a
+                          className={s.weeklyLink}
+                          href={`/feed?theme=${weeklyTag}`}
+                        >
+                          почитай тему недели: 🔥{' '}
+                          <span className={s.highlight}>~{weeklyTag}</span>
+                        </a>
+                      </Trans>
+                    </p>
+                  )}
+                </>
+              )}
             </div>
           )}
 

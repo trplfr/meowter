@@ -10,6 +10,7 @@ import { MeowsModule } from './modules/meows/meows.module'
 import { CatsModule } from './modules/cats/cats.module'
 import { NotificationsModule } from './modules/notifications/notifications.module'
 import { SitemapModule } from './modules/sitemap/sitemap.module'
+import { TopicsModule } from './modules/topics/topics.module'
 import { HealthController } from './health.controller'
 
 @Module({
@@ -25,7 +26,8 @@ import { HealthController } from './health.controller'
     MeowsModule,
     CatsModule,
     NotificationsModule,
-    SitemapModule
+    SitemapModule,
+    TopicsModule
   ],
   controllers: [HealthController],
   providers: [{

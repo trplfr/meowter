@@ -46,6 +46,25 @@ sample({
   target: profilePageOpened
 })
 
+// если сессия загрузилась позже (гидрация) и профиль ещё пустой
+sample({
+  clock: $session,
+  source: {
+    isOpened: routes.catProfile.$isOpened,
+    params: routes.catProfile.$params,
+    profile: $profile
+  },
+  filter: ({ isOpened, profile }, session) =>
+    isOpened && profile === null && session !== null,
+  fn: ({ params }, session) => {
+    if (!params.username || params.username === 'me') {
+      return session!.username
+    }
+    return params.username
+  },
+  target: profilePageOpened
+})
+
 // сброс при открытии нового профиля
 sample({
   clock: profilePageOpened,

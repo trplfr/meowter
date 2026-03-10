@@ -55,6 +55,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .cardText {
@@ -140,7 +144,7 @@
   margin-top: $spacing-sm;
   margin-left: $spacing-lg;
   padding: $spacing-sm $spacing-md;
-  border-left: $separator-height * 2 solid $color-primary;
+  border-left: $separator-height * 2 solid $color-separator;
   border-radius: 0 $radius-sm $radius-sm 0;
   background: $color-bg-secondary;
   text-decoration: none;
@@ -156,4 +160,13 @@
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+}
+
+.mention {
+  color: $color-primary;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }

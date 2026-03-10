@@ -12,30 +12,27 @@ import {
 
 /* Cats */
 
-export const cats = pgTable(
-  'cats',
-  {
-    id: uuid('id').defaultRandom().primaryKey(),
-    username: varchar('username', { length: 30 }).unique().notNull(),
-    email: varchar('email', { length: 255 }).unique().notNull(),
-    passwordHash: text('password_hash').notNull(),
-    displayName: varchar('display_name', { length: 50 }).notNull(),
-    firstName: varchar('first_name', { length: 50 }),
-    lastName: varchar('last_name', { length: 50 }),
-    bio: text('bio'),
-    contacts: varchar('contacts', { length: 255 }),
-    sex: varchar('sex', { length: 10 }),
-    avatarUrl: text('avatar_url'),
-    verified: boolean('verified').default(false).notNull(),
-    deletedAt: timestamp('deleted_at', { withTimezone: true }),
-    createdAt: timestamp('created_at', { withTimezone: true })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp('updated_at', { withTimezone: true })
-      .defaultNow()
-      .notNull()
-  }
-)
+export const cats = pgTable('cats', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  username: varchar('username', { length: 30 }).unique().notNull(),
+  email: varchar('email', { length: 255 }).unique().notNull(),
+  passwordHash: text('password_hash').notNull(),
+  displayName: varchar('display_name', { length: 50 }).notNull(),
+  firstName: varchar('first_name', { length: 50 }),
+  lastName: varchar('last_name', { length: 50 }),
+  bio: text('bio'),
+  contacts: varchar('contacts', { length: 255 }),
+  sex: varchar('sex', { length: 10 }),
+  avatarUrl: text('avatar_url'),
+  verified: boolean('verified').default(false).notNull(),
+  deletedAt: timestamp('deleted_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .defaultNow()
+    .notNull()
+})
 
 /* Meows */
 
@@ -145,9 +142,7 @@ export const comments = pgTable(
       .defaultNow()
       .notNull()
   },
-  t => [
-    index('idx_comments_meow_id').on(t.meowId)
-  ]
+  t => [index('idx_comments_meow_id').on(t.meowId)]
 )
 
 /* Comment Likes */
@@ -167,6 +162,27 @@ export const commentLikes = pgTable(
   },
   t => [primaryKey({ columns: [t.userId, t.commentId] })]
 )
+
+/* App Settings */
+
+export const appSettings = pgTable('app_settings', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  key: varchar('key', { length: 100 }).unique().notNull(),
+  value: text('value').notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .defaultNow()
+    .notNull()
+})
+
+/* Blocked Tags */
+
+export const blockedTags = pgTable('blocked_tags', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  tag: varchar('tag', { length: 100 }).unique().notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull()
+})
 
 /* Notifications */
 

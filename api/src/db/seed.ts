@@ -5,8 +5,16 @@ import bcrypt from 'bcrypt'
 
 import * as schema from './schema'
 
-const { cats, meows, meowTags, likes, follows, comments, notifications } =
-  schema
+const {
+  cats,
+  meows,
+  meowTags,
+  likes,
+  follows,
+  comments,
+  notifications,
+  appSettings
+} = schema
 
 /* Tilde tag parser */
 
@@ -35,9 +43,15 @@ const pickN = <T>(arr: T[], min: number, max: number): T[] => {
   return shuffled.slice(0, count)
 }
 
-// смещение во времени: от now - offsetMinutes до now
-const timeAgo = (minutesAgo: number) =>
-  new Date(Date.now() - minutesAgo * 60 * 1000)
+// дата N дней назад + случайные часы/минуты
+const daysAgo = (days: number, hoursOffset = 0) => {
+  const ms =
+    Date.now() -
+    days * 24 * 60 * 60 * 1000 -
+    hoursOffset * 60 * 60 * 1000 -
+    Math.floor(Math.random() * 60) * 60 * 1000
+  return new Date(ms)
+}
 
 /* Seed data */
 
@@ -55,7 +69,9 @@ interface SeedCat {
   sex: 'MALE' | 'FEMALE'
 }
 
-const seedCats: SeedCat[] = [
+/* 5 русских котов */
+
+const ruCats: SeedCat[] = [
   {
     username: 'murzik',
     email: 'murzik@meowter.ru',
@@ -67,22 +83,12 @@ const seedCats: SeedCat[] = [
     sex: 'MALE'
   },
   {
-    username: 'barsik',
-    email: 'barsik@meowter.ru',
-    displayName: 'Барсик',
-    firstName: 'Дмитрий',
-    lastName: 'Мурлыкин',
-    bio: 'Полосатый кот с характером. Фотографирую закаты и ем сметану',
-    contacts: 't.me/barsik_photo',
-    sex: 'MALE'
-  },
-  {
     username: 'pushok',
     email: 'pushok@meowter.ru',
     displayName: 'Пушок',
     firstName: 'Елена',
     lastName: 'Шерстякова',
-    bio: 'Пушистая облачко. Обожаю книги и теплые пледы',
+    bio: 'Пушистое облачко. Обожаю книги и теплые пледы',
     contacts: null,
     sex: 'FEMALE'
   },
@@ -107,46 +113,6 @@ const seedCats: SeedCat[] = [
     sex: 'FEMALE'
   },
   {
-    username: 'vasiliy',
-    email: 'vasiliy@meowter.ru',
-    displayName: 'Василий',
-    firstName: 'Иван',
-    lastName: 'Лапкин',
-    bio: 'Серьезный кот. Программирую и пью кофе литрами',
-    contacts: 'github.com/vasiliy-cat',
-    sex: 'MALE'
-  },
-  {
-    username: 'klyaksa',
-    email: 'klyaksa@meowter.ru',
-    displayName: 'Клякса',
-    firstName: 'Ольга',
-    lastName: 'Пятнышкина',
-    bio: 'Черно-белая кошка-художница. Рисую лапами и хвостом',
-    contacts: null,
-    sex: 'FEMALE'
-  },
-  {
-    username: 'simba',
-    email: 'simba@meowter.ru',
-    displayName: 'Симба',
-    firstName: 'Артем',
-    lastName: 'Гривов',
-    bio: 'Будущий лев. Слушаю рок и занимаюсь спортом',
-    contacts: 'simba@meowter.ru',
-    sex: 'MALE'
-  },
-  {
-    username: 'luna_cat',
-    email: 'luna@meowter.ru',
-    displayName: 'Луна',
-    firstName: 'Мария',
-    lastName: 'Ночкина',
-    bio: 'Ночная кошка. Люблю астрономию и поздние прогулки',
-    contacts: 't.me/luna_stars',
-    sex: 'FEMALE'
-  },
-  {
     username: 'kompot',
     email: 'kompot@meowter.ru',
     displayName: 'Компот',
@@ -158,105 +124,242 @@ const seedCats: SeedCat[] = [
   }
 ]
 
-// каждый массив = мяуканья одного кота, 3-5 штук
-// теги в правильных падежных формах (стеммер нормализует)
-const seedMeows: string[][] = [
-  [
-    'Сегодня целый день слушал ~музыку и наконец-то нашел новый жанр для себя',
-    'Прочитал статью про ~архитектуру модернизма, теперь хочу съездить в Барселону',
-    'Гулял по парку и думал о ~философии жизни. Кошки знают что-то, чего не знают люди',
-    'Отличный ~кофе под ~книгу = идеальный вечер'
-  ],
-  [
-    'Снял потрясающую ~фотографию заката с крыши соседнего дома',
-    'Посмотрел документалку про ~космос, удивительно как мало мы знаем',
-    'Сегодня попробовал новую технику в ~фотографии с длинной выдержкой, результат огонь',
-    'Нашел классное место для ~путешествий на следующее лето, еду в Грузию'
-  ],
-  [
-    'Дочитала ~книгу Мураками, не могу остановиться, начинаю следующую',
-    'Уютный вечер с ~кофе и пледом, за окном дождь, счастье',
-    'Открыла для себя ~музыку джаза, теперь слушаю Колтрейна каждый вечер',
-    'Рекомендую всем ~книги "Маленький принц", перечитала в пятый раз',
-    'Попробовала новый сорт ~кофе из Эфиопии, невероятный аромат'
-  ],
-  [
-    'Забрался на крышу 25-этажки, вид на город = ~путешествие по джунглям',
-    'Сегодня пробежал 10 км, ~спорт = лучший антидепрессант',
-    'Нашел крутой маршрут для ~путешествий по Карелии, рекомендую',
-    'Утренняя тренировка по ~спорту и потом завтрак на крыше, идеальное утро'
-  ],
-  [
-    'Новая коллекция в ~моде весна-лето просто восхитительна',
-    'Переделала комнату в стиле ~архитектуры минимализма, наконец-то порядок',
-    'Увидела потрясающий аутфит, ~мода повсюду вдохновляет',
-    'Сходила на выставку современного ~искусства в Третьяковку, впечатлена',
-    'Сочетание ~моды и ~архитектуры в новом ТЦ = произведение искусства'
-  ],
-  [
-    'Написал свой первый бот для Telegram, ~программирование за вечер',
-    'Без ~кофе не могу начать утро, это уже ритуал',
-    'Попробовал новый фреймворк, ~программирование вдохновляет',
-    'Автоматизировал рутину через ~программирование на работе, свободен после обеда',
-    'Идеальный стек: ~программирование на TypeScript и ~кофе каждые два часа'
-  ],
-  [
-    'Нарисовала портрет соседского кота, ~искусство рождается из наблюдения',
-    'Сходила на выставку ~фотографий в галерее, вдохновилась на новый проект',
-    'Попробовала снять короткометражку на телефон, ~кино получилось атмосферным'
-  ],
-  [
-    'Сегодня качал лапы в зале, ~спорт = жизнь',
-    'Послушал новый альбом Rammstein, ~музыка которая заряжает',
-    'Пробежал полумарафон! ~спортом заряжаешься на все остальное',
-    'Посмотрел ~кино "Бойцовский клуб" в десятый раз, каждый раз нахожу что-то новое',
-    'Купил новые кроссовки для ~спорта, теперь точно побью рекорд'
-  ],
-  [
-    'Наблюдала Юпитер в телескоп, ~космос завораживает каждый раз',
-    'Прочитала статью про ~технологии квантовых компьютеров, будущее уже здесь',
-    'Сфотографировала Млечный Путь за городом, ~космос прекрасен',
-    'Интересная лекция про ~технологии искусственного интеллекта, много вопросов'
-  ],
-  [
-    'Попробовал новый рецепт ~пиццы с четырьмя сырами, невероятно вкусно',
-    'Нашел ресторан с лучшей ~пиццей в городе, рекомендую на Покровке',
-    'Приготовил тайский суп том-ям, ~кулинария удалась идеально',
-    'Гастрономический тур по Италии = ~путешествие мечты всей жизни',
-    'Сочетание ~кулинарии и ~путешествий = мой способ познавать мир'
-  ]
+/* 5 английских котов */
+
+const enCats: SeedCat[] = [
+  {
+    username: 'whiskers',
+    email: 'whiskers@meowter.app',
+    displayName: 'Whiskers',
+    firstName: 'James',
+    lastName: 'Purrston',
+    bio: 'Curious cat. Love exploring rooftops and writing about tech',
+    contacts: 'whiskers@meowter.app',
+    sex: 'MALE'
+  },
+  {
+    username: 'mittens',
+    email: 'mittens@meowter.app',
+    displayName: 'Mittens',
+    firstName: 'Sophie',
+    lastName: 'Fluffington',
+    bio: 'Cozy cat with big dreams. Books, tea, and rainy days',
+    contacts: null,
+    sex: 'FEMALE'
+  },
+  {
+    username: 'shadow',
+    email: 'shadow@meowter.app',
+    displayName: 'Shadow',
+    firstName: 'Alex',
+    lastName: 'Nightpaw',
+    bio: 'Stealthy cat. Into photography and night walks',
+    contacts: 't.me/shadow_photo',
+    sex: 'MALE'
+  },
+  {
+    username: 'luna_cat',
+    email: 'luna@meowter.app',
+    displayName: 'Luna',
+    firstName: 'Maria',
+    lastName: 'Starwhisker',
+    bio: 'Night cat. Astronomy nerd and stargazer',
+    contacts: 'luna.stars',
+    sex: 'FEMALE'
+  },
+  {
+    username: 'ginger',
+    email: 'ginger@meowter.app',
+    displayName: 'Ginger',
+    firstName: 'Tom',
+    lastName: 'Pawsworth',
+    bio: 'Adventurous ginger cat. Cooking, hiking, and good vibes',
+    contacts: 'ginger@meowter.app',
+    sex: 'MALE'
+  }
 ]
 
-const seedComments: string[] = [
+const seedCats: SeedCat[] = [...ruCats, ...enCats]
+
+/* Мяуты: каждый кот говорит на свою тему + все говорят про кофе/coffee */
+
+interface SeedMeow {
+  content: string
+  daysAgo: number
+  hoursOffset: number
+}
+
+// murzik: философия, музыка, кофе
+const murzikMeows: SeedMeow[] = [
+  { content: 'Сегодня сидел на подоконнике и думал про ~философию счастья. Кошки точно знают секрет', daysAgo: 5, hoursOffset: 2 },
+  { content: 'Послушал новый альбом Radiohead, ~музыка для размышлений идеальна', daysAgo: 4, hoursOffset: 5 },
+  { content: 'Утренний ~кофе на подоконнике, за окном дождь. Моменты ради которых стоит просыпаться', daysAgo: 3, hoursOffset: 1 },
+  { content: 'Прочитал Ницше, теперь смотрю на мир по-другому. ~философия меняет все', daysAgo: 2, hoursOffset: 8 },
+  { content: 'Нашел кофейню где варят ~кофе на песке. Вкус невероятный, как будто в Стамбуле', daysAgo: 1, hoursOffset: 3 },
+  { content: 'Вечерний джаз и ~музыка Колтрейна, лучшее завершение дня', daysAgo: 0, hoursOffset: 6 }
+]
+
+// pushok: книги, уют, кофе
+const pushokMeows: SeedMeow[] = [
+  { content: 'Дочитала ~книгу Мураками "Норвежский лес", не могу остановиться плакать', daysAgo: 5, hoursOffset: 7 },
+  { content: 'Уютный вечер: плед, свечи и горячий ~кофе. Что ещё нужно для счастья?', daysAgo: 4, hoursOffset: 1 },
+  { content: 'Начала ~книгу "Маленький принц" в пятый раз. Каждый раз нахожу что-то новое', daysAgo: 3, hoursOffset: 4 },
+  { content: 'Попробовала новый сорт ~кофе из Эфиопии. Цветочные ноты, невероятно', daysAgo: 2, hoursOffset: 2 },
+  { content: 'Собрала ~книги в стопку на прикроватной тумбочке. Счастье измеряется в непрочитанных страницах', daysAgo: 1, hoursOffset: 9 },
+  { content: 'Дождливое утро, горячий ~кофе и новая ~книга. Идеальный выходной', daysAgo: 0, hoursOffset: 3 },
+  { content: 'Рекомендую всем ~книгу "Стоик" Драйзера, мощная история', daysAgo: 0, hoursOffset: 8 }
+]
+
+// ryzhik: путешествия, спорт, кофе
+const ryzhikMeows: SeedMeow[] = [
+  { content: 'Забрался на крышу 25-этажки, вид на закат = лучшее ~путешествие без билета', daysAgo: 4, hoursOffset: 6 },
+  { content: 'Пробежал 10 км по набережной, ~спорт после дождя = кайф', daysAgo: 3, hoursOffset: 2 },
+  { content: 'Взял ~кофе навынос и пошел гулять по старому городу. Лучший способ узнать место', daysAgo: 3, hoursOffset: 8 },
+  { content: 'Нашел крутой маршрут для ~путешествий по Карелии, еду на выходных', daysAgo: 2, hoursOffset: 4 },
+  { content: 'Утренняя тренировка, ~спорт = лучший антидепрессант. Потом ~кофе и день начался', daysAgo: 1, hoursOffset: 1 },
+  { content: 'Вернулся из ~путешествия по Грузии. Горы, вино, хачапури. Рекомендую', daysAgo: 0, hoursOffset: 5 }
+]
+
+// snezhinka: мода, дизайн, кофе
+const snezhinkaMeows: SeedMeow[] = [
+  { content: 'Новая коллекция в ~моде весна-лето просто восхитительна, особенно пастельные тона', daysAgo: 5, hoursOffset: 3 },
+  { content: 'Переделала комнату в стиле ~дизайн минимализма. Наконец-то порядок и воздух', daysAgo: 4, hoursOffset: 7 },
+  { content: 'Сходила на выставку современного ~искусства, вдохновилась на новый проект', daysAgo: 3, hoursOffset: 5 },
+  { content: 'Пью ~кофе в новой кофейне с потрясающим ~дизайном интерьера. Хочу так же дома', daysAgo: 2, hoursOffset: 2 },
+  { content: 'Сочетание ~моды и архитектуры в новом ТЦ = произведение ~искусства', daysAgo: 1, hoursOffset: 6 },
+  { content: '~кофе с миндальным молоком стал моим утренним ритуалом. Мелочи делают день', daysAgo: 0, hoursOffset: 1 },
+  { content: 'Нашла потрясающий аутфит, ~мода вдохновляет каждый день', daysAgo: 0, hoursOffset: 9 }
+]
+
+// kompot: еда, кулинария, кофе
+const kompotMeows: SeedMeow[] = [
+  { content: 'Приготовил пасту карбонара по оригинальному рецепту, ~кулинария = терапия', daysAgo: 5, hoursOffset: 4 },
+  { content: 'Нашел ресторан с лучшей ~пиццей в городе. Четыре сыра, тонкое тесто, мур', daysAgo: 4, hoursOffset: 2 },
+  { content: 'Попробовал ~кофе со специями по-мароккански. Кардамон и корица = магия', daysAgo: 3, hoursOffset: 6 },
+  { content: 'Гастрономический тур по Италии = ~путешествие мечты. Планирую на осень', daysAgo: 2, hoursOffset: 3 },
+  { content: 'Приготовил тайский суп том-ям, ~кулинария из ЮВА = отдельный вид искусства', daysAgo: 1, hoursOffset: 7 },
+  { content: 'Утро без ~кофе = не утро. Сегодня пробую новую кофемолку, помол решает', daysAgo: 1, hoursOffset: 1 },
+  { content: 'Сочетание ~кулинарии и ~путешествий = мой способ познавать мир и себя', daysAgo: 0, hoursOffset: 4 }
+]
+
+// whiskers: tech, coding, coffee
+const whiskersMeows: SeedMeow[] = [
+  { content: 'Just deployed my first app with ~typescript and it feels amazing', daysAgo: 5, hoursOffset: 3 },
+  { content: 'Morning ~coffee and a good IDE. The perfect start to any coding session', daysAgo: 4, hoursOffset: 1 },
+  { content: 'Been exploring ~rust lately, the borrow checker is strict but fair', daysAgo: 3, hoursOffset: 5 },
+  { content: 'Hot take: ~coffee is the real programming language. Without it nothing compiles', daysAgo: 2, hoursOffset: 2 },
+  { content: 'Finally fixed that ~typescript generic issue that haunted me for days', daysAgo: 1, hoursOffset: 7 },
+  { content: 'Two cups of ~coffee in and the code is flowing. Productive morning', daysAgo: 0, hoursOffset: 3 }
+]
+
+// mittens: books, cozy, coffee
+const mittensMeows: SeedMeow[] = [
+  { content: 'Finished reading "Norwegian Wood" by Murakami. My heart is full of ~books', daysAgo: 5, hoursOffset: 8 },
+  { content: 'Rainy day + warm blanket + hot ~coffee = perfection. No notes', daysAgo: 4, hoursOffset: 2 },
+  { content: 'Started a new ~book by Donna Tartt. "The Secret History" is gripping', daysAgo: 3, hoursOffset: 6 },
+  { content: 'Tried a new Ethiopian blend today. ~coffee with floral notes is divine', daysAgo: 2, hoursOffset: 1 },
+  { content: 'My ~books stack keeps growing. 12 unread and counting. No regrets', daysAgo: 1, hoursOffset: 4 },
+  { content: 'Sunday morning ritual: fresh ~coffee, croissant, and a good ~book by the window', daysAgo: 0, hoursOffset: 2 },
+  { content: 'Anyone else re-read ~books they loved as a child? "Matilda" still hits different', daysAgo: 0, hoursOffset: 9 }
+]
+
+// shadow: photography, night, coffee
+const shadowMeows: SeedMeow[] = [
+  { content: 'Captured the city skyline at midnight. ~photography at night is pure magic', daysAgo: 4, hoursOffset: 10 },
+  { content: 'Late night ~coffee at a 24h diner. The vibe is unmatched', daysAgo: 3, hoursOffset: 11 },
+  { content: 'Tried long exposure ~photography for the first time. Light trails everywhere', daysAgo: 3, hoursOffset: 3 },
+  { content: 'Found a hidden rooftop spot. ~coffee and city lights at 2am. My kind of evening', daysAgo: 2, hoursOffset: 8 },
+  { content: 'New lens arrived. Time to up my ~photography game this weekend', daysAgo: 1, hoursOffset: 5 },
+  { content: 'Black ~coffee, black outfit, black camera. Consistency is key', daysAgo: 0, hoursOffset: 7 }
+]
+
+// luna_cat: astronomy, science, coffee
+const lunaMeows: SeedMeow[] = [
+  { content: 'Spotted Jupiter through my telescope last night. ~astronomy never gets old', daysAgo: 5, hoursOffset: 9 },
+  { content: 'Read about quantum computing today. ~science is moving so fast', daysAgo: 4, hoursOffset: 4 },
+  { content: 'Late night ~coffee while waiting for the meteor shower. Worth every minute', daysAgo: 3, hoursOffset: 10 },
+  { content: 'Photographed the Milky Way outside the city. ~astronomy is best away from light pollution', daysAgo: 2, hoursOffset: 7 },
+  { content: 'Fascinating lecture on AI and ~science ethics today. So many questions', daysAgo: 1, hoursOffset: 3 },
+  { content: 'Morning ~coffee and a documentary about black holes. My brain is expanding', daysAgo: 0, hoursOffset: 1 },
+  { content: '~astronomy fact: there are more stars in the universe than grains of sand on Earth', daysAgo: 0, hoursOffset: 6 }
+]
+
+// ginger: cooking, hiking, coffee
+const gingerMeows: SeedMeow[] = [
+  { content: 'Made the perfect sourdough bread today. ~cooking is an art and a science', daysAgo: 5, hoursOffset: 5 },
+  { content: 'Morning ~coffee before a 15km ~hiking trail. Fuel for the adventure', daysAgo: 4, hoursOffset: 1 },
+  { content: 'Discovered a waterfall on today\'s ~hiking trip. Nature never disappoints', daysAgo: 3, hoursOffset: 4 },
+  { content: 'Tried brewing ~coffee over a campfire. Smoky and perfect', daysAgo: 2, hoursOffset: 6 },
+  { content: 'Cooked a full Thai dinner from scratch. ~cooking Thai food is next level', daysAgo: 1, hoursOffset: 3 },
+  { content: 'The best ~coffee I ever had was at a tiny cafe on a mountain trail. Simple and strong', daysAgo: 0, hoursOffset: 2 }
+]
+
+const allCatMeows: SeedMeow[][] = [
+  murzikMeows,
+  pushokMeows,
+  ryzhikMeows,
+  snezhinkaMeows,
+  kompotMeows,
+  whiskersMeows,
+  mittensMeows,
+  shadowMeows,
+  lunaMeows,
+  gingerMeows
+]
+
+/* Комментарии */
+
+const ruComments: string[] = [
   'Мур, отличный пост!',
   'Как интересно, расскажи подробнее!',
   'Полностью согласен, мяу!',
   'Тоже хочу попробовать!',
-  'Классная фотка!',
+  'Красота, мур-мур!',
   'Завидую, я так не умею',
   'Подписался, жду продолжения',
-  'Мяу-мяу, красота!',
-  'Это точно, лапки вверх!',
+  'Мяу-мяу, это точно!',
+  'Лапки вверх, поддерживаю!',
   'Надо будет тоже так сделать',
   'Вау, невероятно!',
   'Круто, продолжай!',
   'Лучший пост за неделю',
   'А где это находится?',
-  'Хочу так же, мур!'
+  'Хочу так же!'
 ]
 
-// ответы (reply) = мяут со ссылкой на оригинал + собственный ~тег
-const seedReplies: string[] = [
-  'Полностью поддерживаю! Сам давно увлекаюсь ~музыкой и все это чувствую',
-  'О да, ~кофе решает! Особенно утренний',
-  'А я вот думаю ~путешествия лучше планировать заранее, спонтанность не для меня',
-  'Про ~спорт согласен, после тренировки мир другой',
-  'Классная мысль про ~архитектуру, надо бы тоже сходить посмотреть',
-  'У меня похожий опыт с ~программированием, это затягивает',
-  'Согласна на счет ~книги, перечитаю обязательно',
-  'Про ~фотографию интересно, какую камеру используешь?',
-  'Солидарна! ~мода = способ выражения себя',
-  'Тоже смотрела, ~кино потрясающее'
+// комменты с меншнами (AUTHOR заменяется на юзернейм автора поста)
+const ruMentionComments: string[] = [
+  '@AUTHOR мур, отличный пост!',
+  '@AUTHOR а расскажи подробнее?',
+  '@AUTHOR полностью согласен!',
+  '@AUTHOR вау, круто!',
+  '@AUTHOR надо будет тоже попробовать'
+]
+
+const enComments: string[] = [
+  'Love this, meow!',
+  'So relatable!',
+  'Totally agree!',
+  'Need to try this!',
+  'Amazing shot!',
+  'This is the way',
+  'Subscribed, want more!',
+  'Purrfect post!',
+  'Same here!',
+  'Couldn\'t agree more',
+  'Wow, incredible!',
+  'Keep it up!',
+  'Best post this week',
+  'Where is this?',
+  'Goals right here!'
+]
+
+const enMentionComments: string[] = [
+  '@AUTHOR love this, meow!',
+  '@AUTHOR tell me more!',
+  '@AUTHOR totally agree!',
+  '@AUTHOR wow, amazing!',
+  '@AUTHOR need to try this too'
 ]
 
 /* Main seed function */
@@ -324,39 +427,39 @@ const seed = async () => {
 
   console.log(`Создано ${insertedCats.length} котов`)
 
-  // создаем мяуканья с разными таймстемпами
-  // мяуты разбросаны от 7 дней назад до 5 минут назад
-  const allInsertedMeows: {
+  // русские = первые 5, английские = последние 5
+  const ruCatIds = insertedCats.slice(0, 5)
+  const enCatIds = insertedCats.slice(5, 10)
+
+  // создаем мяуканья
+  interface InsertedMeow {
     id: string
     authorId: string
-    authorIndex: number
-    minutesAgo: number
-  }[] = []
-  let minutesCounter = 7 * 24 * 60 // 7 дней
+    catIndex: number
+    daysAgo: number
+    isRu: boolean
+  }
+
+  const allInsertedMeows: InsertedMeow[] = []
 
   for (let i = 0; i < insertedCats.length; i++) {
     const cat = insertedCats[i]
-    const catMeows = seedMeows[i]
+    const catMeows = allCatMeows[i]
 
-    for (const content of catMeows) {
-      // каждый следующий мяут ближе к сегодня (с рандомным шагом)
-      minutesCounter -= Math.floor(Math.random() * 200) + 30
-
-      if (minutesCounter < 5) {
-        minutesCounter = 5
-      }
+    for (const meowData of catMeows) {
+      const createdAt = daysAgo(meowData.daysAgo, meowData.hoursOffset)
 
       const [inserted] = await db
         .insert(meows)
         .values({
           authorId: cat.id,
-          content,
-          createdAt: timeAgo(minutesCounter),
-          updatedAt: timeAgo(minutesCounter)
+          content: meowData.content,
+          createdAt,
+          updatedAt: createdAt
         })
         .returning({ id: meows.id })
 
-      const tags = parseTildes(content)
+      const tags = parseTildes(meowData.content)
       if (tags.length > 0) {
         await db.insert(meowTags).values(
           tags.map(t => ({
@@ -371,46 +474,41 @@ const seed = async () => {
       allInsertedMeows.push({
         id: inserted.id,
         authorId: cat.id,
-        authorIndex: i,
-        minutesAgo: minutesCounter
+        catIndex: i,
+        daysAgo: meowData.daysAgo,
+        isRu: i < 5
       })
     }
   }
 
   console.log(`Создано ${allInsertedMeows.length} мяуканий`)
 
-  // создаем ремяуты: каждый 2й кот ремяутит 1-2 чужих мяута
+  // ремяуты: каждый кот ремяутит 1-2 поста из своей языковой группы
   let remeowCount = 0
 
-  for (let i = 0; i < insertedCats.length; i += 2) {
+  for (let i = 0; i < insertedCats.length; i++) {
     const cat = insertedCats[i]
-    const otherMeows = allInsertedMeows.filter(m => m.authorId !== cat.id)
-    const toRemeow = pickN(otherMeows, 1, 2)
+    const isRu = i < 5
+    const sameGroupMeows = allInsertedMeows.filter(
+      m => m.authorId !== cat.id && m.isRu === isRu
+    )
+    const toRemeow = pickN(sameGroupMeows, 1, 2)
 
     for (const original of toRemeow) {
-      // ремяут произошел позже оригинала
-      const remeowMinutesAgo = Math.max(
-        5,
-        original.minutesAgo - Math.floor(Math.random() * 120) - 10
+      const createdAt = daysAgo(
+        Math.max(0, original.daysAgo - 1),
+        Math.floor(Math.random() * 8)
       )
 
-      const [remeow] = await db
+      await db
         .insert(meows)
         .values({
           authorId: cat.id,
           content: '',
           remeowOfId: original.id,
-          createdAt: timeAgo(remeowMinutesAgo),
-          updatedAt: timeAgo(remeowMinutesAgo)
+          createdAt,
+          updatedAt: createdAt
         })
-        .returning({ id: meows.id })
-
-      allInsertedMeows.push({
-        id: remeow.id,
-        authorId: cat.id,
-        authorIndex: i,
-        minutesAgo: remeowMinutesAgo
-      })
 
       remeowCount++
     }
@@ -418,23 +516,40 @@ const seed = async () => {
 
   console.log(`Создано ${remeowCount} ремяутов`)
 
-  // создаем ответы (reply): каждый 3й кот отвечает на 1-2 чужих мяута
+  // реплаи: каждый 2й кот отвечает на 1-2 чужих мяута из своей группы
+  const ruReplies: string[] = [
+    'Полностью поддерживаю! Сам давно так думаю, мур',
+    'О да, ~кофе утром = залог хорошего дня',
+    'Интересная мысль, надо бы попробовать',
+    'Согласен на все сто! У меня похожий опыт',
+    'Мур, как красиво сказано'
+  ]
+
+  const enReplies: string[] = [
+    'Totally agree! Been thinking the same, meow',
+    'Oh yes, morning ~coffee is everything',
+    'Interesting take, need to try this',
+    'Couldn\'t have said it better myself!',
+    'Meow, beautifully put'
+  ]
+
   let replyCount = 0
 
-  for (let i = 1; i < insertedCats.length; i += 3) {
+  for (let i = 0; i < insertedCats.length; i += 2) {
     const cat = insertedCats[i]
-    // только оригинальные мяуты (не ремяуты)
-    const otherOriginalMeows = allInsertedMeows.filter(
-      m => m.authorId !== cat.id && allInsertedMeows.find(x => x.id === m.id)
+    const isRu = i < 5
+    const sameGroupMeows = allInsertedMeows.filter(
+      m => m.authorId !== cat.id && m.isRu === isRu
     )
-    const toReply = pickN(otherOriginalMeows, 1, 2)
+    const toReply = pickN(sameGroupMeows, 1, 2)
+    const replies = isRu ? ruReplies : enReplies
 
     for (const original of toReply) {
-      const replyMinutesAgo = Math.max(
-        3,
-        original.minutesAgo - Math.floor(Math.random() * 180) - 15
+      const createdAt = daysAgo(
+        Math.max(0, original.daysAgo - 1),
+        Math.floor(Math.random() * 6)
       )
-      const replyContent = pick(seedReplies)
+      const replyContent = pick(replies)
 
       const [reply] = await db
         .insert(meows)
@@ -442,12 +557,11 @@ const seed = async () => {
           authorId: cat.id,
           content: replyContent,
           replyToId: original.id,
-          createdAt: timeAgo(replyMinutesAgo),
-          updatedAt: timeAgo(replyMinutesAgo)
+          createdAt,
+          updatedAt: createdAt
         })
         .returning({ id: meows.id })
 
-      // теги для ответа
       const tags = parseTildes(replyContent)
       if (tags.length > 0) {
         await db.insert(meowTags).values(
@@ -460,37 +574,47 @@ const seed = async () => {
         )
       }
 
-      allInsertedMeows.push({
-        id: reply.id,
-        authorId: cat.id,
-        authorIndex: i,
-        minutesAgo: replyMinutesAgo
-      })
-
       replyCount++
     }
   }
 
-  console.log(`Создано ${replyCount} ответов`)
+  console.log(`Создано ${replyCount} реплаев`)
 
-  // создаем комментарии: каждый кот оставляет 1-2 комментария на чужие мяуканья
+  // комментарии: каждый кот оставляет 3-5 комментариев на чужие мяуты
+  // ~30% комментов содержат @меншн автора поста
   let commentCount = 0
 
-  for (const cat of insertedCats) {
+  // маппинг authorId -> username для меншнов
+  const catUsernameMap = new Map(insertedCats.map(c => [c.id, c.username]))
+
+  for (let i = 0; i < insertedCats.length; i++) {
+    const cat = insertedCats[i]
+    const isRu = i < 5
     const otherMeows = allInsertedMeows.filter(m => m.authorId !== cat.id)
-    const toComment = pickN(otherMeows, 1, 2)
+    const toComment = pickN(otherMeows, 3, 5)
 
     for (const meow of toComment) {
-      const commentMinutesAgo = Math.max(
-        1,
-        meow.minutesAgo - Math.floor(Math.random() * 60) - 5
+      const createdAt = daysAgo(
+        Math.max(0, meow.daysAgo),
+        Math.floor(Math.random() * 12)
       )
+
+      const useMention = Math.random() < 0.3
+      let content: string
+
+      if (useMention) {
+        const mentionPool = isRu ? ruMentionComments : enMentionComments
+        const authorUsername = catUsernameMap.get(meow.authorId) ?? 'unknown'
+        content = pick(mentionPool).replace('AUTHOR', authorUsername)
+      } else {
+        content = pick(isRu ? ruComments : enComments)
+      }
 
       await db.insert(comments).values({
         meowId: meow.id,
         authorId: cat.id,
-        content: pick(seedComments),
-        createdAt: timeAgo(commentMinutesAgo)
+        content,
+        createdAt
       })
       commentCount++
     }
@@ -498,13 +622,13 @@ const seed = async () => {
 
   console.log(`Создано ${commentCount} комментариев`)
 
-  // создаем лайки: каждый кот лайкает 2-4 чужих мяуканья
+  // лайки: каждый кот лайкает 5-8 чужих мяутов
   let likeCount = 0
   const likeSet = new Set<string>()
 
   for (const cat of insertedCats) {
     const otherMeows = allInsertedMeows.filter(m => m.authorId !== cat.id)
-    const toLike = pickN(otherMeows, 2, 4)
+    const toLike = pickN(otherMeows, 5, 8)
 
     for (const meow of toLike) {
       const key = `${cat.id}:${meow.id}`
@@ -523,13 +647,17 @@ const seed = async () => {
 
   console.log(`Создано ${likeCount} лайков`)
 
-  // создаем подписки: каждый кот подписывается на 2-4 других
+  // подписки: каждый кот подписывается на 3-5 других (в своей группе всех, + 1-2 из другой)
   let followCount = 0
   const followSet = new Set<string>()
 
-  for (const cat of insertedCats) {
-    const others = insertedCats.filter(c => c.id !== cat.id)
-    const toFollow = pickN(others, 2, 4)
+  for (let i = 0; i < insertedCats.length; i++) {
+    const cat = insertedCats[i]
+    const isRu = i < 5
+    const sameGroup = (isRu ? ruCatIds : enCatIds).filter(c => c.id !== cat.id)
+    const otherGroup = isRu ? enCatIds : ruCatIds
+    const crossFollow = pickN(otherGroup, 1, 2)
+    const toFollow = [...sameGroup, ...crossFollow]
 
     for (const target of toFollow) {
       const key = `${cat.id}:${target.id}`
@@ -548,14 +676,13 @@ const seed = async () => {
 
   console.log(`Создано ${followCount} подписок`)
 
-  // нотификации для @trplfr
+  // нотификации для @trplfr (если существует)
   const [realUser] = await db
     .select({ id: cats.id, username: cats.username })
     .from(cats)
     .where(sql`${cats.username} = 'trplfr'`)
 
   if (realUser) {
-    // находим мяуты @trplfr
     const realUserMeows = await db
       .select({ id: meows.id })
       .from(meows)
@@ -566,8 +693,8 @@ const seed = async () => {
 
     for (let ai = 0; ai < notifActors.length; ai++) {
       const actor = notifActors[ai]
-      // разброс по времени: каждый актор действовал в разное время
       const baseMinutesAgo = 4000 - ai * 400 + Math.floor(Math.random() * 200)
+      const baseDays = Math.floor(baseMinutesAgo / (24 * 60))
 
       // подписка
       await db
@@ -582,11 +709,11 @@ const seed = async () => {
         userId: realUser.id,
         actorId: actor.id,
         type: 'FOLLOW',
-        createdAt: timeAgo(baseMinutesAgo)
+        createdAt: daysAgo(baseDays, ai * 2)
       })
       notifCount++
 
-      // лайкаем 1-2 мяута trplfr
+      // лайки на мяуты trplfr
       if (realUserMeows.length > 0) {
         const toLikeMeows = pickN(
           realUserMeows,
@@ -608,49 +735,45 @@ const seed = async () => {
             actorId: actor.id,
             type: 'MEOW_LIKE',
             meowId: meow.id,
-            createdAt: timeAgo(
-              baseMinutesAgo - 30 - Math.floor(Math.random() * 60)
-            )
+            createdAt: daysAgo(Math.max(0, baseDays - 1), ai * 3)
           })
           notifCount++
         }
       }
 
-      // ремяут мяута trplfr (первые 2 актора)
+      // ремяут (первые 2 актора)
       if (ai < 2 && realUserMeows.length > 0) {
         const toRemeow = pick(realUserMeows)
-        const remeowMinutesAgo =
-          baseMinutesAgo - 60 - Math.floor(Math.random() * 120)
+        const createdAt = daysAgo(Math.max(0, baseDays - 1), 6 + ai * 2)
 
-        const [remeow] = await db
+        await db
           .insert(meows)
           .values({
             authorId: actor.id,
             content: '',
             remeowOfId: toRemeow.id,
-            createdAt: timeAgo(Math.max(1, remeowMinutesAgo)),
-            updatedAt: timeAgo(Math.max(1, remeowMinutesAgo))
+            createdAt,
+            updatedAt: createdAt
           })
-          .returning({ id: meows.id })
 
         await db.insert(notifications).values({
           userId: realUser.id,
           actorId: actor.id,
           type: 'REMEOW',
           meowId: toRemeow.id,
-          createdAt: timeAgo(Math.max(1, remeowMinutesAgo))
+          createdAt
         })
         notifCount++
-
-        console.log(`  ${actor.username} ремяутнул мяут trplfr`)
       }
 
-      // ответ на мяут trplfr (3й и 4й актор)
+      // реплай (3й и 4й актор)
       if ((ai === 2 || ai === 3) && realUserMeows.length > 0) {
         const toReplyTo = pick(realUserMeows)
-        const replyMinutesAgo =
-          baseMinutesAgo - 90 - Math.floor(Math.random() * 60)
-        const replyContent = pick(seedReplies)
+        const isRu = ai < 5
+        const replyContent = isRu
+          ? pick(ruReplies)
+          : pick(enReplies)
+        const createdAt = daysAgo(Math.max(0, baseDays - 1), 8 + ai)
 
         const [reply] = await db
           .insert(meows)
@@ -658,8 +781,8 @@ const seed = async () => {
             authorId: actor.id,
             content: replyContent,
             replyToId: toReplyTo.id,
-            createdAt: timeAgo(Math.max(1, replyMinutesAgo)),
-            updatedAt: timeAgo(Math.max(1, replyMinutesAgo))
+            createdAt,
+            updatedAt: createdAt
           })
           .returning({ id: meows.id })
 
@@ -680,34 +803,96 @@ const seed = async () => {
           actorId: actor.id,
           type: 'REPLY',
           meowId: reply.id,
-          createdAt: timeAgo(Math.max(1, replyMinutesAgo))
+          createdAt
         })
         notifCount++
-
-        console.log(`  ${actor.username} ответил на мяут trplfr`)
       }
 
-      // комментарий на мяут trplfr (5й+ актор)
+      // комментарий с @trplfr меншном (5й+ актор)
       if (ai >= 4 && realUserMeows.length > 0) {
         const toCommentOn = pick(realUserMeows)
-        const commentMinutesAgo =
-          baseMinutesAgo - 45 - Math.floor(Math.random() * 90)
+        const createdAt = daysAgo(Math.max(0, baseDays), 10 + ai)
+        const isRu = ai < 5
+        const mentionContent = pick(
+          isRu ? ruMentionComments : enMentionComments
+        ).replace('AUTHOR', realUser.username)
 
         await db.insert(comments).values({
           meowId: toCommentOn.id,
           authorId: actor.id,
-          content: pick(seedComments),
-          createdAt: timeAgo(Math.max(1, commentMinutesAgo))
+          content: mentionContent,
+          createdAt
         })
-
-        console.log(`  ${actor.username} прокомментировал мяут trplfr`)
       }
+    }
+
+    // меншны @trplfr в комментах на ЧУЖИЕ мяуты (3-4 штуки)
+    const mentionActors = pickN(insertedCats, 3, 4)
+    for (const actor of mentionActors) {
+      const otherMeows = allInsertedMeows.filter(
+        m => m.authorId !== realUser.id
+      )
+      const targetMeow = pick(otherMeows)
+      const isRu = ruCatIds.some(c => c.id === actor.id)
+      const mentionTexts = isRu
+        ? [
+            `@${realUser.username} смотри что пишут, мур!`,
+            `@${realUser.username} тебе бы понравилось`,
+            `@${realUser.username} как думаешь?`
+          ]
+        : [
+            `@${realUser.username} check this out!`,
+            `@${realUser.username} you would love this`,
+            `@${realUser.username} what do you think?`
+          ]
+      const createdAt = daysAgo(
+        Math.max(0, targetMeow.daysAgo),
+        Math.floor(Math.random() * 10)
+      )
+
+      const [mentionComment] = await db
+        .insert(comments)
+        .values({
+          meowId: targetMeow.id,
+          authorId: actor.id,
+          content: pick(mentionTexts),
+          createdAt
+        })
+        .returning({ id: comments.id })
+
+      await db.insert(notifications).values({
+        userId: realUser.id,
+        actorId: actor.id,
+        type: 'MENTION',
+        meowId: targetMeow.id,
+        commentId: mentionComment.id,
+        createdAt
+      })
+      notifCount++
     }
 
     console.log(`Создано ${notifCount} нотификаций для @${realUser.username}`)
   } else {
-    console.log('Пользователь @trplfr не найден в базе, нотификации не созданы')
+    console.log('Пользователь @trplfr не найден, нотификации пропущены')
   }
+
+  // тема недели: кофе / coffee
+  await db
+    .insert(appSettings)
+    .values([
+      { key: 'topic_of_week_ru', value: 'кофе' },
+      { key: 'topic_of_week_en', value: 'coffee' }
+    ])
+    .onConflictDoNothing()
+
+  // обновляем если уже есть
+  await db
+    .execute(sql`
+      UPDATE app_settings SET value = 'кофе' WHERE key = 'topic_of_week_ru';
+      UPDATE app_settings SET value = 'coffee' WHERE key = 'topic_of_week_en';
+    `)
+
+  console.log('Тема недели: ~кофе / ~coffee')
 
   console.log('Сидирование завершено!')
 

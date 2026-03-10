@@ -5,6 +5,8 @@ import { type Notification, NotificationType, type Sex } from '@shared/types'
 
 import { routes } from '@core/router'
 
+import { type ReactNode } from 'react'
+
 import { highlightTildes } from '@lib/meow'
 
 import { Avatar, TimeAgo } from '@modules/MeowCard'
@@ -63,6 +65,32 @@ const NotificationText = ({
   )
 }
 
+// подсветка @mentions без ссылок (span вместо a, чтобы не вложенные <a>)
+const highlightMentionsInline = (text: string, className: string): ReactNode[] => {
+  const parts: ReactNode[] = []
+  const regex = /(@[\w\u0400-\u04FF]+)/g
+  let lastIndex = 0
+  let match: RegExpExecArray | null
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index))
+    }
+    parts.push(
+      <span key={match.index} className={className}>
+        {match[0]}
+      </span>
+    )
+    lastIndex = regex.lastIndex
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex))
+  }
+
+  return parts
+}
+
 export const NotificationCard = ({ notification }: NotificationCardProps) => {
   const { actor, meow, comment, type } = notification
 
@@ -100,9 +128,12 @@ export const NotificationCard = ({ notification }: NotificationCardProps) => {
       {comment && commentHref && (
         <a href={commentHref} className={s.commentPreview}>
           <div className={s.commentPreviewContent}>
-            {comment.content.length > 150
-              ? comment.content.slice(0, 150) + '...'
-              : comment.content}
+            {highlightMentionsInline(
+              comment.content.length > 150
+                ? comment.content.slice(0, 150) + '...'
+                : comment.content,
+              s.mention
+            )}
           </div>
         </a>
       )}

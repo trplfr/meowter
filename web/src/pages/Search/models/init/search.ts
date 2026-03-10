@@ -28,11 +28,11 @@ import {
   toggleLikeMutation
 } from '../models'
 
-// синхронизация ?tag= с URL
+// синхронизация ?theme= с URL
 const $urlTag = createStore('')
 
 querySync({
-  source: { tag: $urlTag },
+  source: { theme: $urlTag },
   controls,
   route: routes.search
 })
@@ -43,7 +43,7 @@ sample({
   target: tagsQuery.start
 })
 
-// при обновлении query params (уже на /search, кликнули ~tag) = запускаем поиск по $urlTag
+// при обновлении query params (уже на /search, кликнули ~theme) = запускаем поиск по $urlTag
 sample({
   clock: routes.search.updated,
   source: { urlTag: $urlTag, tagsLoaded: $tagsLoaded },
