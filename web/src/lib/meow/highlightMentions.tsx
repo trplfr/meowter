@@ -19,7 +19,7 @@ export const highlightMentions = (
 
     parts.push(
       <a
-        key={match.index}
+        key={`mention-${match.index}`}
         href={`/cat/${encodeURIComponent(username)}`}
         className={mentionClass}
       >

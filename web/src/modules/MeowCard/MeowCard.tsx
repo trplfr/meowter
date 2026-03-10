@@ -49,6 +49,9 @@ export const MeowCard = ({
   const [confirmingDelete, setConfirmingDelete] = useState(false)
 
   const handleCopyLink = useCallback(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
     const url = `${window.location.origin}/cat/${meow.author.username}/meow/${meow.id}`
     navigator.clipboard.writeText(url)
   }, [meow.id, meow.author.username])

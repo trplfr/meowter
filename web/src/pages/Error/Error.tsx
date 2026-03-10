@@ -24,7 +24,7 @@ export const Error = () => {
         </p>
 
         <div className={s.actions}>
-          <button className={s.link} onClick={() => location.reload()}>
+          <button className={s.link} onClick={() => typeof window !== 'undefined' && window.location.reload()}>
             <Trans>Обновить страницу</Trans>
           </button>
         </div>

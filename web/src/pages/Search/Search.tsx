@@ -103,12 +103,12 @@ export const Search = () => {
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) {
-        // не закрываем через событие чтобы не конфликтовать
+        onClear()
       }
     }
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
-  }, [])
+  }, [onClear])
 
   // фильтруем теги
   const filteredTags =

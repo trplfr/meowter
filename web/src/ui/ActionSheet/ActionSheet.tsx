@@ -43,7 +43,7 @@ export const ActionSheet = ({ items }: ActionSheetProps) => {
           <div className={s.items}>
             {items.map((item, i) => (
               <button
-                key={i}
+                key={`action-${i}`}
                 type='button'
                 className={item.variant === 'danger' ? s.itemDanger : s.item}
                 onClick={() => handleItemClick(item)}

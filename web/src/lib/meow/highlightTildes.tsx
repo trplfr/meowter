@@ -21,7 +21,7 @@ export const highlightTildes = (
     if (linkable) {
       parts.push(
         <a
-          key={match.index}
+          key={`tilde-${match.index}`}
           href={`/search?tag=${encodeURIComponent(tag)}`}
           className={className}
         >

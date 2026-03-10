@@ -37,6 +37,9 @@ export const CommentCard = ({
   const [confirmingDelete, setConfirmingDelete] = useState(false)
 
   const handleCopyLink = useCallback(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
     const url = `${window.location.origin}/cat/${meowAuthorUsername}/meow/${meowId}`
     navigator.clipboard.writeText(url)
   }, [meowAuthorUsername, meowId])

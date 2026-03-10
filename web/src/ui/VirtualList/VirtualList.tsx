@@ -50,7 +50,7 @@ export const VirtualList = <T,>({
     ) {
       onLoadMore()
     }
-  }, [lastItem?.index, items.length, hasMore, pending])
+  }, [lastItem?.index, items.length, hasMore, pending, onLoadMore])
 
   return (
     <div ref={parentRef} className={className || s.container}>
