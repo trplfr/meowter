@@ -26,7 +26,7 @@ export const highlightTildes = (
         <Link
           key={`tilde-${match.index}`}
           to={routes.search}
-          query={{ tag }}
+          query={{ theme: tag }}
           className={className}
         >
           {match[0]}
