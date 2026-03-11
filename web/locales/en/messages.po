@@ -45,7 +45,7 @@ msgstr "~{currentTag} / Meowter"
 msgid "404 / Мяутер"
 msgstr "404 / Meowter"
 
-#: src/pages/Settings/Settings.tsx:204
+#: src/pages/Settings/Settings.tsx:206
 msgid "Email, ссылка или телефон"
 msgstr "Email, link or phone"
 
@@ -53,7 +53,7 @@ msgstr "Email, link or phone"
 msgid "Ай!"
 msgstr "Oops!"
 
-#: src/pages/Settings/Settings.tsx:215
+#: src/pages/Settings/Settings.tsx:217
 msgid "Безопасность"
 msgstr "Security"
 
@@ -84,7 +84,7 @@ msgstr "Enter password"
 msgid "Введите почту"
 msgstr "Enter email"
 
-#: src/pages/Settings/Settings.tsx:224
+#: src/pages/Settings/Settings.tsx:226
 msgid "Введите старый пароль"
 msgstr "Enter old password"
 
@@ -172,7 +172,7 @@ msgstr "Access denied / Meowter"
 msgid "Если вам хочется принять участие в обсуждении последних новостей, вместо того, чтобы работать"
 msgstr "If you'd rather join the conversation about the latest news instead of working"
 
-#: src/pages/Settings/Settings.tsx:177
+#: src/pages/Settings/Settings.tsx:179
 msgid "Женский"
 msgstr "Female"
 
@@ -200,7 +200,7 @@ msgstr "or <0>resend the email</0>"
 msgid "или <0>почитай тему недели: 🔥 <1>~{weeklyTag}</1></0>"
 msgstr "or <0>check out the weekly topic: 🔥 <1>~{weeklyTag}</1></0>"
 
-#: src/pages/Settings/Settings.tsx:146
+#: src/pages/Settings/Settings.tsx:148
 msgid "Имя"
 msgstr "First name"
 
@@ -220,7 +220,7 @@ msgstr "Looks like you can't go here..."
 msgid "Кажется, у нас что-то произошло..."
 msgstr "Something went wrong..."
 
-#: src/pages/Settings/Settings.tsx:197
+#: src/pages/Settings/Settings.tsx:199
 msgid "Контакты"
 msgstr "Contacts"
 
@@ -245,11 +245,11 @@ msgstr "Feed / Meowter"
 msgid "Логин"
 msgstr "Username"
 
-#: src/pages/Settings/Settings.tsx:249
+#: src/pages/Settings/Settings.tsx:251
 msgid "Минимум {PASSWORD_MIN} символов"
 msgstr "Minimum {PASSWORD_MIN} characters"
 
-#: src/pages/Settings/Settings.tsx:176
+#: src/pages/Settings/Settings.tsx:178
 msgid "Мужской"
 msgstr "Male"
 
@@ -321,11 +321,11 @@ msgstr "Invalid email format"
 msgid "Необходимо авторизоваться"
 msgstr "Authentication required"
 
-#: src/pages/Settings/Settings.tsx:186
+#: src/pages/Settings/Settings.tsx:188
 msgid "О себе"
 msgstr "About me"
 
-#: src/pages/Settings/Settings.tsx:280
+#: src/pages/Settings/Settings.tsx:282
 msgid "Обновить"
 msgstr "Update"
 
@@ -341,7 +341,7 @@ msgstr "Discussion"
 msgid "Обсуждение / Мяутер"
 msgstr "Discussion / Meowter"
 
-#: src/pages/Settings/Settings.tsx:128
+#: src/pages/Settings/Settings.tsx:130
 msgid "Общая информация"
 msgstr "General info"
 
@@ -366,7 +366,7 @@ msgstr "Reply"
 msgid "Отмена"
 msgstr "Cancel"
 
-#: src/pages/Settings/Settings.tsx:135
+#: src/pages/Settings/Settings.tsx:137
 msgid "Отображаемое имя"
 msgstr "Display name"
 
@@ -394,7 +394,7 @@ msgstr "liked your meow"
 msgid "Ошибка / Мяутер"
 msgstr "Error / Meowter"
 
-#: src/pages/Settings/Settings.tsx:272
+#: src/pages/Settings/Settings.tsx:274
 msgid "Пароли не совпадают"
 msgstr "Passwords don't match"
 
@@ -402,6 +402,10 @@ msgstr "Passwords don't match"
 #: src/modules/Auth/forms/RegisterForm/steps/Credentials/Credentials.tsx:68
 msgid "Пароль"
 msgstr "Password"
+
+#: src/pages/Settings/models/init/settings.ts:254
+msgid "Пароль изменен"
+msgstr "Password changed"
 
 #: src/modules/Auth/models/models/validation.ts:106
 msgid "Пароль максимум {PASSWORD_MAX} символов"
@@ -428,7 +432,7 @@ msgstr "Email already sent"
 #~ msgid "Письмо уже отправлено. Повторно через {mins} мин"
 #~ msgstr "Email already sent. Retry in {mins} min"
 
-#: src/pages/Settings/Settings.tsx:261
+#: src/pages/Settings/Settings.tsx:263
 msgid "Повторите пароль"
 msgstr "Confirm password"
 
@@ -523,8 +527,8 @@ msgstr "No meows on ~{currentTag} yet"
 msgid "Пока нет уведомлений"
 msgstr "No notifications yet"
 
-#: src/pages/Settings/Settings.tsx:168
-#: src/pages/Settings/Settings.tsx:175
+#: src/pages/Settings/Settings.tsx:170
+#: src/pages/Settings/Settings.tsx:177
 msgid "Пол не выбран"
 msgstr "Not specified"
 
@@ -555,7 +559,7 @@ msgstr "Character limit exceeded ({0}/{COMMENT_CONTENT_MAX})"
 msgid "Превышено количество символов ({0}/{MEOW_CONTENT_MAX})"
 msgstr "Character limit exceeded ({0}/{MEOW_CONTENT_MAX})"
 
-#: src/pages/Settings/Settings.tsx:238
+#: src/pages/Settings/Settings.tsx:240
 msgid "Придумайте новый пароль"
 msgstr "Create a new password"
 
@@ -576,6 +580,10 @@ msgstr "@{0}'s profile on Meowter"
 #: src/pages/CatProfile/CatProfile.tsx:135
 msgid "Профиль / Мяутер"
 msgstr "Profile / Meowter"
+
+#: src/pages/Settings/models/init/settings.ts:223
+msgid "Профиль обновлен"
+msgstr "Profile updated"
 
 #: src/modules/CreateMeow/CreateMeowForm.tsx:109
 #: src/modules/CreateMeow/CreateMeowForm.tsx:114
@@ -695,7 +703,7 @@ msgstr "No file selected"
 msgid "Файл слишком большой (макс. 5 МБ)"
 msgstr "File is too large (max 5 MB)"
 
-#: src/pages/Settings/Settings.tsx:157
+#: src/pages/Settings/Settings.tsx:159
 msgid "Фамилия"
 msgstr "Last name"
 

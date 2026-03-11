@@ -222,7 +222,7 @@ export const Settings = () => {
             name='oldPassword'
             className={s.input}
             type='password'
-            autoComplete='current-password'
+            autoComplete='off'
             placeholder={t`Введите старый пароль`}
             value={passwordForm.oldPassword}
             onChange={e =>
@@ -236,7 +236,7 @@ export const Settings = () => {
               name='newPassword'
               className={s.input}
               type='password'
-              autoComplete='new-password'
+              autoComplete='off'
               placeholder={t`Придумайте новый пароль`}
               value={passwordForm.newPassword}
               onChange={e =>
@@ -259,7 +259,7 @@ export const Settings = () => {
               name='confirmPassword'
               className={s.input}
               type='password'
-              autoComplete='new-password'
+              autoComplete='off'
               placeholder={t`Повторите пароль`}
               value={passwordForm.confirmPassword}
               onChange={e =>

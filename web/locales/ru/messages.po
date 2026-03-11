@@ -45,7 +45,7 @@ msgstr "~{currentTag} / Мяутер"
 msgid "404 / Мяутер"
 msgstr "404 / Мяутер"
 
-#: src/pages/Settings/Settings.tsx:204
+#: src/pages/Settings/Settings.tsx:206
 msgid "Email, ссылка или телефон"
 msgstr "Email, ссылка или телефон"
 
@@ -53,7 +53,7 @@ msgstr "Email, ссылка или телефон"
 msgid "Ай!"
 msgstr "Ай!"
 
-#: src/pages/Settings/Settings.tsx:215
+#: src/pages/Settings/Settings.tsx:217
 msgid "Безопасность"
 msgstr "Безопасность"
 
@@ -84,7 +84,7 @@ msgstr "Введите пароль"
 msgid "Введите почту"
 msgstr "Введите почту"
 
-#: src/pages/Settings/Settings.tsx:224
+#: src/pages/Settings/Settings.tsx:226
 msgid "Введите старый пароль"
 msgstr "Введите старый пароль"
 
@@ -172,7 +172,7 @@ msgstr "Доступ запрещен / Мяутер"
 msgid "Если вам хочется принять участие в обсуждении последних новостей, вместо того, чтобы работать"
 msgstr "Если вам хочется принять участие в обсуждении последних новостей, вместо того, чтобы работать"
 
-#: src/pages/Settings/Settings.tsx:177
+#: src/pages/Settings/Settings.tsx:179
 msgid "Женский"
 msgstr "Женский"
 
@@ -200,7 +200,7 @@ msgstr "или <0>отправьте письмо повторно</0>"
 msgid "или <0>почитай тему недели: 🔥 <1>~{weeklyTag}</1></0>"
 msgstr "или <0>почитай тему недели: 🔥 <1>~{weeklyTag}</1></0>"
 
-#: src/pages/Settings/Settings.tsx:146
+#: src/pages/Settings/Settings.tsx:148
 msgid "Имя"
 msgstr "Имя"
 
@@ -220,7 +220,7 @@ msgstr "Кажется, вам сюда нельзя..."
 msgid "Кажется, у нас что-то произошло..."
 msgstr "Кажется, у нас что-то произошло..."
 
-#: src/pages/Settings/Settings.tsx:197
+#: src/pages/Settings/Settings.tsx:199
 msgid "Контакты"
 msgstr "Контакты"
 
@@ -245,11 +245,11 @@ msgstr "Лента / Мяутер"
 msgid "Логин"
 msgstr "Логин"
 
-#: src/pages/Settings/Settings.tsx:249
+#: src/pages/Settings/Settings.tsx:251
 msgid "Минимум {PASSWORD_MIN} символов"
 msgstr "Минимум {PASSWORD_MIN} символов"
 
-#: src/pages/Settings/Settings.tsx:176
+#: src/pages/Settings/Settings.tsx:178
 msgid "Мужской"
 msgstr "Мужской"
 
@@ -321,11 +321,11 @@ msgstr "Некорректный формат почты"
 msgid "Необходимо авторизоваться"
 msgstr "Необходимо авторизоваться"
 
-#: src/pages/Settings/Settings.tsx:186
+#: src/pages/Settings/Settings.tsx:188
 msgid "О себе"
 msgstr "О себе"
 
-#: src/pages/Settings/Settings.tsx:280
+#: src/pages/Settings/Settings.tsx:282
 msgid "Обновить"
 msgstr "Обновить"
 
@@ -341,7 +341,7 @@ msgstr "Обсуждение"
 msgid "Обсуждение / Мяутер"
 msgstr "Обсуждение / Мяутер"
 
-#: src/pages/Settings/Settings.tsx:128
+#: src/pages/Settings/Settings.tsx:130
 msgid "Общая информация"
 msgstr "Общая информация"
 
@@ -366,7 +366,7 @@ msgstr "Ответить"
 msgid "Отмена"
 msgstr "Отмена"
 
-#: src/pages/Settings/Settings.tsx:135
+#: src/pages/Settings/Settings.tsx:137
 msgid "Отображаемое имя"
 msgstr "Отображаемое имя"
 
@@ -394,7 +394,7 @@ msgstr "оценила ваш мяут"
 msgid "Ошибка / Мяутер"
 msgstr "Ошибка / Мяутер"
 
-#: src/pages/Settings/Settings.tsx:272
+#: src/pages/Settings/Settings.tsx:274
 msgid "Пароли не совпадают"
 msgstr "Пароли не совпадают"
 
@@ -402,6 +402,10 @@ msgstr "Пароли не совпадают"
 #: src/modules/Auth/forms/RegisterForm/steps/Credentials/Credentials.tsx:68
 msgid "Пароль"
 msgstr "Пароль"
+
+#: src/pages/Settings/models/init/settings.ts:254
+msgid "Пароль изменен"
+msgstr "Пароль изменен"
 
 #: src/modules/Auth/models/models/validation.ts:106
 msgid "Пароль максимум {PASSWORD_MAX} символов"
@@ -428,7 +432,7 @@ msgstr "Письмо уже отправлено"
 #~ msgid "Письмо уже отправлено. Повторно через {mins} мин"
 #~ msgstr "Письмо уже отправлено. Повторно через {mins} мин"
 
-#: src/pages/Settings/Settings.tsx:261
+#: src/pages/Settings/Settings.tsx:263
 msgid "Повторите пароль"
 msgstr "Повторите пароль"
 
@@ -523,8 +527,8 @@ msgstr "Пока нет мяутов по теме ~{currentTag}"
 msgid "Пока нет уведомлений"
 msgstr "Пока нет уведомлений"
 
-#: src/pages/Settings/Settings.tsx:168
-#: src/pages/Settings/Settings.tsx:175
+#: src/pages/Settings/Settings.tsx:170
+#: src/pages/Settings/Settings.tsx:177
 msgid "Пол не выбран"
 msgstr "Пол не выбран"
 
@@ -555,7 +559,7 @@ msgstr "Превышено количество символов ({0}/{COMMENT_C
 msgid "Превышено количество символов ({0}/{MEOW_CONTENT_MAX})"
 msgstr "Превышено количество символов ({0}/{MEOW_CONTENT_MAX})"
 
-#: src/pages/Settings/Settings.tsx:238
+#: src/pages/Settings/Settings.tsx:240
 msgid "Придумайте новый пароль"
 msgstr "Придумайте новый пароль"
 
@@ -576,6 +580,10 @@ msgstr "Профиль @{0} в Мяутере"
 #: src/pages/CatProfile/CatProfile.tsx:135
 msgid "Профиль / Мяутер"
 msgstr "Профиль / Мяутер"
+
+#: src/pages/Settings/models/init/settings.ts:223
+msgid "Профиль обновлен"
+msgstr "Профиль обновлен"
 
 #: src/modules/CreateMeow/CreateMeowForm.tsx:109
 #: src/modules/CreateMeow/CreateMeowForm.tsx:114
@@ -695,7 +703,7 @@ msgstr "Файл не выбран"
 msgid "Файл слишком большой (макс. 5 МБ)"
 msgstr "Файл слишком большой (макс. 5 МБ)"
 
-#: src/pages/Settings/Settings.tsx:157
+#: src/pages/Settings/Settings.tsx:159
 msgid "Фамилия"
 msgstr "Фамилия"
 

@@ -1,7 +1,9 @@
 import { sample } from 'effector'
+import { t } from '@lingui/core/macro'
 
 import { routes } from '@core/router'
 import { $session, sessionReceived } from '@logic/session'
+import { showSuccessToastFx } from '@logic/notifications'
 
 import {
   type SettingsForm,
@@ -215,6 +217,13 @@ sample({
   target: $isDirty
 })
 
+// тост после обновления профиля
+sample({
+  clock: updateProfileFx.doneData,
+  fn: () => t`Профиль обновлен`,
+  target: showSuccessToastFx
+})
+
 // сброс аватара после загрузки
 sample({
   clock: uploadAvatarFx.doneData,
@@ -237,4 +246,11 @@ sample({
   clock: changePasswordFx.doneData,
   fn: () => false,
   target: $isPasswordDirty
+})
+
+// тост после смены пароля
+sample({
+  clock: changePasswordFx.doneData,
+  fn: () => t`Пароль изменен`,
+  target: showSuccessToastFx
 })
