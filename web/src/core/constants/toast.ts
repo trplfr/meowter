@@ -1,7 +1,7 @@
 import { type ToasterProps } from 'sonner'
 
 export const toastOptions: ToasterProps = {
-  position: 'bottom-center',
+  position: 'top-center',
   toastOptions: {
     style: {
       fontFamily: 'var(--font-family)',

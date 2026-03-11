@@ -4,7 +4,6 @@ import { redirect } from 'atomic-router'
 import { routes } from '@core/router'
 
 import { sessionReceived } from '@logic/session'
-import { errorOccurred } from '@logic/notifications'
 
 import {
   $loginForm,
@@ -140,18 +139,6 @@ sample({
   clock: recoveryFieldChanged,
   fn: ({ field }) => field,
   target: recoveryValidation.fieldTouched
-})
-
-/* API errors -> toast */
-
-sample({
-  clock: [
-    loginFx.failData,
-    registerFx.failData,
-    recoveryFx.failData,
-    uploadAvatarFx.failData
-  ],
-  target: errorOccurred
 })
 
 /* Success -> session + next step */
