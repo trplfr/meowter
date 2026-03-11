@@ -84,21 +84,10 @@ sample({
   target: $hasMore
 })
 
-// свой профиль -> берем из сессии, чужой -> запрос
+// всегда запрашиваем профиль через API
 sample({
   clock: profilePageOpened,
-  source: $session,
-  filter: (session, username) =>
-    session !== null && session.username === username,
-  fn: session => session!,
-  target: $profile
-})
-
-sample({
-  clock: profilePageOpened,
-  source: $session,
-  filter: (session, username) => !session || session.username !== username,
-  fn: (_, username) => username,
+  fn: username => username,
   target: profileQuery.start
 })
 

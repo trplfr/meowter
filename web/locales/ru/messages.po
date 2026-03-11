@@ -14,28 +14,46 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. placeholder {0}: profile.followersCount
-#: src/pages/CatProfile/CatProfile.tsx:164
+#: src/pages/CatProfile/CatProfile.tsx:208
 msgid "{0, plural, one {читатель} few {читателя} many {читателей} other {читателей}}"
 msgstr "{0, plural, one {читатель} few {читателя} many {читателей} other {читателей}}"
 
 #. placeholder {0}: profile.displayName
-#: src/pages/CatProfile/CatProfile.tsx:111
+#: src/pages/CatProfile/CatProfile.tsx:115
 msgid "{0} / Мяутер"
 msgstr "{0} / Мяутер"
+
+#. placeholder {0}: meow.author.displayName
+#. placeholder {1}: meow.content.slice(0, 60)
+#: src/pages/MeowThread/MeowThread.tsx:95
+msgid "{0}: {1} / Мяутер"
+msgstr "{0}: {1} / Мяутер"
+
+#: src/pages/CatProfile/CatProfile.tsx:242
+msgid "<0>Напиши первый мяут</0> с <1>~темой</1>"
+msgstr "<0>Напиши первый мяут</0> с <1>~темой</1>"
+
+#: src/pages/Feed/Feed.tsx:84
+msgid "<0>Напиши свой первый мяут</0><1/>используя <2>~тильду</2>, чтобы открыть ленту!"
+msgstr "<0>Напиши свой первый мяут</0><1/>используя <2>~тильду</2>, чтобы открыть ленту!"
+
+#: src/pages/Feed/Feed.tsx:64
+msgid "~{currentTag} / Мяутер"
+msgstr "~{currentTag} / Мяутер"
 
 #: src/pages/NotFound/NotFound.tsx:17
 msgid "404 / Мяутер"
 msgstr "404 / Мяутер"
 
-#: src/pages/Settings/Settings.tsx:203
+#: src/pages/Settings/Settings.tsx:204
 msgid "Email, ссылка или телефон"
 msgstr "Email, ссылка или телефон"
 
-#: src/pages/Unauthorized/Unauthorized.tsx:24
+#: src/pages/Unauthorized/Unauthorized.tsx:25
 msgid "Ай!"
 msgstr "Ай!"
 
-#: src/pages/Settings/Settings.tsx:214
+#: src/pages/Settings/Settings.tsx:215
 msgid "Безопасность"
 msgstr "Безопасность"
 
@@ -66,7 +84,7 @@ msgstr "Введите пароль"
 msgid "Введите почту"
 msgstr "Введите почту"
 
-#: src/pages/Settings/Settings.tsx:223
+#: src/pages/Settings/Settings.tsx:224
 msgid "Введите старый пароль"
 msgstr "Введите старый пароль"
 
@@ -74,10 +92,14 @@ msgstr "Введите старый пароль"
 msgid "Войдите в аккаунт, чтобы продолжить обсуждать любимые темы"
 msgstr "Войдите в аккаунт, чтобы продолжить обсуждать любимые темы"
 
+#: src/pages/Login/Login.tsx:16
+msgid "Войдите в свой аккаунт Мяутера"
+msgstr "Войдите в свой аккаунт Мяутера"
+
 #: src/modules/Auth/forms/RecoveryForm/RecoveryForm.tsx:67
 #: src/modules/Auth/forms/RegisterForm/steps/Credentials/Credentials.tsx:86
-#: src/pages/Unauthorized/Unauthorized.tsx:33
-#: src/pages/Welcome/Welcome.tsx:39
+#: src/pages/Unauthorized/Unauthorized.tsx:34
+#: src/pages/Welcome/Welcome.tsx:46
 msgid "Войти в аккаунт"
 msgstr "Войти в аккаунт"
 
@@ -101,12 +123,12 @@ msgstr "Вход"
 msgid "Вход / Мяутер"
 msgstr "Вход / Мяутер"
 
-#: src/pages/Search/Search.tsx:183
-#: src/pages/Search/Search.tsx:221
+#: src/pages/Search/Search.tsx:209
+#: src/pages/Search/Search.tsx:247
 msgid "Вы ещё не говорили на эту тему"
 msgstr "Вы ещё не говорили на эту тему"
 
-#: src/pages/Search/Search.tsx:170
+#: src/pages/Search/Search.tsx:195
 msgid "Вы ещё не использовали ~темы в своих мяутах. Напишите мяут с ~темой, чтобы открыть поиск!"
 msgstr "Вы ещё не использовали ~темы в своих мяутах. Напишите мяут с ~темой, чтобы открыть поиск!"
 
@@ -114,7 +136,7 @@ msgstr "Вы ещё не использовали ~темы в своих мяу
 msgid "Выберите аватар"
 msgstr "Выберите аватар"
 
-#: src/modules/CreateMeow/CreateMeowForm.tsx:96
+#: src/modules/CreateMeow/CreateMeowForm.tsx:117
 msgid "Выдели слово, используя тильду:<0/><1>~работа</1>, чтобы составить ленту"
 msgstr "Выдели слово, используя тильду:<0/><1>~работа</1>, чтобы составить ленту"
 
@@ -134,7 +156,7 @@ msgstr "Давайте знакомиться"
 msgid "Далее"
 msgstr "Далее"
 
-#: src/pages/Welcome/Welcome.tsx:24
+#: src/pages/Welcome/Welcome.tsx:31
 msgid "Добро пожаловать<0/> в Мяутер"
 msgstr "Добро пожаловать<0/> в Мяутер"
 
@@ -146,11 +168,11 @@ msgstr "Допустимы только PNG, JPEG и WebP"
 msgid "Доступ запрещен / Мяутер"
 msgstr "Доступ запрещен / Мяутер"
 
-#: src/pages/Welcome/Welcome.tsx:30
+#: src/pages/Welcome/Welcome.tsx:37
 msgid "Если вам хочется принять участие в обсуждении последних новостей, вместо того, чтобы работать"
 msgstr "Если вам хочется принять участие в обсуждении последних новостей, вместо того, чтобы работать"
 
-#: src/pages/Settings/Settings.tsx:176
+#: src/pages/Settings/Settings.tsx:177
 msgid "Женский"
 msgstr "Женский"
 
@@ -158,12 +180,21 @@ msgstr "Женский"
 msgid "Заведите аккаунт, чтобы начать общаться"
 msgstr "Заведите аккаунт, чтобы начать общаться"
 
-#: src/pages/Unauthorized/Unauthorized.tsx:37
-#: src/pages/Welcome/Welcome.tsx:43
+#: src/pages/Unauthorized/Unauthorized.tsx:38
+#: src/pages/Welcome/Welcome.tsx:50
 msgid "Зарегистрироваться"
 msgstr "Зарегистрироваться"
 
-#: src/pages/Settings/Settings.tsx:145
+#: src/pages/Register/Register.tsx:17
+msgid "Зарегистрируйтесь в Мяутере = соцсети с кошачьей тематикой"
+msgstr "Зарегистрируйтесь в Мяутере = соцсети с кошачьей тематикой"
+
+#: src/pages/CatProfile/CatProfile.tsx:251
+#: src/pages/Feed/Feed.tsx:95
+msgid "или <0>почитай тему недели: 🔥 <1>~{weeklyTag}</1></0>"
+msgstr "или <0>почитай тему недели: 🔥 <1>~{weeklyTag}</1></0>"
+
+#: src/pages/Settings/Settings.tsx:146
 msgid "Имя"
 msgstr "Имя"
 
@@ -175,7 +206,7 @@ msgstr "Имя максимум {USERNAME_MAX} символов"
 msgid "Имя минимум {USERNAME_MIN} символа"
 msgstr "Имя минимум {USERNAME_MIN} символа"
 
-#: src/pages/Unauthorized/Unauthorized.tsx:27
+#: src/pages/Unauthorized/Unauthorized.tsx:28
 msgid "Кажется, вам сюда нельзя..."
 msgstr "Кажется, вам сюда нельзя..."
 
@@ -183,7 +214,7 @@ msgstr "Кажется, вам сюда нельзя..."
 msgid "Кажется, у нас что-то произошло..."
 msgstr "Кажется, у нас что-то произошло..."
 
-#: src/pages/Settings/Settings.tsx:196
+#: src/pages/Settings/Settings.tsx:197
 msgid "Контакты"
 msgstr "Контакты"
 
@@ -196,11 +227,11 @@ msgstr "Копировать ссылку"
 msgid "Круто!"
 msgstr "Круто!"
 
-#: src/pages/Feed/Feed.tsx:55
+#: src/pages/Feed/Feed.tsx:59
 msgid "Лента"
 msgstr "Лента"
 
-#: src/pages/Feed/Feed.tsx:56
+#: src/pages/Feed/Feed.tsx:64
 msgid "Лента / Мяутер"
 msgstr "Лента / Мяутер"
 
@@ -208,11 +239,11 @@ msgstr "Лента / Мяутер"
 msgid "Логин"
 msgstr "Логин"
 
-#: src/pages/Settings/Settings.tsx:248
+#: src/pages/Settings/Settings.tsx:249
 msgid "Минимум {PASSWORD_MIN} символов"
 msgstr "Минимум {PASSWORD_MIN} символов"
 
-#: src/pages/Settings/Settings.tsx:175
+#: src/pages/Settings/Settings.tsx:176
 msgid "Мужской"
 msgstr "Мужской"
 
@@ -228,11 +259,15 @@ msgstr "Мяут не найден"
 msgid "Мяут создан!"
 msgstr "Мяут создан!"
 
-#: src/pages/Welcome/Welcome.tsx:17
+#: src/pages/Welcome/Welcome.tsx:18
 msgid "Мяутер"
 msgstr "Мяутер"
 
-#: src/modules/CreateMeow/CreateMeowForm.tsx:168
+#: src/pages/Welcome/Welcome.tsx:19
+msgid "Мяутер = соцсеть с кошачьей тематикой. Чтобы читать, нужно писать. Присоединяйтесь!"
+msgstr "Мяутер = соцсеть с кошачьей тематикой. Чтобы читать, нужно писать. Присоединяйтесь!"
+
+#: src/modules/CreateMeow/CreateMeowForm.tsx:189
 #: src/pages/CreateMeow/CreateMeow.tsx:40
 msgid "Мяутнуть"
 msgstr "Мяутнуть"
@@ -241,7 +276,7 @@ msgstr "Мяутнуть"
 msgid "Мяутнуть / Мяутер"
 msgstr "Мяутнуть / Мяутер"
 
-#: src/pages/NotFound/NotFound.tsx:36
+#: src/pages/NotFound/NotFound.tsx:37
 msgid "Назад"
 msgstr "Назад"
 
@@ -251,8 +286,8 @@ msgid "Написать комментарий..."
 msgstr "Написать комментарий..."
 
 #: src/pages/Feed/Feed.tsx:69
-msgid "Напишите свой первый мяут с ~темой, чтобы открыть ленту!"
-msgstr "Напишите свой первый мяут с ~темой, чтобы открыть ленту!"
+#~ msgid "Напишите свой первый мяут с ~темой, чтобы открыть ленту!"
+#~ msgstr "Напишите свой первый мяут с ~темой, чтобы открыть ленту!"
 
 #: src/pages/Settings/Settings.tsx:91
 msgid "Настройки"
@@ -280,11 +315,11 @@ msgstr "Некорректный формат почты"
 msgid "Необходимо авторизоваться"
 msgstr "Необходимо авторизоваться"
 
-#: src/pages/Settings/Settings.tsx:185
+#: src/pages/Settings/Settings.tsx:186
 msgid "О себе"
 msgstr "О себе"
 
-#: src/pages/Settings/Settings.tsx:279
+#: src/pages/Settings/Settings.tsx:280
 msgid "Обновить"
 msgstr "Обновить"
 
@@ -292,27 +327,27 @@ msgstr "Обновить"
 msgid "Обновить страницу"
 msgstr "Обновить страницу"
 
-#: src/pages/MeowThread/MeowThread.tsx:90
+#: src/pages/MeowThread/MeowThread.tsx:92
 msgid "Обсуждение"
 msgstr "Обсуждение"
 
-#: src/pages/MeowThread/MeowThread.tsx:91
+#: src/pages/MeowThread/MeowThread.tsx:96
 msgid "Обсуждение / Мяутер"
 msgstr "Обсуждение / Мяутер"
 
-#: src/pages/Settings/Settings.tsx:127
+#: src/pages/Settings/Settings.tsx:128
 msgid "Общая информация"
 msgstr "Общая информация"
 
-#: src/pages/NotFound/NotFound.tsx:28
+#: src/pages/NotFound/NotFound.tsx:29
 msgid "Ой!"
 msgstr "Ой!"
 
-#: src/pages/Notifications/NotificationCard.tsx:51
+#: src/pages/Notifications/NotificationCard.tsx:53
 msgid "ответил на ваш мяут"
 msgstr "ответил на ваш мяут"
 
-#: src/pages/Notifications/NotificationCard.tsx:49
+#: src/pages/Notifications/NotificationCard.tsx:51
 msgid "ответила на ваш мяут"
 msgstr "ответила на ваш мяут"
 
@@ -325,27 +360,27 @@ msgstr "Ответить"
 msgid "Отмена"
 msgstr "Отмена"
 
-#: src/pages/Settings/Settings.tsx:134
+#: src/pages/Settings/Settings.tsx:135
 msgid "Отображаемое имя"
 msgstr "Отображаемое имя"
 
-#: src/pages/CatProfile/CatProfile.tsx:182
+#: src/pages/CatProfile/CatProfile.tsx:226
 msgid "Отписаться"
 msgstr "Отписаться"
 
-#: src/pages/Notifications/NotificationCard.tsx:62
+#: src/pages/Notifications/NotificationCard.tsx:64
 msgid "оценил ваш комментарий"
 msgstr "оценил ваш комментарий"
 
-#: src/pages/Notifications/NotificationCard.tsx:36
+#: src/pages/Notifications/NotificationCard.tsx:38
 msgid "оценил ваш мяут"
 msgstr "оценил ваш мяут"
 
-#: src/pages/Notifications/NotificationCard.tsx:60
+#: src/pages/Notifications/NotificationCard.tsx:62
 msgid "оценила ваш комментарий"
 msgstr "оценила ваш комментарий"
 
-#: src/pages/Notifications/NotificationCard.tsx:36
+#: src/pages/Notifications/NotificationCard.tsx:38
 msgid "оценила ваш мяут"
 msgstr "оценила ваш мяут"
 
@@ -353,12 +388,12 @@ msgstr "оценила ваш мяут"
 msgid "Ошибка / Мяутер"
 msgstr "Ошибка / Мяутер"
 
-#: src/pages/Settings/Settings.tsx:271
+#: src/pages/Settings/Settings.tsx:272
 msgid "Пароли не совпадают"
 msgstr "Пароли не совпадают"
 
 #: src/modules/Auth/forms/LoginForm/LoginForm.tsx:57
-#: src/modules/Auth/forms/RegisterForm/steps/Credentials/Credentials.tsx:58
+#: src/modules/Auth/forms/RegisterForm/steps/Credentials/Credentials.tsx:68
 msgid "Пароль"
 msgstr "Пароль"
 
@@ -371,19 +406,19 @@ msgstr "Пароль максимум {PASSWORD_MAX} символов"
 msgid "Пароль минимум {PASSWORD_MIN} символов"
 msgstr "Пароль минимум {PASSWORD_MIN} символов"
 
-#: src/pages/Settings/Settings.tsx:260
+#: src/pages/Settings/Settings.tsx:261
 msgid "Повторите пароль"
 msgstr "Повторите пароль"
 
-#: src/pages/Notifications/NotificationCard.tsx:29
+#: src/pages/Notifications/NotificationCard.tsx:31
 msgid "подписалась на вас"
 msgstr "подписалась на вас"
 
-#: src/pages/Notifications/NotificationCard.tsx:31
+#: src/pages/Notifications/NotificationCard.tsx:33
 msgid "подписался на вас"
 msgstr "подписался на вас"
 
-#: src/pages/CatProfile/CatProfile.tsx:184
+#: src/pages/CatProfile/CatProfile.tsx:228
 msgid "Подписаться"
 msgstr "Подписаться"
 
@@ -392,33 +427,37 @@ msgstr "Подписаться"
 msgid "Пожаловаться"
 msgstr "Пожаловаться"
 
-#: src/pages/Search/Search.tsx:122
+#: src/pages/Search/Search.tsx:137
 msgid "Поиск"
 msgstr "Поиск"
 
-#: src/pages/Search/Search.tsx:123
+#: src/pages/Search/Search.tsx:138
 msgid "Поиск / Мяутер"
 msgstr "Поиск / Мяутер"
 
-#: src/pages/Search/Search.tsx:132
-#: src/pages/Search/Search.tsx:134
+#: src/pages/Search/Search.tsx:148
+#: src/pages/Search/Search.tsx:150
 msgid "Поиск по темам..."
 msgstr "Поиск по темам..."
 
-#: src/pages/MeowThread/MeowThread.tsx:122
+#: src/pages/MeowThread/MeowThread.tsx:172
 msgid "Пока нет комментариев"
 msgstr "Пока нет комментариев"
 
-#: src/pages/CatProfile/CatProfile.tsx:192
+#: src/pages/CatProfile/CatProfile.tsx:237
 msgid "Пока нет мяутов"
 msgstr "Пока нет мяутов"
 
-#: src/pages/Notifications/Notifications.tsx:65
+#: src/pages/Feed/Feed.tsx:80
+msgid "Пока нет мяутов по теме ~{currentTag}"
+msgstr "Пока нет мяутов по теме ~{currentTag}"
+
+#: src/pages/Notifications/Notifications.tsx:66
 msgid "Пока нет уведомлений"
 msgstr "Пока нет уведомлений"
 
-#: src/pages/Settings/Settings.tsx:167
-#: src/pages/Settings/Settings.tsx:174
+#: src/pages/Settings/Settings.tsx:168
+#: src/pages/Settings/Settings.tsx:175
 msgid "Пол не выбран"
 msgstr "Пол не выбран"
 
@@ -441,11 +480,11 @@ msgid "Превышено количество символов ({0}/{COMMENT_CO
 msgstr "Превышено количество символов ({0}/{COMMENT_CONTENT_MAX})"
 
 #. placeholder {0}: text.length
-#: src/modules/CreateMeow/CreateMeowForm.tsx:91
+#: src/modules/CreateMeow/CreateMeowForm.tsx:93
 msgid "Превышено количество символов ({0}/{MEOW_CONTENT_MAX})"
 msgstr "Превышено количество символов ({0}/{MEOW_CONTENT_MAX})"
 
-#: src/pages/Settings/Settings.tsx:237
+#: src/pages/Settings/Settings.tsx:238
 msgid "Придумайте новый пароль"
 msgstr "Придумайте новый пароль"
 
@@ -457,20 +496,27 @@ msgstr "Проверьте введенные данные"
 msgid "Пропустить"
 msgstr "Пропустить"
 
-#: src/pages/CatProfile/CatProfile.tsx:111
+#. placeholder {0}: profile.username
+#: src/pages/CatProfile/CatProfile.tsx:121
+#: src/pages/CatProfile/CatProfile.tsx:129
+msgid "Профиль @{0} в Мяутере"
+msgstr "Профиль @{0} в Мяутере"
+
+#: src/pages/CatProfile/CatProfile.tsx:115
 msgid "Профиль / Мяутер"
 msgstr "Профиль / Мяутер"
 
-#: src/modules/CreateMeow/CreateMeowForm.tsx:78
-#: src/modules/CreateMeow/CreateMeowForm.tsx:83
+#: src/modules/CreateMeow/CreateMeowForm.tsx:80
+#: src/modules/CreateMeow/CreateMeowForm.tsx:85
 msgid "Расскажи, что сегодня случилось?"
 msgstr "Расскажи, что сегодня случилось?"
 
-#: src/pages/Register/Register.tsx:15
+#: src/pages/Register/Register.tsx:16
+#: src/pages/Register/Register.tsx:18
 msgid "Регистрация / Мяутер"
 msgstr "Регистрация / Мяутер"
 
-#: src/logic/feed/init/feed.ts:250
+#: src/logic/feed/init/feed.ts:276
 msgid "Ремяут!"
 msgstr "Ремяут!"
 
@@ -478,7 +524,7 @@ msgstr "Ремяут!"
 msgid "ремяутнул"
 msgstr "ремяутнул"
 
-#: src/pages/Notifications/NotificationCard.tsx:43
+#: src/pages/Notifications/NotificationCard.tsx:45
 msgid "ремяутнул ваш мяут"
 msgstr "ремяутнул ваш мяут"
 
@@ -486,7 +532,7 @@ msgstr "ремяутнул ваш мяут"
 msgid "ремяутнула"
 msgstr "ремяутнула"
 
-#: src/pages/Notifications/NotificationCard.tsx:41
+#: src/pages/Notifications/NotificationCard.tsx:43
 msgid "ремяутнула ваш мяут"
 msgstr "ремяутнула ваш мяут"
 
@@ -502,9 +548,18 @@ msgstr "Скорее ставь аватарку, чтобы друзья смо
 msgid "Слишком много запросов, попробуйте позже"
 msgstr "Слишком много запросов, попробуйте позже"
 
-#: src/pages/NotFound/NotFound.tsx:31
+#: src/pages/Register/Register.tsx:19
+#: src/pages/Welcome/Welcome.tsx:21
+msgid "Соцсеть с кошачьей тематикой. Чтобы читать, нужно писать."
+msgstr "Соцсеть с кошачьей тематикой. Чтобы читать, нужно писать."
+
+#: src/pages/NotFound/NotFound.tsx:32
 msgid "Такой страницы нет..."
 msgstr "Такой страницы нет..."
+
+#: src/modules/CreateMeow/CreateMeowForm.tsx:98
+msgid "Тема недели: <0>~{weeklyTag}</0><1/>Выдели слово, используя тильду:<2/><3>~работа</3>, чтобы составить ленту"
+msgstr "Тема недели: <0>~{weeklyTag}</0><1/>Выдели слово, используя тильду:<2/><3>~работа</3>, чтобы составить ленту"
 
 #: src/modules/Auth/forms/RegisterForm/steps/Done/Done.tsx:48
 msgid "Теперь ваши друзья найдут вас быстрее, ведь вы выбрали, как выглядеть"
@@ -526,7 +581,7 @@ msgstr "Уведомления"
 msgid "Уведомления / Мяутер"
 msgstr "Уведомления / Мяутер"
 
-#: src/logic/feed/init/feed.ts:178
+#: src/logic/feed/init/feed.ts:204
 #: src/pages/MeowThread/models/init/meowThread.ts:304
 #: src/pages/MeowThread/models/init/meowThread.ts:329
 msgid "Удалено!"
@@ -537,11 +592,11 @@ msgstr "Удалено!"
 msgid "Удалить"
 msgstr "Удалить"
 
-#: src/pages/Notifications/NotificationCard.tsx:56
+#: src/pages/Notifications/NotificationCard.tsx:58
 msgid "упомянул вас"
 msgstr "упомянул вас"
 
-#: src/pages/Notifications/NotificationCard.tsx:56
+#: src/pages/Notifications/NotificationCard.tsx:58
 msgid "упомянула вас"
 msgstr "упомянула вас"
 
@@ -557,11 +612,11 @@ msgstr "Файл не выбран"
 msgid "Файл слишком большой (макс. 5 МБ)"
 msgstr "Файл слишком большой (макс. 5 МБ)"
 
-#: src/pages/Settings/Settings.tsx:156
+#: src/pages/Settings/Settings.tsx:157
 msgid "Фамилия"
 msgstr "Фамилия"
 
-#: src/pages/CatProfile/CatProfile.tsx:158
+#: src/pages/CatProfile/CatProfile.tsx:202
 msgid "читает"
 msgstr "читает"
 
@@ -571,7 +626,7 @@ msgstr "Что-то пошло не так"
 
 #: src/modules/Auth/forms/LoginForm/LoginForm.tsx:48
 #: src/modules/Auth/forms/RecoveryForm/RecoveryForm.tsx:49
-#: src/modules/Auth/forms/RegisterForm/steps/Credentials/Credentials.tsx:68
+#: src/modules/Auth/forms/RegisterForm/steps/Credentials/Credentials.tsx:58
 msgid "Электронная почта"
 msgstr "Электронная почта"
 
