@@ -74,37 +74,41 @@ export const Sidebar = () => {
         <img src={logo} alt='Meowter' width={423} height={248} />
       </Link>
 
-      <nav className={s.nav} aria-label='Боковое меню'>
-        {navItems.map((item, i) => (
-          <Link
-            key={i}
-            to={item.route}
-            params={item.params ?? {}}
-            className={clsx(
-              s.navItem,
-              item.active && s.active,
-              item.create && s.create
-            )}
-            aria-current={item.active ? 'page' : undefined}
-          >
-            <item.icon size={24} />
-            {item.badge !== undefined && item.badge > 0 && (
-              <span className={s.badge}>
-                {item.badge > 99 ? '99+' : item.badge}
-              </span>
-            )}
-          </Link>
-        ))}
-      </nav>
+      {session && (
+        <>
+          <nav className={s.nav} aria-label='Боковое меню'>
+            {navItems.map((item, i) => (
+              <Link
+                key={i}
+                to={item.route}
+                params={item.params ?? {}}
+                className={clsx(
+                  s.navItem,
+                  item.active && s.active,
+                  item.create && s.create
+                )}
+                aria-current={item.active ? 'page' : undefined}
+              >
+                <item.icon size={24} />
+                {item.badge !== undefined && item.badge > 0 && (
+                  <span className={s.badge}>
+                    {item.badge > 99 ? '99+' : item.badge}
+                  </span>
+                )}
+              </Link>
+            ))}
+          </nav>
 
-      <button
-        type='button'
-        className={s.logoutButton}
-        onClick={() => onLogout()}
-        aria-label='Выйти'
-      >
-        <LogOut size={24} />
-      </button>
+          <button
+            type='button'
+            className={s.logoutButton}
+            onClick={() => onLogout()}
+            aria-label='Выйти'
+          >
+            <LogOut size={24} />
+          </button>
+        </>
+      )}
     </aside>
   )
 }

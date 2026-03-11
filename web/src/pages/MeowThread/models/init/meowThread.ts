@@ -138,11 +138,18 @@ sample({
   target: $commentText
 })
 
-// гард: неверифицированным = тост (ответ на комментарий)
+// гард: гость = редирект, неверифицированный = тост (ответ на комментарий)
 sample({
   clock: replyClicked,
   source: $session,
-  filter: session => !session?.emailVerified,
+  filter: session => session === null,
+  target: routes.unauthorized.open
+})
+
+sample({
+  clock: replyClicked,
+  source: $session,
+  filter: session => session !== null && !session.emailVerified,
   fn: () => t`Подтвердите почту`,
   target: showErrorToastFx
 })
@@ -219,11 +226,18 @@ sample({
   target: $meow
 })
 
-// гард: неверифицированным = тост
+// гард: гость = редирект, неверифицированный = тост
 sample({
   clock: meowLikeToggled,
   source: $session,
-  filter: session => !session?.emailVerified,
+  filter: session => session === null,
+  target: routes.unauthorized.open
+})
+
+sample({
+  clock: meowLikeToggled,
+  source: $session,
+  filter: session => session !== null && !session.emailVerified,
   fn: () => t`Подтвердите почту`,
   target: showErrorToastFx
 })
@@ -273,11 +287,18 @@ sample({
   target: $meow
 })
 
-// гард: неверифицированным = тост (лайк комментария)
+// гард: гость = редирект, неверифицированный = тост (лайк комментария)
 sample({
   clock: commentLikeToggled,
   source: $session,
-  filter: session => !session?.emailVerified,
+  filter: session => session === null,
+  target: routes.unauthorized.open
+})
+
+sample({
+  clock: commentLikeToggled,
+  source: $session,
+  filter: session => session !== null && !session.emailVerified,
   fn: () => t`Подтвердите почту`,
   target: showErrorToastFx
 })

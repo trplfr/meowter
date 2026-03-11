@@ -177,7 +177,7 @@ export const MeowThread = () => {
         <ScrollButton scrollRef={scrollRef} />
       </div>
 
-      <CommentForm />
+      {session && <CommentForm />}
     </Layout>
   )
 }

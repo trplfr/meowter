@@ -201,11 +201,18 @@ sample({
   target: followChanged
 })
 
-// гард: неверифицированным = тост
+// гард: гость = редирект, неверифицированный = тост
 sample({
   clock: meowLikeToggled,
   source: $session,
-  filter: session => !session?.emailVerified,
+  filter: session => session === null,
+  target: routes.unauthorized.open
+})
+
+sample({
+  clock: meowLikeToggled,
+  source: $session,
+  filter: session => session !== null && !session.emailVerified,
   fn: () => t`Подтвердите почту`,
   target: showErrorToastFx
 })

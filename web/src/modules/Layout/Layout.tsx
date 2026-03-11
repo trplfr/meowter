@@ -5,6 +5,7 @@ import { ArrowLeft, House, User, Search, Plus, Heart } from 'lucide-react'
 
 import { routes } from '@core/router'
 import { Navigator, ScrollButton } from '@ui/index'
+import { $session } from '@logic/session'
 import { $unreadCount, startPolling, stopPolling } from '@logic/notifications'
 
 import { CreateMeowForm } from '@modules/CreateMeow'
@@ -29,13 +30,20 @@ export const Layout = ({
 }: LayoutProps) => {
   const contentRef = useRef<HTMLDivElement>(null)
 
+  const session = useUnit($session)
+  const isAuth = session !== null
+
   const unreadCount = useUnit($unreadCount)
   const [onStartPolling, onStopPolling] = useUnit([startPolling, stopPolling])
 
   useEffect(() => {
+    if (!isAuth) {
+      return
+    }
+
     onStartPolling()
     return () => onStopPolling()
-  }, [])
+  }, [isAuth])
 
   const isActive = useUnit({
     feed: routes.feed.$isOpened,
@@ -74,14 +82,18 @@ export const Layout = ({
 
       <main className={s.main}>
         <header className={s.header}>
-          <button
-            className={s.backButton}
-            type='button'
-            aria-label='Назад'
-            onClick={() => window.history.back()}
-          >
-            <ArrowLeft size={24} />
-          </button>
+          {isAuth ? (
+            <button
+              className={s.backButton}
+              type='button'
+              aria-label='Назад'
+              onClick={() => window.history.back()}
+            >
+              <ArrowLeft size={24} />
+            </button>
+          ) : (
+            <div className={s.backButton} />
+          )}
           <h1 className={s.title}>{title}</h1>
           {headerAction ? (
             <div className={s.headerRight}>{headerAction}</div>
@@ -96,11 +108,13 @@ export const Layout = ({
         </div>
       </main>
 
-      <aside className={s.panel}>
-        {panel !== null && (panel ?? <CreateMeowForm />)}
-      </aside>
+      {isAuth && (
+        <aside className={s.panel}>
+          {panel !== null && (panel ?? <CreateMeowForm />)}
+        </aside>
+      )}
 
-      <Navigator items={navItems} />
+      {isAuth && <Navigator items={navItems} />}
     </div>
   )
 }
