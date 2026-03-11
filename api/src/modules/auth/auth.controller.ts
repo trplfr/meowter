@@ -177,10 +177,7 @@ export class AuthController {
   @Throttle({ default: { ttl: 60_000, limit: 5 } })
   @ApiOperation({ summary: 'Повторная отправка письма верификации' })
   @ApiResponse({ status: 200, description: 'Письмо отправлено или cooldown' })
-  async reverify(
-    @CurrentUser() user: JwtPayload,
-    @Req() req: FastifyRequest
-  ) {
+  async reverify(@CurrentUser() user: JwtPayload, @Req() req: FastifyRequest) {
     const origin = this.getOrigin(req)
     return this.auth.reverify(user, origin)
   }
@@ -191,6 +188,14 @@ export class AuthController {
 
     if (hostStr.includes('localhost')) {
       return process.env.WEB_ORIGIN || 'http://localhost:3000'
+    }
+
+    if (hostStr.includes('dev.meowter.ru')) {
+      return 'https://dev.meowter.ru'
+    }
+
+    if (hostStr.includes('dev.meowter.app')) {
+      return 'https://dev.meowter.app'
     }
 
     if (hostStr.includes('meowter.ru')) {
