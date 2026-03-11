@@ -19,7 +19,7 @@ api/uploads/
 api/src/db/seed.ts
 
 certs/
-docker/nginx/.htpasswd*
+docker/nginx/.htpasswd-dev
 
 legacy/
 reports/
