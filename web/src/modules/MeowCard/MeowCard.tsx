@@ -52,7 +52,7 @@ export const MeowCard = ({
     if (typeof window === 'undefined') {
       return
     }
-    const url = `${window.location.origin}/cat/${meow.author.username}/meow/${meow.id}`
+    const url = `${window.location.origin}/meow/${meow.id}`
     navigator.clipboard.writeText(url)
   }, [meow.id, meow.author.username])
 

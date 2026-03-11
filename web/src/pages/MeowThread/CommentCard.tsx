@@ -40,7 +40,7 @@ export const CommentCard = ({
     if (typeof window === 'undefined') {
       return
     }
-    const url = `${window.location.origin}/cat/${meowAuthorUsername}/meow/${meowId}`
+    const url = `${window.location.origin}/meow/${meowId}`
     navigator.clipboard.writeText(url)
   }, [meowAuthorUsername, meowId])
 
