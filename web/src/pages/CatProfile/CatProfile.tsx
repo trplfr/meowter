@@ -154,7 +154,7 @@ export const CatProfile = () => {
             content={`${origin}/cat/${profile.username}`}
           />
           {profile.avatarUrl && (
-            <meta property='og:image' content={profile.avatarUrl} />
+            <meta property='og:image' content={`${origin}${profile.avatarUrl}`} />
           )}
           <meta name='twitter:card' content='summary' />
           <SEO path={`/cat/${profile.username}`} />

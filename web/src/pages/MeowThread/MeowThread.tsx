@@ -102,9 +102,9 @@ export const MeowThread = () => {
           <meta property='og:description' content={meow.content.slice(0, 160)} />
           <meta property='og:type' content='article' />
           <meta property='og:url' content={`${origin}/meow/${meow.id}`} />
-          {meow.imageUrl && <meta property='og:image' content={meow.imageUrl} />}
+          {meow.imageUrl && <meta property='og:image' content={`${origin}${meow.imageUrl}`} />}
           {meow.author.avatarUrl && !meow.imageUrl && (
-            <meta property='og:image' content={meow.author.avatarUrl} />
+            <meta property='og:image' content={`${origin}${meow.author.avatarUrl}`} />
           )}
           <meta name='twitter:card' content={meow.imageUrl ? 'summary_large_image' : 'summary'} />
           <SEO path={`/meow/${meow.id}`} />

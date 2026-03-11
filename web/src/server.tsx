@@ -11,6 +11,8 @@ import { routes, router } from '@core/router'
 import { activateLocale } from '@core/i18n'
 import { $session, $origin, appStarted, fetchSessionFx } from '@logic/session'
 import { setSsrCookieProvider } from '@lib/api'
+import { $meow } from '@pages/MeowThread/models'
+import { $profile } from '@pages/CatProfile/models'
 
 import { App } from './App'
 
@@ -26,6 +28,64 @@ const getLocale = (host: string) => {
   }
 
   return 'ru'
+}
+
+// экранирует HTML-спецсимволы для атрибутов
+const esc = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
+
+const buildHeadTags = (scope: any, origin: string): string => {
+  const tags: string[] = []
+
+  // страница мяута
+  const meow = scope.getState($meow)
+  if (meow) {
+    const title = `${meow.author.displayName} в Мяутере`
+    const desc = meow.content.slice(0, 160)
+    const url = `${origin}/meow/${meow.id}`
+    const image = meow.imageUrl
+      ? `${origin}${meow.imageUrl}`
+      : meow.author.avatarUrl
+        ? `${origin}${meow.author.avatarUrl}`
+        : null
+
+    tags.push(`<title>${esc(title)}</title>`)
+    tags.push(`<meta name="description" content="${esc(desc)}" />`)
+    tags.push(`<meta property="og:title" content="${esc(title)}" />`)
+    tags.push(`<meta property="og:description" content="${esc(desc)}" />`)
+    tags.push(`<meta property="og:type" content="article" />`)
+    tags.push(`<meta property="og:url" content="${esc(url)}" />`)
+    if (image) {
+      tags.push(`<meta property="og:image" content="${esc(image)}" />`)
+    }
+    tags.push(`<meta name="twitter:card" content="${meow.imageUrl ? 'summary_large_image' : 'summary'}" />`)
+
+    return tags.join('\n')
+  }
+
+  // страница профиля
+  const profile = scope.getState($profile)
+  if (profile) {
+    const title = `${profile.displayName} (@${profile.username})`
+    const desc = profile.bio || `Профиль @${profile.username} в Мяутере`
+    const url = `${origin}/cat/${profile.username}`
+    const image = profile.avatarUrl ? `${origin}${profile.avatarUrl}` : null
+
+    tags.push(`<title>${esc(title)}</title>`)
+    tags.push(`<meta name="description" content="${esc(desc)}" />`)
+    tags.push(`<meta property="og:title" content="${esc(title)}" />`)
+    tags.push(`<meta property="og:description" content="${esc(desc)}" />`)
+    tags.push(`<meta property="og:type" content="profile" />`)
+    tags.push(`<meta property="og:url" content="${esc(url)}" />`)
+    if (image) {
+      tags.push(`<meta property="og:image" content="${esc(image)}" />`)
+    }
+    tags.push(`<meta name="twitter:card" content="summary" />`)
+
+    return tags.join('\n')
+  }
+
+  return ''
 }
 
 const GUEST_PATHS = ['/', '/login', '/register', '/recovery']
@@ -93,19 +153,15 @@ export const render = async (url: string, host = 'localhost', cookie = '') => {
     await allSettled(appStarted, { scope })
     await allSettled(router.setHistory, { scope, params: history })
 
-    const rawHtml = renderToString(
+    const html = renderToString(
       <Provider value={scope}>
         <App />
       </Provider>
     )
 
-    // извлекаем <title>, <meta>, <link> из body (React 19 хоистинг не работает в renderToString)
-    const headTagsRegex = /<(title|meta|link)\b[^>]*(?:\/>|>[^<]*<\/\1>)/gi
-    const headTags: string[] = []
-    let html = rawHtml.replace(headTagsRegex, match => {
-      headTags.push(match)
-      return ''
-    })
+    // React 19 renderToString не рендерит <meta>/<title> в body,
+    // поэтому генерируем OG-теги вручную из scope
+    const headTags = buildHeadTags(scope, origin)
 
     const scopeData = serialize(scope)
 
@@ -120,6 +176,6 @@ export const render = async (url: string, host = 'localhost', cookie = '') => {
       status = 403
     }
 
-    return { html, headTags: headTags.join('\n'), scopeData, locale, status }
+    return { html, headTags, scopeData, locale, status }
   })
 }
