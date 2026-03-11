@@ -40,6 +40,7 @@ services:
       REDIS_URL: redis://redis-prod:6379
     volumes:
       - ./uploads:/app/uploads
+      - ./api/src/db/seed.ts:/app/api/src/db/seed.ts:ro
     depends_on:
       postgres-prod:
         condition: service_healthy
