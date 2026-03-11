@@ -67,11 +67,13 @@ export const render = async (url: string, host = 'localhost', cookie = '') => {
     const origin = `${protocol}://${host.split(':')[0]}`
 
     // fork с кешированной сессией (без повторного запроса)
+    const values: [any, any][] = [[$origin, origin]]
+    if (session) {
+      values.push([$session, session])
+    }
+
     const scope = fork({
-      values: [
-        [$origin, origin],
-        ...(session ? [[$session, session] as const] : [])
-      ],
+      values,
       handlers: [
         [
           fetchSessionFx,

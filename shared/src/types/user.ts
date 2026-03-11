@@ -14,6 +14,7 @@ export interface User {
   contacts: string | null
   sex: Sex | null
   avatarUrl: string | null
+  emailVerified: boolean
   verified: boolean
   createdAt: string
 }

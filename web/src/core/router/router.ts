@@ -24,6 +24,7 @@ export const routes = {
   notifications: createRoute(),
   settings: createRoute(),
   createMeow: createRoute(),
+  verify: createRoute(),
   notFound: createRoute(),
   unauthorized: createRoute()
 }
@@ -43,6 +44,7 @@ export const routesMap: RouteConfig[] = [
   { path: '/settings', route: routes.settings },
   { path: '/meow', route: routes.createMeow },
   { path: '/meow/:meowId', route: routes.meowThread },
+  { path: '/verify', route: routes.verify },
   { path: '/unauthorized', route: routes.unauthorized }
 ]
 

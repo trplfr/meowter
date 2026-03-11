@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Post,
   Query,
@@ -16,9 +17,13 @@ import {
   ApiConsumes
 } from '@nestjs/swagger'
 import type { FastifyRequest } from 'fastify'
+import { eq } from 'drizzle-orm'
 import { join } from 'path'
 
 import { ErrorCode } from '@shared/types'
+
+import { DB, type Db } from '../../db/db.module'
+import { cats } from '../../db/schema'
 
 import { CurrentUser, type JwtPayload } from '../../common/decorators'
 import { AppException } from '../../common/exceptions'
@@ -36,7 +41,10 @@ const MAX_LIMIT = 100
 @ApiTags('Meows')
 @Controller('meows')
 export class MeowsController {
-  constructor(private readonly meows: MeowsService) {}
+  constructor(
+    private readonly meows: MeowsService,
+    @Inject(DB) private readonly db: Db
+  ) {}
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -44,6 +52,8 @@ export class MeowsController {
   @ApiConsumes('multipart/form-data')
   @ApiResponse({ status: 201, description: 'Мяут создан' })
   async create(@Req() req: FastifyRequest, @CurrentUser() user: JwtPayload) {
+    await this.ensureEmailVerified(user.sub)
+
     const parts = req.parts({ limits: { fileSize: MAX_SIZE } })
 
     let content = ''
@@ -146,6 +156,7 @@ export class MeowsController {
   @ApiOperation({ summary: 'Лайкнуть мяут' })
   @ApiResponse({ status: 200, description: 'Лайк поставлен' })
   async like(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
+    await this.ensureEmailVerified(user.sub)
     return this.meows.like(id, user.sub)
   }
 
@@ -154,6 +165,7 @@ export class MeowsController {
   @ApiOperation({ summary: 'Убрать лайк' })
   @ApiResponse({ status: 200, description: 'Лайк убран' })
   async unlike(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
+    await this.ensureEmailVerified(user.sub)
     return this.meows.unlike(id, user.sub)
   }
 
@@ -162,6 +174,7 @@ export class MeowsController {
   @ApiOperation({ summary: 'Ремяутнуть' })
   @ApiResponse({ status: 201, description: 'Ремяут создан' })
   async remeow(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
+    await this.ensureEmailVerified(user.sub)
     return this.meows.remeow(id, user.sub)
   }
 
@@ -170,6 +183,7 @@ export class MeowsController {
   @ApiOperation({ summary: 'Убрать ремяут' })
   @ApiResponse({ status: 200, description: 'Ремяут убран' })
   async undoRemeow(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
+    await this.ensureEmailVerified(user.sub)
     return this.meows.undoRemeow(id, user.sub)
   }
 
@@ -202,6 +216,7 @@ export class MeowsController {
     @Body() dto: CreateCommentDto,
     @CurrentUser() user: JwtPayload
   ) {
+    await this.ensureEmailVerified(user.sub)
     return this.meows.createComment(id, user.sub, dto)
   }
 
@@ -224,6 +239,7 @@ export class MeowsController {
     @Param('commentId') commentId: string,
     @CurrentUser() user: JwtPayload
   ) {
+    await this.ensureEmailVerified(user.sub)
     return this.meows.likeComment(commentId, user.sub)
   }
 
@@ -235,6 +251,23 @@ export class MeowsController {
     @Param('commentId') commentId: string,
     @CurrentUser() user: JwtPayload
   ) {
+    await this.ensureEmailVerified(user.sub)
     return this.meows.unlikeComment(commentId, user.sub)
+  }
+
+  private async ensureEmailVerified(userId: string) {
+    const [cat] = await this.db
+      .select({ emailVerified: cats.emailVerified })
+      .from(cats)
+      .where(eq(cats.id, userId))
+      .limit(1)
+
+    if (!cat?.emailVerified) {
+      throw new AppException(
+        ErrorCode.EMAIL_NOT_VERIFIED,
+        403,
+        'Email not verified'
+      )
+    }
   }
 }

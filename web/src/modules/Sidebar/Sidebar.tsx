@@ -71,7 +71,7 @@ export const Sidebar = () => {
   return (
     <aside className={s.sidebar}>
       <Link to={routes.feed} params={{}} className={s.logo}>
-        <img src={logo} alt='Meowter' />
+        <img src={logo} alt='Meowter' width={423} height={248} />
       </Link>
 
       <nav className={s.nav} aria-label='Боковое меню'>

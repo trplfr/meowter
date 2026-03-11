@@ -24,6 +24,7 @@ export const cats = pgTable('cats', {
   contacts: varchar('contacts', { length: 255 }),
   sex: varchar('sex', { length: 10 }),
   avatarUrl: text('avatar_url'),
+  emailVerified: boolean('email_verified').default(false).notNull(),
   verified: boolean('verified').default(false).notNull(),
   deletedAt: timestamp('deleted_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true })

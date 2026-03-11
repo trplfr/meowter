@@ -6,7 +6,7 @@ import { type Meow, type MeowPreview } from '@shared/types'
 
 import { routes } from '@core/router'
 import { Link } from 'atomic-router-react'
-import { $session } from '@logic/session'
+import { $session, $reverifyCooldown, reverifyMutation } from '@logic/session'
 import {
   $meows,
   $hasMore,
@@ -29,21 +29,25 @@ import s from './Feed.module.scss'
 export const route = routes.feed
 
 export const Feed = () => {
-  const [meows, hasMore, pending, session, currentTag, weeklyTag] = useUnit([
-    $meows,
-    $hasMore,
-    feedQuery.$pending,
-    $session,
-    $currentTag,
-    $weeklyTag
-  ])
-  const [onLoadMore, onLike, onDelete, onRemeow, onReply] = useUnit([
-    feedLoadMore,
-    meowLikeToggled,
-    meowDeleted,
-    remeowToggled,
-    replyInitiated
-  ])
+  const [meows, hasMore, pending, session, currentTag, weeklyTag, cooldown] =
+    useUnit([
+      $meows,
+      $hasMore,
+      feedQuery.$pending,
+      $session,
+      $currentTag,
+      $weeklyTag,
+      $reverifyCooldown
+    ])
+  const [onLoadMore, onLike, onDelete, onRemeow, onReply, onResendVerification] =
+    useUnit([
+      feedLoadMore,
+      meowLikeToggled,
+      meowDeleted,
+      remeowToggled,
+      replyInitiated,
+      reverifyMutation.start
+    ])
 
   const handleReply = (meow: Meow) => {
     const preview: MeowPreview = {
@@ -78,6 +82,32 @@ export const Feed = () => {
         <div className={s.empty}>
           {currentTag ? (
             <Trans>Пока нет мяутов по теме ~{currentTag}</Trans>
+          ) : !session?.emailVerified ? (
+            <p className={s.emptyText}>
+              <Trans>Подтвердите почту, чтобы начать мяутить. Проверьте входящие</Trans>
+              {cooldown > 0 ? (
+                <>
+                  {' '}
+                  <span className={s.cooldown}>
+                    {Math.floor(cooldown / 60)}:{String(cooldown % 60).padStart(2, '0')}
+                  </span>
+                </>
+              ) : (
+                <>
+                  {' '}
+                  <Trans>
+                    или{' '}
+                    <button
+                      type='button'
+                      className={s.resendBtn}
+                      onClick={() => onResendVerification()}
+                    >
+                      отправьте письмо повторно
+                    </button>
+                  </Trans>
+                </>
+              )}
+            </p>
           ) : (
             <>
               <p className={s.emptyText}>

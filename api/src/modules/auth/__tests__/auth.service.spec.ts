@@ -51,7 +51,12 @@ const mockJwt = {
 }
 
 const mockConfig = {
-  getOrThrow: vi.fn().mockReturnValue('15m')
+  getOrThrow: vi.fn().mockReturnValue('15m'),
+  get: vi.fn().mockReturnValue('Meowter <noreply@meowter.app>')
+}
+
+const mockEmail = {
+  sendVerificationEmail: vi.fn().mockResolvedValue(undefined)
 }
 
 vi.mock('bcrypt', () => ({
@@ -66,7 +71,8 @@ const createService = () => {
     mockDb as any,
     mockRedis as any,
     mockJwt as any,
-    mockConfig as any
+    mockConfig as any,
+    mockEmail as any
   )
 }
 
@@ -91,6 +97,7 @@ describe('AuthService', () => {
           email: 'whiskers@meowter.app',
           displayName: 'whiskers',
           avatarUrl: null,
+          emailVerified: false,
           verified: false
         }]
       ]
@@ -99,7 +106,7 @@ describe('AuthService', () => {
         username: 'whiskers',
         email: 'whiskers@meowter.app',
         password: 'MyStr0ngP@ss'
-      })
+      }, 'https://meowter.app')
 
       expect(result.user.username).toBe('whiskers')
       expect(result.accessToken).toBe('mock-access-token')
@@ -117,7 +124,7 @@ describe('AuthService', () => {
           username: 'whiskers',
           email: 'whiskers@meowter.app',
           password: 'MyStr0ngP@ss'
-        })
+        }, 'https://meowter.app')
       ).rejects.toThrow(AppException)
     })
 
@@ -132,7 +139,7 @@ describe('AuthService', () => {
           username: 'whiskers',
           email: 'new@meowter.app',
           password: 'MyStr0ngP@ss'
-        })
+        }, 'https://meowter.app')
       ).rejects.toThrow(AppException)
     })
   })
@@ -146,6 +153,7 @@ describe('AuthService', () => {
           email: 'whiskers@meowter.app',
           displayName: 'whiskers',
           avatarUrl: null,
+          emailVerified: false,
           verified: false,
           passwordHash: 'hashed-password'
         }]
@@ -198,6 +206,7 @@ describe('AuthService', () => {
           email: 'whiskers@meowter.app',
           displayName: 'whiskers',
           avatarUrl: null,
+          emailVerified: false,
           verified: false
         }]
       ]

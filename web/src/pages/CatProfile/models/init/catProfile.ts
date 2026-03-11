@@ -1,5 +1,6 @@
 import { sample } from 'effector'
 import { concurrency } from '@farfetched/core'
+import { t } from '@lingui/core/macro'
 
 import { routes } from '@core/router'
 import {
@@ -9,6 +10,7 @@ import {
   meowDeletedGlobal,
   remeowChanged
 } from '@logic/feed'
+import { showErrorToastFx } from '@logic/notifications'
 import { $session } from '@logic/session'
 
 import {
@@ -199,11 +201,24 @@ sample({
   target: followChanged
 })
 
+// гард: неверифицированным = тост
+sample({
+  clock: meowLikeToggled,
+  source: $session,
+  filter: session => !session?.emailVerified,
+  fn: () => t`Подтвердите почту`,
+  target: showErrorToastFx
+})
+
 // toggle лайка
 sample({
   clock: meowLikeToggled,
-  source: $meows,
-  fn: (meows, meowId) => {
+  source: {
+    meows: $meows,
+    session: $session
+  },
+  filter: ({ session }) => session?.emailVerified === true,
+  fn: ({ meows }, meowId) => {
     const meow = meows.find(m => m.id === meowId)
     if (!meow) {
       return { meowId, isLiked: false }
@@ -216,8 +231,12 @@ sample({
 // стреляем глобальный лайк (ДО оптимистичного апдейта, иначе $meows уже обновлен)
 sample({
   clock: meowLikeToggled,
-  source: $meows,
-  fn: (meows, meowId) => {
+  source: {
+    meows: $meows,
+    session: $session
+  },
+  filter: ({ session }) => session?.emailVerified === true,
+  fn: ({ meows }, meowId) => {
     const meow = meows.find(m => m.id === meowId)
     if (!meow) {
       return { meowId, isLiked: false, likesCount: 0 }
@@ -234,8 +253,12 @@ sample({
 // оптимистичный апдейт лайка (ПОСЛЕ meowLikeChanged)
 sample({
   clock: meowLikeToggled,
-  source: $meows,
-  fn: (meows, meowId) =>
+  source: {
+    meows: $meows,
+    session: $session
+  },
+  filter: ({ session }) => session?.emailVerified === true,
+  fn: ({ meows }, meowId) =>
     meows.map(m => {
       if (m.id !== meowId) {
         return m

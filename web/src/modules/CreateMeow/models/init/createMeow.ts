@@ -5,7 +5,8 @@ import { t } from '@lingui/core/macro'
 
 import { routes, controls } from '@core/router'
 import { meowCreated, replyInitiated } from '@logic/feed'
-import { showSuccessToastFx } from '@logic/notifications'
+import { showSuccessToastFx, showErrorToastFx } from '@logic/notifications'
+import { $session } from '@logic/session'
 
 import {
   $text,
@@ -104,14 +105,30 @@ sample({
   target: $replyId
 })
 
+// гард: неверифицированным = тост
+sample({
+  clock: replyInitiated,
+  source: $session,
+  filter: session => !session?.emailVerified,
+  fn: () => t`Подтвердите почту`,
+  target: showErrorToastFx
+})
+
 // глобальное событие reply -> сохраняем мяут и переходим на страницу создания
 sample({
   clock: replyInitiated,
+  source: $session,
+  filter: session => session?.emailVerified === true,
+  fn: (_, meow) => meow,
   target: replyToSet
 })
 
 redirect({
-  clock: replyInitiated,
+  clock: sample({
+    clock: replyInitiated,
+    source: $session,
+    filter: session => session?.emailVerified === true
+  }),
   route: routes.createMeow
 })
 
@@ -163,3 +180,4 @@ redirect({
   clock: createMeowMutation.finished.success,
   route: routes.feed
 })
+

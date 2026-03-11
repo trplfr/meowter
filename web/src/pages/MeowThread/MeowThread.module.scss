@@ -244,6 +244,13 @@
   border-color: $color-error;
 }
 
+.commentOverlay {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+
 .commentSendButton {
   flex-shrink: 0;
   display: flex;

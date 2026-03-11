@@ -15,6 +15,8 @@ import { AppException } from '../../common/exceptions'
 import { auditLog } from '../../common/lib'
 import type { JwtPayload } from '../../common/decorators'
 
+import { EmailService } from '../email'
+
 import type {
   RegisterDto,
   LoginDto,
@@ -24,14 +26,18 @@ import type {
 
 @Injectable()
 export class AuthService {
+  private readonly VERIFY_TTL = 24 * 60 * 60 // 24 часа
+  private readonly REVERIFY_COOLDOWN = 15 * 60 // 15 минут
+
   constructor(
     @Inject(DB) private readonly db: Db,
     @Inject(REDIS) private readonly redis: Redis,
     private readonly jwt: JwtService,
-    private readonly config: ConfigService
+    private readonly config: ConfigService,
+    private readonly email: EmailService
   ) {}
 
-  async register(dto: RegisterDto) {
+  async register(dto: RegisterDto, origin: string) {
     const [byEmail] = await this.db
       .select({ id: cats.id })
       .from(cats)
@@ -72,10 +78,13 @@ export class AuthService {
         email: cats.email,
         displayName: cats.displayName,
         avatarUrl: cats.avatarUrl,
+        emailVerified: cats.emailVerified,
         verified: cats.verified
       })
 
     auditLog('register', user.id, { username: dto.username, email: dto.email })
+
+    await this.sendVerificationEmail(user.id, dto.email, origin)
 
     return this.issueTokens(user)
   }
@@ -113,6 +122,7 @@ export class AuthService {
       email: user.email,
       displayName: user.displayName,
       avatarUrl: user.avatarUrl,
+      emailVerified: user.emailVerified,
       verified: user.verified
     })
   }
@@ -137,6 +147,7 @@ export class AuthService {
         email: cats.email,
         displayName: cats.displayName,
         avatarUrl: cats.avatarUrl,
+        emailVerified: cats.emailVerified,
         verified: cats.verified
       })
       .from(cats)
@@ -169,6 +180,7 @@ export class AuthService {
         contacts: cats.contacts,
         sex: cats.sex,
         avatarUrl: cats.avatarUrl,
+        emailVerified: cats.emailVerified,
         verified: cats.verified,
         createdAt: cats.createdAt
       })
@@ -231,6 +243,7 @@ export class AuthService {
         contacts: cats.contacts,
         sex: cats.sex,
         avatarUrl: cats.avatarUrl,
+        emailVerified: cats.emailVerified,
         verified: cats.verified,
         createdAt: cats.createdAt
       })
@@ -306,12 +319,85 @@ export class AuthService {
     return user
   }
 
+  async verifyEmail(token: string) {
+    const userId = await this.redis.get(`verify:${token}`)
+
+    if (!userId) {
+      throw new AppException(
+        ErrorCode.VERIFICATION_TOKEN_INVALID,
+        400,
+        'Verification token is invalid or expired'
+      )
+    }
+
+    await this.redis.del(`verify:${token}`)
+
+    await this.db
+      .update(cats)
+      .set({ emailVerified: true, updatedAt: new Date() })
+      .where(eq(cats.id, userId))
+
+    auditLog('email_verified', userId)
+
+    return { ok: true }
+  }
+
+  async reverify(payload: JwtPayload, origin: string) {
+    const [user] = await this.db
+      .select({
+        id: cats.id,
+        email: cats.email,
+        emailVerified: cats.emailVerified
+      })
+      .from(cats)
+      .where(eq(cats.id, payload.sub))
+      .limit(1)
+
+    if (!user) {
+      throw new AppException(ErrorCode.USER_NOT_FOUND, 404, 'User not found')
+    }
+
+    if (user.emailVerified) {
+      return { ok: true, retryAfter: 0 }
+    }
+
+    // cooldown: 1 письмо в 15 минут
+    const cooldownKey = `reverify_cooldown:${user.id}`
+    const ttl = await this.redis.ttl(cooldownKey)
+
+    if (ttl > 0) {
+      return { ok: false, retryAfter: ttl }
+    }
+
+    await this.sendVerificationEmail(user.id, user.email, origin)
+    await this.redis.set(cooldownKey, '1', 'EX', this.REVERIFY_COOLDOWN)
+
+    return { ok: true, retryAfter: this.REVERIFY_COOLDOWN }
+  }
+
+  private async sendVerificationEmail(
+    userId: string,
+    userEmail: string,
+    origin: string
+  ) {
+    const token = randomUUID()
+
+    await this.redis.set(`verify:${token}`, userId, 'EX', this.VERIFY_TTL)
+
+    try {
+      await this.email.sendVerificationEmail(userEmail, token, origin)
+    } catch (err) {
+      auditLog('verification_email_failed', userId, { error: String(err) })
+    }
+  }
+
   private async issueTokens(user: {
     id: string
     username: string
     email: string
     displayName: string
     avatarUrl: string | null
+    emailVerified: boolean
     verified: boolean
   }) {
     const payload: JwtPayload = { sub: user.id, username: user.username }

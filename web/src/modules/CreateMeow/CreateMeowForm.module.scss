@@ -70,6 +70,13 @@
   border-color: $color-error;
 }
 
+.editorOverlay {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+
 /* Hint */
 
 .hint {
@@ -104,6 +111,11 @@
   &:hover {
     text-decoration-style: solid;
   }
+}
+
+.cooldown {
+  color: $color-text-secondary;
+  font-variant-numeric: tabular-nums;
 }
 
 .overLimit {

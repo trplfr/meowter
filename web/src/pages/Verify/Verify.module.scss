@@ -1,0 +1,41 @@
+.header {
+  height: $header-height;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 $spacing-lg;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  color: $color-primary;
+  margin-bottom: $spacing-md;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.emoji {
+  font-size: 48px;
+  margin-bottom: $spacing-md;
+}
+
+.title {
+  font-size: $font-size-title;
+  font-weight: 700;
+  margin-bottom: $spacing-xs;
+}
+
+.text {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}

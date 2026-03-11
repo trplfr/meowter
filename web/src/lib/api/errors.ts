@@ -16,6 +16,8 @@ export const errorMessages: Record<ErrorCode, () => string> = {
   [ErrorCode.VALIDATION_ERROR]: () => t`Проверьте введенные данные`,
   [ErrorCode.WRONG_PASSWORD]: () => t`Неверный пароль`,
   [ErrorCode.MEOW_NOT_FOUND]: () => t`Мяут не найден`,
+  [ErrorCode.EMAIL_NOT_VERIFIED]: () => t`Подтвердите почту`,
+  [ErrorCode.VERIFICATION_TOKEN_INVALID]: () => t`Ссылка подтверждения недействительна или истекла`,
   [ErrorCode.INTERNAL_ERROR]: () => t`Что-то пошло не так`
 }
 

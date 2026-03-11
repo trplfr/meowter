@@ -4,7 +4,7 @@ import { querySync } from 'atomic-router'
 import { t } from '@lingui/core/macro'
 
 import { routes, controls } from '@core/router'
-import { showSuccessToastFx } from '@logic/notifications'
+import { showSuccessToastFx, showErrorToastFx } from '@logic/notifications'
 import { $session } from '@logic/session'
 
 import {
@@ -128,11 +128,24 @@ sample({
   target: feedQuery.start
 })
 
+// гард: неверифицированным = тост
+sample({
+  clock: meowLikeToggled,
+  source: $session,
+  filter: session => !session?.emailVerified,
+  fn: () => t`Подтвердите почту`,
+  target: showErrorToastFx
+})
+
 // toggle лайка
 sample({
   clock: meowLikeToggled,
-  source: $meows,
-  fn: (meows, meowId) => {
+  source: {
+    meows: $meows,
+    session: $session
+  },
+  filter: ({ session }) => session?.emailVerified === true,
+  fn: ({ meows }, meowId) => {
     const meow = meows.find(m => m.id === meowId)
     if (!meow) {
       return { meowId, isLiked: false }
@@ -145,8 +158,12 @@ sample({
 // стреляем глобальный лайк для синхронизации других страниц (ДО оптимистичного апдейта)
 sample({
   clock: meowLikeToggled,
-  source: $meows,
-  fn: (meows, meowId) => {
+  source: {
+    meows: $meows,
+    session: $session
+  },
+  filter: ({ session }) => session?.emailVerified === true,
+  fn: ({ meows }, meowId) => {
     const meow = meows.find(m => m.id === meowId)
     if (!meow) {
       return { meowId, isLiked: false, likesCount: 0 }
@@ -163,8 +180,12 @@ sample({
 // оптимистичный апдейт лайка (ПОСЛЕ meowLikeChanged)
 sample({
   clock: meowLikeToggled,
-  source: $meows,
-  fn: (meows, meowId) =>
+  source: {
+    meows: $meows,
+    session: $session
+  },
+  filter: ({ session }) => session?.emailVerified === true,
+  fn: ({ meows }, meowId) =>
     meows.map(m => {
       if (m.id !== meowId) {
         return m
@@ -215,16 +236,32 @@ sample({
 
 /* Remeow */
 
+// гард: неверифицированным = тост
 sample({
   clock: remeowToggled,
+  source: $session,
+  filter: session => !session?.emailVerified,
+  fn: () => t`Подтвердите почту`,
+  target: showErrorToastFx
+})
+
+sample({
+  clock: remeowToggled,
+  source: $session,
+  filter: session => session?.emailVerified === true,
+  fn: (_, meowId) => meowId,
   target: remeowMutation.start
 })
 
 // стреляем глобальный remeow (ДО оптимистичного апдейта)
 sample({
   clock: remeowToggled,
-  source: $meows,
-  fn: (meows, meowId) => {
+  source: {
+    meows: $meows,
+    session: $session
+  },
+  filter: ({ session }) => session?.emailVerified === true,
+  fn: ({ meows }, meowId) => {
     const meow = meows.find(m => m.id === meowId)
     if (!meow) {
       return { meowId, isRemeowed: true, remeowsCount: 1, myRemeowId: null }
@@ -242,8 +279,12 @@ sample({
 // оптимистичный апдейт ремяута
 sample({
   clock: remeowToggled,
-  source: $meows,
-  fn: (meows, meowId) =>
+  source: {
+    meows: $meows,
+    session: $session
+  },
+  filter: ({ session }) => session?.emailVerified === true,
+  fn: ({ meows }, meowId) =>
     meows.map(m => {
       if (m.id !== meowId) {
         return m

@@ -4,7 +4,7 @@ import { useRef } from 'react'
 import { t } from '@lingui/core/macro'
 import { Trans } from '@lingui/react/macro'
 import { useUnit } from 'effector-react'
-import { Download, Check, ChevronDown } from 'lucide-react'
+import { Download, Check, ChevronDown, ImageIcon } from 'lucide-react'
 
 import { PASSWORD_MIN } from '@shared/constants'
 
@@ -102,7 +102,9 @@ export const Settings = () => {
             {avatarSrc ? (
               <img className={s.avatar} src={avatarSrc} alt='' />
             ) : (
-              <div className={s.avatarPlaceholder} />
+              <div className={s.avatarPlaceholder}>
+                <ImageIcon size={35} />
+              </div>
             )}
             <label className={s.avatarUpload}>
               <Download size={18} />

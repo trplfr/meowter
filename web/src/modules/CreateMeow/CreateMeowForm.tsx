@@ -22,6 +22,8 @@ import {
   createMeowMutation
 } from './models'
 
+import { $session, $reverifyCooldown, reverifyMutation } from '@logic/session'
+import { showErrorToastFx } from '@logic/notifications'
 import { $weeklyTag } from '@logic/topics'
 import { highlightTildes } from '@lib/meow'
 
@@ -33,23 +35,44 @@ export const CreateMeowForm = () => {
   const fileRef = useRef<HTMLInputElement>(null)
   const backdropRef = useRef<HTMLDivElement>(null)
 
-  const [text, hasTildes, preview, replyTo, pending, weeklyTag] = useUnit([
+  const [
+    text,
+    hasTildes,
+    preview,
+    replyTo,
+    pending,
+    weeklyTag,
+    session,
+    cooldown
+  ] = useUnit([
     $text,
     $hasTildes,
     $imagePreview,
     $replyToMeow,
     createMeowMutation.$pending,
-    $weeklyTag
+    $weeklyTag,
+    $session,
+    $reverifyCooldown
   ])
-  const [onTextChange, onImageSelect, onImageRemove, onSubmit, onClearReply] =
-    useUnit([
-      textChanged,
-      imageSelected,
-      imageRemoved,
-      submitted,
-      replyToCleared
-    ])
+  const [
+    onTextChange,
+    onImageSelect,
+    onImageRemove,
+    onSubmit,
+    onClearReply,
+    onResendVerification,
+    onShowError
+  ] = useUnit([
+    textChanged,
+    imageSelected,
+    imageRemoved,
+    submitted,
+    replyToCleared,
+    reverifyMutation.start,
+    showErrorToastFx
+  ])
 
+  const emailVerified = session?.emailVerified ?? false
   const remaining = MEOW_CONTENT_MAX - text.length
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,6 +83,12 @@ export const CreateMeowForm = () => {
 
     onImageSelect(file)
     e.target.value = ''
+  }
+
+  const handleEditorClick = () => {
+    if (!emailVerified) {
+      onShowError(t`Подтвердите почту`)
+    }
   }
 
   const handleScroll = (e: React.UIEvent<HTMLTextAreaElement>) => {
@@ -84,11 +113,42 @@ export const CreateMeowForm = () => {
           onScroll={handleScroll}
           placeholder={t`Расскажи, что сегодня случилось?`}
           rows={6}
+          disabled={!emailVerified}
         />
+        {!emailVerified && (
+          // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+          <div className={s.editorOverlay} onClick={handleEditorClick} />
+        )}
       </div>
 
       <p className={s.hint}>
-        {remaining < 0 ? (
+        {!emailVerified ? (
+          <>
+            <Trans>Подтвердите почту, чтобы начать мяутить. Проверьте входящие</Trans>
+            {cooldown > 0 ? (
+              <>
+                {' '}
+                <span className={s.cooldown}>
+                  {Math.floor(cooldown / 60)}:{String(cooldown % 60).padStart(2, '0')}
+                </span>
+              </>
+            ) : (
+              <>
+                {' '}
+                <Trans>
+                  или{' '}
+                  <button
+                    type='button'
+                    className={s.weeklyTagBtn}
+                    onClick={() => onResendVerification()}
+                  >
+                    отправьте письмо повторно
+                  </button>
+                </Trans>
+              </>
+            )}
+          </>
+        ) : remaining < 0 ? (
           <span className={s.overLimit}>
             <Trans>
               Превышено количество символов ({text.length}/{MEOW_CONTENT_MAX})
@@ -183,7 +243,7 @@ export const CreateMeowForm = () => {
 
         <button
           className={s.submitButton}
-          disabled={pending || !hasTildes || remaining < 0}
+          disabled={pending || !hasTildes || remaining < 0 || !emailVerified}
           onClick={() => onSubmit()}
         >
           <Trans>Мяутнуть</Trans>

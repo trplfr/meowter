@@ -1,19 +1,27 @@
-import { sample } from 'effector'
+import { createEvent, sample } from 'effector'
 import { redirect } from 'atomic-router'
+import { interval } from 'patronum'
+import { t } from '@lingui/core/macro'
 
 import { routes } from '@core/router'
 import { followChanged } from '@logic/feed'
-import { stopPolling } from '@logic/notifications'
+import {
+  stopPolling,
+  showSuccessToastFx,
+  showErrorToastFx
+} from '@logic/notifications'
 
 import {
   $session,
   $isAuthenticated,
+  $reverifyCooldown,
   appStarted,
   sessionReceived,
   sessionReset,
   logout,
   fetchSessionFx,
-  logoutFx
+  logoutFx,
+  reverifyMutation
 } from '../models'
 
 /* App start -> check session (пропускаем если уже есть от SSR) */
@@ -141,4 +149,52 @@ redirect({
       opened.catProfile
   }),
   route: routes.unauthorized
+})
+
+/* Reverify: повторная отправка письма */
+
+// cooldown таймер (клиентский, тикает каждую секунду)
+const stopCooldown = createEvent()
+
+const cooldownInterval = interval({
+  timeout: 1000,
+  start: reverifyMutation.finished.success,
+  stop: stopCooldown
+})
+
+sample({
+  clock: reverifyMutation.finished.success,
+  fn: ({ result }) => result.retryAfter,
+  target: $reverifyCooldown
+})
+
+// уже на cooldown (ok: false)
+sample({
+  clock: reverifyMutation.finished.success,
+  filter: ({ result }) => !result.ok,
+  fn: () => t`Письмо уже отправлено`,
+  target: showErrorToastFx
+})
+
+// письмо отправлено
+sample({
+  clock: reverifyMutation.finished.success,
+  filter: ({ result }) => result.ok,
+  fn: () => t`Письмо отправлено! Проверьте почту`,
+  target: showSuccessToastFx
+})
+
+// тик таймера
+sample({
+  clock: cooldownInterval.tick,
+  source: $reverifyCooldown,
+  fn: (seconds: number) => Math.max(0, seconds - 1),
+  target: $reverifyCooldown
+})
+
+// остановка при 0
+sample({
+  clock: $reverifyCooldown,
+  filter: (seconds: number) => seconds <= 0,
+  target: stopCooldown
 })

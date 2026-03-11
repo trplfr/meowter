@@ -36,4 +36,10 @@ export const updateProfile = (params: UpdateProfileRequest) =>
 export const changePassword = (params: ChangePasswordRequest) =>
   api.patch('auth/password', { json: params }).json<ChangePasswordResponse>()
 
+export const verifyEmail = (token: string) =>
+  api.post('auth/verify', { json: { token } }).json<{ ok: boolean }>()
+
+export const reverify = () =>
+  api.post('auth/reverify').json<{ ok: boolean; retryAfter: number }>()
+
 export const logout = () => api.post('auth/logout').json<void>()

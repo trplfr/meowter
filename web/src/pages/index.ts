@@ -9,6 +9,7 @@ import * as Search from './Search'
 import * as Notifications from './Notifications'
 import * as Settings from './Settings'
 import * as CreateMeow from './CreateMeow'
+import * as Verify from './Verify'
 import * as NotFound from './NotFound'
 import * as Unauthorized from './Unauthorized'
 
@@ -24,6 +25,7 @@ export const pages = [
   { route: Notifications.route, view: Notifications.view },
   { route: Settings.route, view: Settings.view },
   { route: CreateMeow.route, view: CreateMeow.view },
+  { route: Verify.route, view: Verify.view },
   { route: NotFound.route, view: NotFound.view },
   { route: Unauthorized.route, view: Unauthorized.view }
 ]

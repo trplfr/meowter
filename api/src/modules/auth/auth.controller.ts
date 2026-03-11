@@ -4,6 +4,7 @@ import {
   Get,
   Patch,
   Post,
+  Query,
   Req,
   Res,
   UseGuards
@@ -45,9 +46,14 @@ export class AuthController {
   @ApiResponse({ status: 409, description: 'Пользователь уже существует' })
   async register(
     @Body() dto: RegisterDto,
+    @Req() req: FastifyRequest,
     @Res({ passthrough: true }) res: FastifyReply
   ) {
-    const { accessToken, refreshToken, user } = await this.auth.register(dto)
+    const origin = this.getOrigin(req)
+    const { accessToken, refreshToken, user } = await this.auth.register(
+      dto,
+      origin
+    )
 
     this.setCookies(res, accessToken, refreshToken)
 
@@ -146,6 +152,52 @@ export class AuthController {
     @CurrentUser() user: JwtPayload
   ) {
     return this.auth.changePassword(user.sub, dto)
+  }
+
+  @Post('verify')
+  @ApiOperation({ summary: 'Подтверждение email по токену' })
+  @ApiResponse({ status: 200, description: 'Email подтвержден' })
+  @ApiResponse({ status: 400, description: 'Невалидный токен' })
+  async verify(@Body('token') token: string) {
+    if (!token) {
+      throw new AppException(
+        ErrorCode.VERIFICATION_TOKEN_INVALID,
+        400,
+        'Token is required'
+      )
+    }
+
+    await this.auth.verifyEmail(token)
+
+    return { ok: true }
+  }
+
+  @Post('reverify')
+  @UseGuards(JwtAuthGuard)
+  @Throttle({ default: { ttl: 60_000, limit: 5 } })
+  @ApiOperation({ summary: 'Повторная отправка письма верификации' })
+  @ApiResponse({ status: 200, description: 'Письмо отправлено или cooldown' })
+  async reverify(
+    @CurrentUser() user: JwtPayload,
+    @Req() req: FastifyRequest
+  ) {
+    const origin = this.getOrigin(req)
+    return this.auth.reverify(user, origin)
+  }
+
+  private getOrigin(req: FastifyRequest): string {
+    const host = req.headers['x-forwarded-host'] || req.headers.host || ''
+    const hostStr = Array.isArray(host) ? host[0] : host
+
+    if (hostStr.includes('localhost')) {
+      return process.env.WEB_ORIGIN || 'http://localhost:3000'
+    }
+
+    if (hostStr.includes('meowter.ru')) {
+      return 'https://meowter.ru'
+    }
+
+    return 'https://meowter.app'
   }
 
   private setCookies(

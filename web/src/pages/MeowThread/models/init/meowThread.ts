@@ -5,7 +5,8 @@ import { t } from '@lingui/core/macro'
 
 import { routes } from '@core/router'
 import { meowLikeChanged, meowDeletedGlobal } from '@logic/feed'
-import { showSuccessToastFx } from '@logic/notifications'
+import { showSuccessToastFx, showErrorToastFx } from '@logic/notifications'
+import { $session } from '@logic/session'
 
 import {
   $meow,
@@ -137,11 +138,24 @@ sample({
   target: $commentText
 })
 
+// гард: неверифицированным = тост (ответ на комментарий)
+sample({
+  clock: replyClicked,
+  source: $session,
+  filter: session => !session?.emailVerified,
+  fn: () => t`Подтвердите почту`,
+  target: showErrorToastFx
+})
+
 // ответить -> вставляем @username,
 sample({
   clock: replyClicked,
-  source: $commentText,
-  fn: (text, username) => {
+  source: {
+    text: $commentText,
+    session: $session
+  },
+  filter: ({ session }) => session?.emailVerified === true,
+  fn: ({ text }, username) => {
     const mention = `@${username}, `
     if (text.length === 0) {
       return mention
@@ -154,8 +168,12 @@ sample({
 // счетчик для фокуса textarea
 sample({
   clock: replyClicked,
-  source: $replyTrigger,
-  fn: n => n + 1,
+  source: {
+    trigger: $replyTrigger,
+    session: $session
+  },
+  filter: ({ session }) => session?.emailVerified === true,
+  fn: ({ trigger }) => trigger + 1,
   target: $replyTrigger
 })
 
@@ -201,12 +219,24 @@ sample({
   target: $meow
 })
 
+// гард: неверифицированным = тост
+sample({
+  clock: meowLikeToggled,
+  source: $session,
+  filter: session => !session?.emailVerified,
+  fn: () => t`Подтвердите почту`,
+  target: showErrorToastFx
+})
+
 // toggle лайка мяута
 sample({
   clock: meowLikeToggled,
-  source: $meow,
-  filter: meow => meow !== null,
-  fn: meow => ({
+  source: {
+    meow: $meow,
+    session: $session
+  },
+  filter: ({ meow, session }) => meow !== null && session?.emailVerified === true,
+  fn: ({ meow }) => ({
     meowId: meow!.id,
     isLiked: meow!.isLiked
   }),
@@ -216,9 +246,12 @@ sample({
 // стреляем глобальный лайк (оптимистичный апдейт через meowLikeChanged listener ниже)
 sample({
   clock: meowLikeToggled,
-  source: $meow,
-  filter: meow => meow !== null,
-  fn: meow => ({
+  source: {
+    meow: $meow,
+    session: $session
+  },
+  filter: ({ meow, session }) => meow !== null && session?.emailVerified === true,
+  fn: ({ meow }) => ({
     meowId: meow!.id,
     isLiked: !meow!.isLiked,
     likesCount: meow!.isLiked ? meow!.likesCount - 1 : meow!.likesCount + 1
@@ -240,11 +273,24 @@ sample({
   target: $meow
 })
 
+// гард: неверифицированным = тост (лайк комментария)
+sample({
+  clock: commentLikeToggled,
+  source: $session,
+  filter: session => !session?.emailVerified,
+  fn: () => t`Подтвердите почту`,
+  target: showErrorToastFx
+})
+
 // toggle лайка комментария
 sample({
   clock: commentLikeToggled,
-  source: $comments,
-  fn: (comments, commentId) => {
+  source: {
+    comments: $comments,
+    session: $session
+  },
+  filter: ({ session }) => session?.emailVerified === true,
+  fn: ({ comments }, commentId) => {
     const comment = comments.find(c => c.id === commentId)
     if (!comment) {
       return { commentId, isLiked: false }
@@ -257,8 +303,12 @@ sample({
 // оптимистичный апдейт лайка комментария
 sample({
   clock: commentLikeToggled,
-  source: $comments,
-  fn: (comments, commentId) =>
+  source: {
+    comments: $comments,
+    session: $session
+  },
+  filter: ({ session }) => session?.emailVerified === true,
+  fn: ({ comments }, commentId) =>
     comments.map(c => {
       if (c.id !== commentId) {
         return c

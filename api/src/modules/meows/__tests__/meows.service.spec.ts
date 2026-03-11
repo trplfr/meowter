@@ -52,10 +52,15 @@ const mockNotifications = {
   create: vi.fn()
 }
 
+const mockTopics = {
+  updateTopicStats: vi.fn()
+}
+
 const createService = () => {
   return new MeowsService(
     mockDb as any,
-    mockNotifications as any
+    mockNotifications as any,
+    mockTopics as any
   )
 }
 

@@ -14,12 +14,12 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. placeholder {0}: profile.followersCount
-#: src/pages/CatProfile/CatProfile.tsx:208
+#: src/pages/CatProfile/CatProfile.tsx:228
 msgid "{0, plural, one {читатель} few {читателя} many {читателей} other {читателей}}"
 msgstr "{0, plural, one {follower} other {followers}}"
 
 #. placeholder {0}: profile.displayName
-#: src/pages/CatProfile/CatProfile.tsx:115
+#: src/pages/CatProfile/CatProfile.tsx:135
 msgid "{0} / Мяутер"
 msgstr "{0} / Meowter"
 
@@ -29,15 +29,15 @@ msgstr "{0} / Meowter"
 msgid "{0}: {1} / Мяутер"
 msgstr "{0}: {1} / Meowter"
 
-#: src/pages/CatProfile/CatProfile.tsx:242
+#: src/pages/CatProfile/CatProfile.tsx:289
 msgid "<0>Напиши первый мяут</0> с <1>~темой</1>"
 msgstr "<0>Write your first meow</0> with a <1>~topic</1>"
 
-#: src/pages/Feed/Feed.tsx:84
+#: src/pages/Feed/Feed.tsx:114
 msgid "<0>Напиши свой первый мяут</0><1/>используя <2>~тильду</2>, чтобы открыть ленту!"
 msgstr "<0>Write your first meow</0><1/>using a <2>~tilde</2> to unlock the feed!"
 
-#: src/pages/Feed/Feed.tsx:64
+#: src/pages/Feed/Feed.tsx:68
 msgid "~{currentTag} / Мяутер"
 msgstr "~{currentTag} / Meowter"
 
@@ -136,7 +136,7 @@ msgstr "You haven't used ~topics in your meows yet. Write a meow with a ~topic t
 msgid "Выберите аватар"
 msgstr "Choose an avatar"
 
-#: src/modules/CreateMeow/CreateMeowForm.tsx:117
+#: src/modules/CreateMeow/CreateMeowForm.tsx:177
 msgid "Выдели слово, используя тильду:<0/><1>~работа</1>, чтобы составить ленту"
 msgstr "Highlight a word with a tilde:<0/><1>~work</1>, to build your feed"
 
@@ -189,8 +189,14 @@ msgstr "Sign up"
 msgid "Зарегистрируйтесь в Мяутере = соцсети с кошачьей тематикой"
 msgstr "Sign up for Meowter = a cat-themed social network"
 
-#: src/pages/CatProfile/CatProfile.tsx:251
-#: src/pages/Feed/Feed.tsx:95
+#: src/modules/CreateMeow/CreateMeowForm.tsx:138
+#: src/pages/CatProfile/CatProfile.tsx:272
+#: src/pages/Feed/Feed.tsx:98
+msgid "или <0>отправьте письмо повторно</0>"
+msgstr "or <0>resend the email</0>"
+
+#: src/pages/CatProfile/CatProfile.tsx:298
+#: src/pages/Feed/Feed.tsx:125
 msgid "или <0>почитай тему недели: 🔥 <1>~{weeklyTag}</1></0>"
 msgstr "or <0>check out the weekly topic: 🔥 <1>~{weeklyTag}</1></0>"
 
@@ -227,11 +233,11 @@ msgstr "Copy link"
 msgid "Круто!"
 msgstr "Awesome!"
 
-#: src/pages/Feed/Feed.tsx:59
+#: src/pages/Feed/Feed.tsx:63
 msgid "Лента"
 msgstr "Feed"
 
-#: src/pages/Feed/Feed.tsx:64
+#: src/pages/Feed/Feed.tsx:68
 msgid "Лента / Мяутер"
 msgstr "Feed / Meowter"
 
@@ -255,7 +261,7 @@ msgstr "We'll send a new password to the email you used to register"
 msgid "Мяут не найден"
 msgstr "Meow not found"
 
-#: src/modules/CreateMeow/models/init/createMeow.ts:157
+#: src/modules/CreateMeow/models/init/createMeow.ts:174
 msgid "Мяут создан!"
 msgstr "Meow posted!"
 
@@ -267,7 +273,7 @@ msgstr "Meowter"
 msgid "Мяутер = соцсеть с кошачьей тематикой. Чтобы читать, нужно писать. Присоединяйтесь!"
 msgstr "Meowter = a cat-themed social network. To read, you need to write. Join us!"
 
-#: src/modules/CreateMeow/CreateMeowForm.tsx:189
+#: src/modules/CreateMeow/CreateMeowForm.tsx:249
 #: src/pages/CreateMeow/CreateMeow.tsx:40
 msgid "Мяутнуть"
 msgstr "Meow"
@@ -280,8 +286,8 @@ msgstr "New Meow / Meowter"
 msgid "Назад"
 msgstr "Back"
 
-#: src/pages/MeowThread/CommentForm.tsx:77
-#: src/pages/MeowThread/CommentForm.tsx:86
+#: src/pages/MeowThread/CommentForm.tsx:88
+#: src/pages/MeowThread/CommentForm.tsx:97
 msgid "Написать комментарий..."
 msgstr "Write a comment..."
 
@@ -364,7 +370,7 @@ msgstr "Cancel"
 msgid "Отображаемое имя"
 msgstr "Display name"
 
-#: src/pages/CatProfile/CatProfile.tsx:226
+#: src/pages/CatProfile/CatProfile.tsx:246
 msgid "Отписаться"
 msgstr "Unfollow"
 
@@ -406,6 +412,22 @@ msgstr "Password max {PASSWORD_MAX} characters"
 msgid "Пароль минимум {PASSWORD_MIN} символов"
 msgstr "Password min {PASSWORD_MIN} characters"
 
+#: src/pages/Verify/Verify.tsx:43
+msgid "Перенаправляем в ленту..."
+msgstr "Redirecting to feed..."
+
+#: src/logic/session/init/session.ts:183
+msgid "Письмо отправлено! Проверьте почту"
+msgstr "Email sent! Check your inbox"
+
+#: src/logic/session/init/session.ts:175
+msgid "Письмо уже отправлено"
+msgstr "Email already sent"
+
+#: src/logic/session/init/session.ts:173
+#~ msgid "Письмо уже отправлено. Повторно через {mins} мин"
+#~ msgstr "Email already sent. Retry in {mins} min"
+
 #: src/pages/Settings/Settings.tsx:261
 msgid "Повторите пароль"
 msgstr "Confirm password"
@@ -418,9 +440,54 @@ msgstr "followed you"
 msgid "подписался на вас"
 msgstr "followed you"
 
-#: src/pages/CatProfile/CatProfile.tsx:228
+#: src/pages/CatProfile/CatProfile.tsx:248
 msgid "Подписаться"
 msgstr "Follow"
+
+#: src/lib/api/errors.ts:19
+#: src/logic/feed/init/feed.ts:136
+#: src/logic/feed/init/feed.ts:244
+#: src/modules/CreateMeow/CreateMeowForm.tsx:90
+#: src/modules/CreateMeow/models/init/createMeow.ts:113
+#: src/pages/CatProfile/models/init/catProfile.ts:209
+#: src/pages/MeowThread/CommentForm.tsx:66
+#: src/pages/MeowThread/models/init/meowThread.ts:146
+#: src/pages/MeowThread/models/init/meowThread.ts:227
+#: src/pages/MeowThread/models/init/meowThread.ts:281
+#: src/pages/Search/models/init/search.ts:270
+msgid "Подтвердите почту"
+msgstr "Verify your email"
+
+#: src/lib/api/errors.ts:19
+#: src/logic/feed/init/feed.ts:136
+#: src/logic/feed/init/feed.ts:244
+#: src/modules/CreateMeow/models/init/createMeow.ts:114
+#: src/pages/CatProfile/models/init/catProfile.ts:209
+#: src/pages/MeowThread/CommentForm.tsx:66
+#: src/pages/MeowThread/models/init/meowThread.ts:146
+#: src/pages/MeowThread/models/init/meowThread.ts:227
+#: src/pages/MeowThread/models/init/meowThread.ts:281
+#: src/pages/Search/models/init/search.ts:270
+#~ msgid "Подтвердите почту, чтобы мяутить"
+#~ msgstr "Verify your email to start meowing"
+
+#: src/modules/CreateMeow/CreateMeowForm.tsx:127
+#: src/pages/CatProfile/CatProfile.tsx:261
+#: src/pages/Feed/Feed.tsx:87
+msgid "Подтвердите почту, чтобы начать мяутить. Проверьте входящие"
+msgstr "Verify your email to start meowing. Check your inbox"
+
+#: src/modules/CreateMeow/CreateMeowForm.tsx:118
+#~ msgid "Подтвердите почту, чтобы начать мяутить. Проверьте входящие или <0>отправьте письмо повторно</0>"
+#~ msgstr "Verify your email to start meowing. Check your inbox or <0>resend the email</0>"
+
+#: src/pages/Verify/Verify.tsx:32
+msgid "Подтверждаем почту..."
+msgstr "Verifying email..."
+
+#: src/pages/Verify/Verify.tsx:22
+msgid "Подтверждение почты / Мяутер"
+msgstr "Email verification / Meowter"
 
 #: src/modules/MeowCard/MeowCard.tsx:98
 #: src/pages/MeowThread/CommentCard.tsx:86
@@ -444,11 +511,11 @@ msgstr "Search by topics..."
 msgid "Пока нет комментариев"
 msgstr "No comments yet"
 
-#: src/pages/CatProfile/CatProfile.tsx:237
+#: src/pages/CatProfile/CatProfile.tsx:257
 msgid "Пока нет мяутов"
 msgstr "No meows yet"
 
-#: src/pages/Feed/Feed.tsx:80
+#: src/pages/Feed/Feed.tsx:84
 msgid "Пока нет мяутов по теме ~{currentTag}"
 msgstr "No meows on ~{currentTag} yet"
 
@@ -465,6 +532,10 @@ msgstr "Not specified"
 msgid "Пользователь не найден"
 msgstr "User not found"
 
+#: src/pages/Verify/Verify.tsx:40
+msgid "Почта подтверждена!"
+msgstr "Email verified!"
+
 #: src/modules/Auth/models/models/validation.ts:41
 #: src/modules/Auth/models/models/validation.ts:91
 msgid "Почта слишком длинная"
@@ -475,12 +546,12 @@ msgid "Почти готово!"
 msgstr "Almost done!"
 
 #. placeholder {0}: text.length
-#: src/pages/MeowThread/CommentForm.tsx:63
+#: src/pages/MeowThread/CommentForm.tsx:74
 msgid "Превышено количество символов ({0}/{COMMENT_CONTENT_MAX})"
 msgstr "Character limit exceeded ({0}/{COMMENT_CONTENT_MAX})"
 
 #. placeholder {0}: text.length
-#: src/modules/CreateMeow/CreateMeowForm.tsx:93
+#: src/modules/CreateMeow/CreateMeowForm.tsx:153
 msgid "Превышено количество символов ({0}/{MEOW_CONTENT_MAX})"
 msgstr "Character limit exceeded ({0}/{MEOW_CONTENT_MAX})"
 
@@ -497,17 +568,17 @@ msgid "Пропустить"
 msgstr "Skip"
 
 #. placeholder {0}: profile.username
-#: src/pages/CatProfile/CatProfile.tsx:121
-#: src/pages/CatProfile/CatProfile.tsx:129
+#: src/pages/CatProfile/CatProfile.tsx:141
+#: src/pages/CatProfile/CatProfile.tsx:149
 msgid "Профиль @{0} в Мяутере"
 msgstr "@{0}'s profile on Meowter"
 
-#: src/pages/CatProfile/CatProfile.tsx:115
+#: src/pages/CatProfile/CatProfile.tsx:135
 msgid "Профиль / Мяутер"
 msgstr "Profile / Meowter"
 
-#: src/modules/CreateMeow/CreateMeowForm.tsx:80
-#: src/modules/CreateMeow/CreateMeowForm.tsx:85
+#: src/modules/CreateMeow/CreateMeowForm.tsx:109
+#: src/modules/CreateMeow/CreateMeowForm.tsx:114
 msgid "Расскажи, что сегодня случилось?"
 msgstr "What happened today?"
 
@@ -516,7 +587,7 @@ msgstr "What happened today?"
 msgid "Регистрация / Мяутер"
 msgstr "Sign up / Meowter"
 
-#: src/logic/feed/init/feed.ts:276
+#: src/logic/feed/init/feed.ts:317
 msgid "Ремяут!"
 msgstr "Remeowed!"
 
@@ -553,11 +624,23 @@ msgstr "Too many requests, please try again later"
 msgid "Соцсеть с кошачьей тематикой. Чтобы читать, нужно писать."
 msgstr "A cat-themed social network. To read, you need to write."
 
+#: src/pages/Verify/Verify.tsx:54
+msgid "Ссылка истекла или уже была использована"
+msgstr "The link has expired or has already been used"
+
+#: src/pages/Verify/Verify.tsx:51
+msgid "Ссылка недействительна"
+msgstr "Link is invalid"
+
+#: src/lib/api/errors.ts:20
+msgid "Ссылка подтверждения недействительна или истекла"
+msgstr "Verification link is invalid or expired"
+
 #: src/pages/NotFound/NotFound.tsx:32
 msgid "Такой страницы нет..."
 msgstr "This page doesn't exist..."
 
-#: src/modules/CreateMeow/CreateMeowForm.tsx:98
+#: src/modules/CreateMeow/CreateMeowForm.tsx:158
 msgid "Тема недели: <0>~{weeklyTag}</0><1/>Выдели слово, используя тильду:<2/><3>~работа</3>, чтобы составить ленту"
 msgstr "Weekly topic: <0>~{weeklyTag}</0><1/>Highlight a word with a tilde:<2/><3>~work</3>, to build your feed"
 
@@ -581,9 +664,9 @@ msgstr "Notifications"
 msgid "Уведомления / Мяутер"
 msgstr "Notifications / Meowter"
 
-#: src/logic/feed/init/feed.ts:204
-#: src/pages/MeowThread/models/init/meowThread.ts:304
-#: src/pages/MeowThread/models/init/meowThread.ts:329
+#: src/logic/feed/init/feed.ts:225
+#: src/pages/MeowThread/models/init/meowThread.ts:354
+#: src/pages/MeowThread/models/init/meowThread.ts:379
 msgid "Удалено!"
 msgstr "Deleted!"
 
@@ -616,11 +699,11 @@ msgstr "File is too large (max 5 MB)"
 msgid "Фамилия"
 msgstr "Last name"
 
-#: src/pages/CatProfile/CatProfile.tsx:202
+#: src/pages/CatProfile/CatProfile.tsx:222
 msgid "читает"
 msgstr "following"
 
-#: src/lib/api/errors.ts:19
+#: src/lib/api/errors.ts:21
 msgid "Что-то пошло не так"
 msgstr "Something went wrong"
 

@@ -10,7 +10,7 @@ import { LogOut, Pencil } from 'lucide-react'
 import { type Meow, type MeowPreview } from '@shared/types'
 
 import { routes } from '@core/router'
-import { $origin, logout } from '@logic/session'
+import { $session, $origin, $reverifyCooldown, logout, reverifyMutation } from '@logic/session'
 import { meowDeleted, remeowToggled, replyInitiated } from '@logic/feed'
 import { $weeklyTag } from '@logic/topics'
 
@@ -35,24 +35,44 @@ import s from './CatProfile.module.scss'
 export const route = routes.catProfile
 
 export const CatProfile = () => {
-  const [profile, meows, hasMore, pending, origin, weeklyTag] = useUnit([
+  const [
+    profile,
+    meows,
+    hasMore,
+    pending,
+    origin,
+    weeklyTag,
+    session,
+    cooldown
+  ] = useUnit([
     $profile,
     $meows,
     $hasMore,
     catMeowsQuery.$pending,
     $origin,
-    $weeklyTag
+    $weeklyTag,
+    $session,
+    $reverifyCooldown
   ])
-  const [onLoadMore, onFollow, onLike, onLogout, onDelete, onRemeow, onReply] =
-    useUnit([
-      loadMoreMeows,
-      followToggled,
-      meowLikeToggled,
-      logout,
-      meowDeleted,
-      remeowToggled,
-      replyInitiated
-    ])
+  const [
+    onLoadMore,
+    onFollow,
+    onLike,
+    onLogout,
+    onDelete,
+    onRemeow,
+    onReply,
+    onResendVerification
+  ] = useUnit([
+    loadMoreMeows,
+    followToggled,
+    meowLikeToggled,
+    logout,
+    meowDeleted,
+    remeowToggled,
+    replyInitiated,
+    reverifyMutation.start
+  ])
 
   const handleCopyContacts = useCallback(() => {
     if (profile?.contacts) {
@@ -236,7 +256,34 @@ export const CatProfile = () => {
               <p className={s.emptyText}>
                 <Trans>Пока нет мяутов</Trans>
               </p>
-              {profile.isOwn && (
+              {profile.isOwn && !session?.emailVerified && (
+                <p className={s.emptyHint}>
+                  <Trans>Подтвердите почту, чтобы начать мяутить. Проверьте входящие</Trans>
+                  {cooldown > 0 ? (
+                    <>
+                      {' '}
+                      <span className={s.cooldown}>
+                        {Math.floor(cooldown / 60)}:{String(cooldown % 60).padStart(2, '0')}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      {' '}
+                      <Trans>
+                        или{' '}
+                        <button
+                          type='button'
+                          className={s.resendBtn}
+                          onClick={() => onResendVerification()}
+                        >
+                          отправьте письмо повторно
+                        </button>
+                      </Trans>
+                    </>
+                  )}
+                </p>
+              )}
+              {profile.isOwn && session?.emailVerified && (
                 <>
                   <p className={s.emptyHint}>
                     <Trans>

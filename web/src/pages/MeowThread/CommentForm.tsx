@@ -7,6 +7,8 @@ import clsx from 'clsx'
 
 import { COMMENT_CONTENT_MAX } from '@shared/constants'
 
+import { $session } from '@logic/session'
+import { showErrorToastFx } from '@logic/notifications'
 import { highlightMentionsOverlay } from '@lib/meow'
 
 import {
@@ -22,16 +24,19 @@ import s from './MeowThread.module.scss'
 export const CommentForm = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const backdropRef = useRef<HTMLDivElement>(null)
-  const [text, replyTrigger, pending] = useUnit([
+  const [text, replyTrigger, pending, session] = useUnit([
     $commentText,
     $replyTrigger,
-    createCommentMutation.$pending
+    createCommentMutation.$pending,
+    $session
   ])
-  const [onTextChange, onSubmit] = useUnit([
+  const [onTextChange, onSubmit, onShowError] = useUnit([
     commentTextChanged,
-    commentSubmitted
+    commentSubmitted,
+    showErrorToastFx
   ])
 
+  const emailVerified = session?.emailVerified ?? false
   const isOverLimit = text.length > COMMENT_CONTENT_MAX
 
   // автофокус при нажатии "ответить"
@@ -56,9 +61,15 @@ export const CommentForm = () => {
     }
   }
 
+  const handleEditorClick = () => {
+    if (!emailVerified) {
+      onShowError(t`Подтвердите почту`)
+    }
+  }
+
   return (
     <div className={s.commentFormWrap}>
-      {isOverLimit && (
+      {emailVerified && isOverLimit && (
         <div className={s.commentError}>
           <Trans>
             Превышено количество символов ({text.length}/{COMMENT_CONTENT_MAX})
@@ -85,13 +96,18 @@ export const CommentForm = () => {
             onScroll={handleScroll}
             placeholder={t`Написать комментарий...`}
             rows={2}
+            disabled={!emailVerified}
           />
+          {!emailVerified && (
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+            <div className={s.commentOverlay} onClick={handleEditorClick} />
+          )}
         </div>
         <button
           type='button'
           aria-label='Отправить'
           className={s.commentSendButton}
-          disabled={pending || text.trim().length === 0 || isOverLimit}
+          disabled={pending || text.trim().length === 0 || isOverLimit || !emailVerified}
           onClick={() => onSubmit()}
         >
           <Send size={20} />
