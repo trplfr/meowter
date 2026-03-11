@@ -116,7 +116,7 @@ export default defineConfig({
             .replace('lang=""', `lang="${result.locale}"`)
             .replace(
               '</head>',
-              `<script>self.__SSR_STATE__ = ${JSON.stringify(result.scopeData).replace(/</g, '\\u003c')}</script></head>`
+              `${result.headTags}\n<script>self.__SSR_STATE__ = ${JSON.stringify(result.scopeData).replace(/</g, '\\u003c')}</script></head>`
             )
             .replace('<!--app-content-->', result.html)
 

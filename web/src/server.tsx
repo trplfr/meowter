@@ -93,11 +93,19 @@ export const render = async (url: string, host = 'localhost', cookie = '') => {
     await allSettled(appStarted, { scope })
     await allSettled(router.setHistory, { scope, params: history })
 
-    const html = renderToString(
+    const rawHtml = renderToString(
       <Provider value={scope}>
         <App />
       </Provider>
     )
+
+    // извлекаем <title>, <meta>, <link> из body (React 19 хоистинг не работает в renderToString)
+    const headTagsRegex = /<(title|meta|link)\b[^>]*(?:\/>|>[^<]*<\/\1>)/gi
+    const headTags: string[] = []
+    let html = rawHtml.replace(headTagsRegex, match => {
+      headTags.push(match)
+      return ''
+    })
 
     const scopeData = serialize(scope)
 
@@ -112,6 +120,6 @@ export const render = async (url: string, host = 'localhost', cookie = '') => {
       status = 403
     }
 
-    return { html, scopeData, locale, status }
+    return { html, headTags: headTags.join('\n'), scopeData, locale, status }
   })
 }
