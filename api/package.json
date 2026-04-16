@@ -14,7 +14,7 @@
   "dependencies": {
     "@fastify/cookie": "^11.0.2",
     "@fastify/multipart": "^9.4.0",
-    "@fastify/static": "^9.0.0",
+    "@fastify/static": "^9.1.1",
     "@nestjs/common": "^11.1.16",
     "@nestjs/config": "^4.0.3",
     "@nestjs/core": "^11.1.16",
